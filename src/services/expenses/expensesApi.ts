@@ -1,0 +1,90 @@
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { normalizeGetAllExpensesData, normalizeGetAllSearchedData } from './normalizers';
+import type {
+  Data,
+  DeleteExpenseArgs,
+  DeleteExpensesArgs,
+  GetArgs,
+  GetExpensesData,
+  NewDataResponse,
+  PatchArgs,
+  PostArgs,
+} from './expensesApi.types';
+import { getExpensesByIdUrl, getExpensesUrl } from './helpers';
+
+export const expensesApi = createApi({
+  reducerPath: 'expensesApi',
+  tagTypes: ['Expense', 'MonthlyData'],
+  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000/' }),
+
+  endpoints: (builder) => ({
+    getExpenses: builder.query<GetExpensesData, GetArgs>({
+      query: ({ search, yearMonth }) => ({
+        url: getExpensesUrl(search, yearMonth),
+        method: 'GET',
+      }),
+      transformResponse: (response: NewDataResponse, _, { search }) => {
+        if (search) {
+          return normalizeGetAllSearchedData(response);
+        }
+        return normalizeGetAllExpensesData(response);
+      },
+      providesTags: [{ type: 'Expense', id: 'LIST' }],
+    }),
+
+    createExpense: builder.mutation<Data | Data[], PostArgs>({
+      query: ({ data }) => ({
+        url: getExpensesUrl(),
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: [
+        { type: 'Expense', id: 'LIST' },
+        { type: 'MonthlyData', id: 'LIST' },
+      ],
+    }),
+
+    updateExpense: builder.mutation<Data, PatchArgs>({
+      query: ({ id, data }) => ({
+        url: getExpensesByIdUrl(id),
+        method: 'PUT',
+        body: data,
+      }),
+      invalidatesTags: [
+        { type: 'Expense', id: 'LIST' },
+        { type: 'MonthlyData', id: 'LIST' },
+      ],
+    }),
+
+    deleteExpense: builder.mutation<void, DeleteExpenseArgs>({
+      query: ({ id }) => ({
+        url: getExpensesByIdUrl(id),
+        method: 'DELETE',
+      }),
+      invalidatesTags: [
+        { type: 'Expense', id: 'LIST' },
+        { type: 'MonthlyData', id: 'LIST' },
+      ],
+    }),
+
+    deleteExpenses: builder.mutation<void, DeleteExpensesArgs>({
+      query: ({ ids }) => ({
+        url: getExpensesUrl(),
+        method: 'DELETE',
+        body: ids,
+      }),
+      invalidatesTags: [
+        { type: 'Expense', id: 'LIST' },
+        { type: 'MonthlyData', id: 'LIST' },
+      ],
+    }),
+  }),
+});
+
+export const {
+  useGetExpensesQuery,
+  useCreateExpenseMutation,
+  useUpdateExpenseMutation,
+  useDeleteExpenseMutation,
+  useDeleteExpensesMutation,
+} = expensesApi;
