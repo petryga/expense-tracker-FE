@@ -1,0 +1,29 @@
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  height: 56px;
+  border-top: 1px solid #e0e0e0;
+  font-size: 16px;
+  color: #eeb12e;
+}
+
+.searchBar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px !important;
+  margin: 0 auto;
+  width: 200px;
+  background-color: #fff;
+}
+
+.searchBar input {
+  height: 40px;
+  padding: 0 10px;
+  font-size: 16px;
+}
+
+.searchBar svg {
+  color: #eeb12e;
+}

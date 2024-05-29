@@ -1,0 +1,30 @@
+.container {
+  margin-top: 20px;
+}
+
+.summary p {
+  margin: 5px 0;
+}
+
+text {
+  font-size: 12px;
+}
+
+.tooltip {
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 5px;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.tooltip ul {
+  list-style-type: none;
+  margin-left: -20px;
+  text-align: left;
+  font-size: 14px;
+}
+
+.tooltip ul li {
+  margin: 5px 0;
+}

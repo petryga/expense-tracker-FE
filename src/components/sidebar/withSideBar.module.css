@@ -1,0 +1,29 @@
+.root {
+  display: flex;
+  justify-content: space-between;
+}
+
+.pageRoot {
+  width: 100%;
+  margin-left: 0;
+  display: flex;
+  transition: margin 0.3s ease;
+}
+
+.pageRoot > * {
+  width: 100%;
+}
+
+.compact {
+  margin-left: 250px;
+  transition: margin 0.3s ease 0.08s;
+}
+
+.centerPanel {
+  display: flex;
+  flex-direction: column;
+}
+
+.divider {
+  margin: 12px 0 !important;
+}
