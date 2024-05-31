@@ -1,22 +1,22 @@
 import { Data } from '../../../services/expenses/expensesApi.types';
 import { DataByCategory } from '../../expenses/ExpensesPage.types';
+import { BUDGETS } from '../../expenses/helpers';
+
+const colors = [
+  '#8884d8',
+  '#82ca9d',
+  '#ffc658',
+  '#ff8042',
+  '#8dd1e1',
+  '#a4de6c',
+  '#d0ed57',
+  '#ffc0cb',
+  '#b0e0e6',
+  '#ffb6c1',
+  '#db7093',
+];
 
 const getColor = (index: number) => {
-  const colors = [
-    '#8884d8',
-    '#82ca9d',
-    '#ffc658',
-    '#ff8042',
-    '#8dd1e1',
-    '#a4de6c',
-    '#d0ed57',
-    '#ffc0cb',
-    '#b0e0e6',
-    '#ffb6c1',
-    '#ff69b4',
-    '#db7093',
-    '#c71585',
-  ];
   return colors[index % colors.length];
 };
 
@@ -28,7 +28,6 @@ export const getVisualizedData = (
   }
 
   const sumByCategory: Record<string, DataByCategory> = {};
-
   let total = 0;
 
   const filteredData = data.filter((entry) => entry.category !== 'Rent' && entry.amount > 0);
@@ -41,6 +40,7 @@ export const getVisualizedData = (
         total: 0,
         details: [],
         fill: getColor(Object.keys(sumByCategory).length),
+        budget: BUDGETS[category] || null,
       };
     }
     sumByCategory[category].total += amount;
@@ -56,7 +56,7 @@ export const getVisualizedData = (
   const sortedByAmount = Object.values(sumByCategory).sort((a, b) => b.total - a.total);
 
   return {
-    dataByCategory: Object.values(sortedByAmount),
+    dataByCategory: sortedByAmount,
     totalSpent: parseFloat(total.toFixed(2)),
   };
 };
