@@ -19,6 +19,7 @@ export type DataByCategory = {
   total: number;
   fill?: string;
   details: { description: string; amount: number }[];
+  budget: number | null;
 };
 
 export interface TabPanelProps {

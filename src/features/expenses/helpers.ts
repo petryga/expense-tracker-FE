@@ -9,6 +9,21 @@ export enum AccountType {
   CASH = 'Cash',
 }
 
+export const BUDGETS: Record<string, number> = {
+  Electricity: 60,
+  Groceries: 400,
+  'Eating Out': 20,
+  'Coffee Shops': 20,
+  'Taxi & Ride Shares': 50,
+  'Travel & Vacation': 100,
+  Entertainment: 50,
+  Books: 20,
+  Clothing: 200,
+  Beauty: 50,
+  'Furniture & Housewares': 100,
+  Gifts: 100,
+};
+
 export const CATEGORIES: Category[] = [
   {
     id: 1,
@@ -73,13 +88,13 @@ export const CATEGORIES: Category[] = [
       { id: 703, name: 'Wellness & Spa' },
     ],
   },
+  // {
+  //   id: 8,
+  //   name: 'Investments',
+  //   subcategories: [{ id: 801, name: 'Stocks & Bonds' }],
+  // },
   {
     id: 8,
-    name: 'Investments',
-    subcategories: [{ id: 801, name: 'Stocks & Bonds' }],
-  },
-  {
-    id: 9,
     name: 'Gifts',
     subcategories: [{ id: 901, name: 'Gifts' }],
   },
