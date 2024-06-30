@@ -16,6 +16,7 @@ import WarningModal from '../../components/warningModal/WarningModal';
 import { format } from 'date-fns';
 import { recurringExpenses } from './helpers';
 import { Context, CustomFooter } from './CustomFooter';
+import ConfirmationModal from './ConfirmationModal';
 
 export const ExpensesDataGrid = () => {
   const { yearMonth } = useParams();
@@ -27,6 +28,7 @@ export const ExpensesDataGrid = () => {
 
   const [rows, setRows] = useState<Data[]>([]);
   const [openModal, setOpenModal] = useState(false);
+  const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
   const [entryId, setEntryId] = useState<string | null>(null);
   const navigate = useNavigate();
   const [total, setTotal] = useState<number | null>(null);
@@ -148,6 +150,21 @@ export const ExpensesDataGrid = () => {
     await createExpense({ data: expensesArray }).unwrap();
   };
 
+  const handleDownloadExpenses = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/export');
+      const blob = await response.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.setAttribute('download', 'expenses.csv');
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode?.removeChild(link);
+    } catch (error) {
+      console.error('Error downloading the file:', error);
+    }
+  };
   return (
     <>
       <Context.Provider
@@ -169,6 +186,7 @@ export const ExpensesDataGrid = () => {
           }}
           slotProps={{
             toolbar: { setRows, setRowModesModel, onAddRecurringButtonClick },
+            footer: { setOpenConfirmationModal } as any,
           }}
           sx={tableStyles}
           hideFooterPagination
@@ -180,6 +198,12 @@ export const ExpensesDataGrid = () => {
         open={openModal}
         setOpen={setOpenModal}
         onDelete={entryId ? handleDeleteRow : handleDeleteRows}
+      />
+
+      <ConfirmationModal
+        open={openConfirmationModal}
+        setOpen={setOpenConfirmationModal}
+        onConfirm={handleDownloadExpenses}
       />
     </>
   );

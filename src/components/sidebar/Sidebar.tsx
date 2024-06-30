@@ -11,6 +11,7 @@ import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 const Sidebar = (): JSX.Element => {
   const { isVisible } = useSelector(selectSidebar);
+
   const dispatch = useDispatch();
   const location = useLocation();
 

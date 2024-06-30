@@ -43,3 +43,20 @@
 .amountBold {
   font-weight: 600;
 }
+
+.downloadButton {
+  cursor: pointer;
+}
+
+.actions {
+  padding: 10px 30px 20px 0 !important;
+}
+
+.actions button {
+  font-weight: 600;
+}
+
+.title {
+  font-weight: 600;
+  color: #eeb12e;
+}
