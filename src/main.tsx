@@ -1,18 +1,18 @@
-import React, { Suspense } from "react";
-import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
-import "./index.css";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { store } from "./store";
-import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import React, { Suspense } from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App.tsx';
+import './index.css';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { store } from './store';
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
 
 const theme = createTheme({
   components: {
     MuiButton: {
       styleOverrides: {
         root: {
-          color: "#eeb12e",
+          color: '#eeb12e',
         },
       },
     },
@@ -20,11 +20,11 @@ const theme = createTheme({
     MuiButtonBase: {
       styleOverrides: {
         root: {
-          "&.Mui-selected": {
-            color: "#eeb12e",
+          '&.Mui-selected': {
+            color: '#eeb12e',
           },
-          "&:focus": {
-            outline: "none",
+          '&:focus': {
+            outline: 'none',
           },
         },
       },
@@ -32,7 +32,7 @@ const theme = createTheme({
   },
 });
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <Provider store={store}>
       <BrowserRouter>

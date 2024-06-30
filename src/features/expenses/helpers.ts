@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import type { Data } from '../../services/expenses/expensesApi.types';
 import type { Category, RecurringExpense } from './ExpensesPage.types';
 
@@ -88,11 +89,6 @@ export const CATEGORIES: Category[] = [
       { id: 703, name: 'Wellness & Spa' },
     ],
   },
-  // {
-  //   id: 8,
-  //   name: 'Investments',
-  //   subcategories: [{ id: 801, name: 'Stocks & Bonds' }],
-  // },
   {
     id: 8,
     name: 'Gifts',
@@ -127,49 +123,52 @@ export const getDataByMonth = (
     }, {});
 };
 
-export const getRecurringExpenses = (): RecurringExpense[] => {
-  return [
-    {
-      dayPosted: '01',
-      account: AccountType.TD_SAVINGS,
-      description: 'Rent',
-      category: 'Rent',
-      amount: 1896,
-    },
-    {
-      dayPosted: '01',
-      account: AccountType.TD_CREDIT,
-      description: 'Internet',
-      category: 'Internet',
-      amount: 67.2,
-    },
-    {
-      dayPosted: '27',
-      account: AccountType.TD_CREDIT,
-      description: 'Mobile Phone',
-      category: 'Mobile Phone',
-      amount: 38.42,
-    },
-    {
-      dayPosted: '02',
-      account: AccountType.AMEX,
-      description: 'Amex Fee',
-      category: 'Financial Fees',
-      amount: 12.99,
-    },
-    {
-      dayPosted: '28',
-      account: AccountType.ROGERS,
-      description: 'Chat GPT Subscription',
-      category: 'Subscriptions',
-      amount: 30,
-    },
-    {
-      dayPosted: '14',
-      account: AccountType.AMEX,
-      description: 'Spotify Subscription',
-      category: 'Subscriptions',
-      amount: 12.31,
-    },
-  ];
+export const recurringExpenses: RecurringExpense[] = [
+  // {
+  //   dayPosted: '01',
+  //   account: AccountType.TD_SAVINGS,
+  //   description: 'Rent',
+  //   category: 'Rent',
+  //   amount: 1896,
+  // },
+  // {
+  //   dayPosted: '01',
+  //   account: AccountType.TD_CREDIT,
+  //   description: 'Internet',
+  //   category: 'Internet',
+  //   amount: 67.2,
+  // },
+  {
+    dayPosted: '27',
+    account: AccountType.TD_CREDIT,
+    description: 'Mobile Phone',
+    category: 'Mobile Phone',
+    amount: 38.42,
+  },
+  {
+    dayPosted: '02',
+    account: AccountType.AMEX,
+    description: 'Amex Fee',
+    category: 'Financial Fees',
+    amount: 12.99,
+  },
+  {
+    dayPosted: '28',
+    account: AccountType.ROGERS,
+    description: 'Chat GPT Subscription',
+    category: 'Subscriptions',
+    amount: 30,
+  },
+  {
+    dayPosted: '14',
+    account: AccountType.AMEX,
+    description: 'Spotify Subscription',
+    category: 'Subscriptions',
+    amount: 12.31,
+  },
+];
+
+export const getCurrentMonthPath = () => {
+  const currentMonth = format(new Date(), 'yyyy-MM');
+  return `/expenses/${currentMonth}`;
 };

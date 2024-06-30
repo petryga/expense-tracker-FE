@@ -12,7 +12,7 @@ const AllTimeReportsPage: FC = () => {
   const { data } = useGetMonthlyDataQuery({});
 
   return (
-    <div>
+    <>
       <Tabs
         value={value}
         onChange={(_, newValue) => setValue(newValue)}
@@ -25,7 +25,7 @@ const AllTimeReportsPage: FC = () => {
 
       {value === 0 && <MonthlyExpenses data={data} />}
       {value === 1 && <WealthTracker data={data} />}
-    </div>
+    </>
   );
 };
 

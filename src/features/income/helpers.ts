@@ -14,11 +14,10 @@ const CATEGORIES = [
   IncomeCategories.CASH,
 ];
 
-export const getRecurringIncomeEntries = (): RecurringIncomeEntries[] => {
-  return CATEGORIES.map((category) => ({
+export const getRecurringIncomeEntries = (): RecurringIncomeEntries[] =>
+  CATEGORIES.map((category) => ({
     category,
     amount: 0,
     description: '',
     date: '',
   }));
-};

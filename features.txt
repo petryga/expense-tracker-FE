@@ -3,3 +3,4 @@ export
 fix add new row when filter is on
 fix invalidate tags between apis
 publish?
+add margin under expenses table
