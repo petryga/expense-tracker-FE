@@ -1,5 +1,5 @@
 import { DataGrid, GridRowId, GridRowModes, GridRowModesModel } from '@mui/x-data-grid';
-import { FC, createContext, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { EditToolbar } from '../../components/EditToolBar';
 import WarningModal from '../../components/warningModal/WarningModal';
 import { tableStyles } from '../expenses/styles';
@@ -15,20 +15,7 @@ import { v4 as uuidv4 } from 'uuid';
 import type { IncomeData } from '../../services/income/incomeApi.types';
 import { format } from 'date-fns';
 import { getRecurringIncomeEntries } from './helpers';
-import { useContext } from 'react';
-import styles from './IncomePage.module.css';
-
-const Context = createContext<{ totalSelected: number | null } | null>(null);
-
-const CustomFooter = () => {
-  const { totalSelected } = useContext(Context) || {};
-
-  return (
-    <div className={styles.footer}>
-      {totalSelected ? `Total Amount of Selected Entries - ${totalSelected?.toFixed(2)}$` : ''}
-    </div>
-  );
-};
+import { Context, CustomFooter } from './CustomFooter';
 
 const IncomePage: FC = () => {
   const { data: incomeData, isLoading, isFetching } = useGetIncomeEntriesQuery({});

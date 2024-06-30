@@ -4,7 +4,6 @@ export const tableStyles = {
   padding: '10px',
   border: 'solid 1px #9b9b9b',
   minHeight: '500px',
-
   '& .MuiDataGrid-cell': {
     fontSize: '0.875rem',
     borderRight: '0.5px solid #e0e0e0',
@@ -37,6 +36,9 @@ export const tableStyles = {
   },
   '& .MuiButton-text': {
     fontWeight: 'bold',
+  },
+  '& .MuiDataGrid-virtualScroller': {
+    overflow: 'hidden',
   },
 };
 

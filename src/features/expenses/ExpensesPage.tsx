@@ -2,17 +2,12 @@ import { FC, useEffect, useState } from 'react';
 import { withSidebar } from '../../components/sidebar/withSideBar';
 import { format, parseISO } from 'date-fns';
 import { useGetExpensesQuery } from '../../services/expenses/expensesApi';
-import { DataGridComponent } from './DataGrid';
-import { getDataByMonth } from './helpers';
+import { ExpensesDataGrid } from './ExpensesDataGrid';
+import { getCurrentMonthPath, getDataByMonth } from './helpers';
 import { Link, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import styles from './ExpensesPage.module.css';
 import classNames from 'classnames';
 import type { Data } from '../../services/expenses/expensesApi.types';
-
-const getCurrentMonthPath = () => {
-  const currentMonth = format(new Date(), 'yyyy-MM');
-  return `/expenses/${currentMonth}`;
-};
 
 const ExpensesPage: FC = () => {
   const { data: { data: allData } = {}, isLoading } = useGetExpensesQuery({});
@@ -50,9 +45,9 @@ const ExpensesPage: FC = () => {
 
       <Routes>
         <Route path="*" element={<Navigate to={getCurrentMonthPath()} />} />
-        {Object.keys(dataByMonth).map((_, index) => {
-          return <Route key={index} path=":yearMonth" element={<DataGridComponent />} />;
-        })}
+        {Object.keys(dataByMonth).map((_, index) => (
+          <Route key={index} path=":yearMonth" element={<ExpensesDataGrid />} />
+        ))}
       </Routes>
     </div>
   );

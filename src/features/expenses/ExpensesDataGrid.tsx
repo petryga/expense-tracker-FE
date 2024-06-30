@@ -1,6 +1,6 @@
 import { DataGrid, GridRowId, GridRowModesModel } from '@mui/x-data-grid';
 import { createTableColumns } from './columns';
-import { createContext, useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { EditToolbar } from '../../components/EditToolBar';
 import {
   useCreateExpenseMutation,
@@ -14,27 +14,10 @@ import { tableStyles } from './styles';
 import { useNavigate, useParams } from 'react-router-dom';
 import WarningModal from '../../components/warningModal/WarningModal';
 import { format } from 'date-fns';
-import styles from './ExpensesPage.module.css';
-import { getRecurringExpenses } from './helpers';
+import { recurringExpenses } from './helpers';
+import { Context, CustomFooter } from './CustomFooter';
 
-const Context = createContext<{
-  totalSelected: number | null;
-  expensesTotalAmount?: number;
-} | null>(null);
-
-const CustomFooter = () => {
-  const { totalSelected, expensesTotalAmount } = useContext(Context) || {};
-
-  return (
-    <div className={styles.footer}>
-      {totalSelected
-        ? `Total Amount of Selected Entries - ${totalSelected?.toFixed(2)}$`
-        : `Total Expenses This Month - ${expensesTotalAmount}$`}
-    </div>
-  );
-};
-
-export const DataGridComponent = () => {
+export const ExpensesDataGrid = () => {
   const { yearMonth } = useParams();
   const {
     data: { data: expenses, expensesTotal } = {},
@@ -146,7 +129,6 @@ export const DataGridComponent = () => {
   });
 
   const isExpensesLoading = isLoading || isFetching;
-  const recurringExpenses = getRecurringExpenses();
 
   const onAddRecurringButtonClick = async () => {
     const expensesArray: Data[] = [];
@@ -180,9 +162,7 @@ export const DataGridComponent = () => {
           editMode="row"
           processRowUpdate={handleRowUpdate}
           rowModesModel={rowModesModel}
-          onProcessRowUpdateError={(params) => {
-            return params.updatedRow;
-          }}
+          onProcessRowUpdateError={(params) => params.updatedRow}
           slots={{
             toolbar: EditToolbar,
             footer: CustomFooter,

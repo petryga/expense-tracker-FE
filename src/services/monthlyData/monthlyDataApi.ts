@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { getMonthlyDataByIdUrl, getMonthlyDataUrl } from './helpers';
-import { DeleteArgs, GetArgs, MonthlyData, PatchArgs, PostArgs } from './monthlyData.types';
+import { getMonthlyDataUrl } from './helpers';
+import { GetArgs, MonthlyData } from './monthlyData.types';
 import { normalizeGetMonthlyData } from './normalizers';
 
 export const monthlyDataApi = createApi({
@@ -14,9 +14,8 @@ export const monthlyDataApi = createApi({
         url: getMonthlyDataUrl(),
         method: 'GET',
       }),
-      transformResponse: (response: MonthlyData[], _, { type }) => {
-        return normalizeGetMonthlyData(response, type);
-      },
+      transformResponse: (response: MonthlyData[], _, { type }) =>
+        normalizeGetMonthlyData(response, type),
       providesTags: [{ type: 'MonthlyData', id: 'LIST' }],
     }),
   }),
