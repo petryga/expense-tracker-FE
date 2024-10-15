@@ -28,3 +28,7 @@ text {
 .tooltip ul li {
   margin: 5px 0;
 }
+
+.currency {
+  color: red;
+}

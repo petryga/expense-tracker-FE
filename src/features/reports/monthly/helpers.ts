@@ -22,18 +22,19 @@ const getColor = (index: number) => {
 
 export const getVisualizedData = (
   data?: Data[]
-): { dataByCategory: DataByCategory[]; totalSpent: number } => {
+): { dataByCategory: DataByCategory[]; totalSpentCad: number; totalSpentUsd: number } => {
   if (!data) {
-    return { dataByCategory: [], totalSpent: 0 };
+    return { dataByCategory: [], totalSpentCad: 0, totalSpentUsd: 0 };
   }
 
   const sumByCategory: Record<string, DataByCategory> = {};
-  let total = 0;
+  let totalCad = 0;
+  let totalUsd = 0;
 
   const filteredData = data.filter((entry) => entry.category !== 'Rent' && entry.amount > 0);
 
   filteredData.forEach((entry) => {
-    const { category, description, amount } = entry;
+    const { category, description, amount, currency } = entry;
     if (!sumByCategory[category]) {
       sumByCategory[category] = {
         category,
@@ -43,10 +44,16 @@ export const getVisualizedData = (
         budget: BUDGETS[category] || null,
       };
     }
-    sumByCategory[category].total += amount;
-    sumByCategory[category].details.push({ description, amount });
 
-    total += amount;
+    if (currency === 'CAD') {
+      totalCad += amount;
+      sumByCategory[category].total += amount;
+    } else if (currency === 'USD') {
+      totalUsd += amount;
+      sumByCategory[category].total += amount;
+    }
+
+    sumByCategory[category].details.push({ description, amount, currency });
   });
 
   for (const cat in sumByCategory) {
@@ -57,6 +64,7 @@ export const getVisualizedData = (
 
   return {
     dataByCategory: sortedByAmount,
-    totalSpent: parseFloat(total.toFixed(2)),
+    totalSpentCad: parseFloat(totalCad.toFixed(2)),
+    totalSpentUsd: parseFloat(totalUsd.toFixed(2)),
   };
 };

@@ -8,23 +8,28 @@ export type Data = {
   isNew?: boolean;
   year?: number;
   month?: number;
+  currency: string;
 };
 
 export interface GetExpensesData {
   data: Data[];
   expensesTotal: {
-    totalAmountThisMonth: number;
+    totalAmountThisMonthCad: number;
+    totalAmountThisMonthUsd: number;
     totalAmountAllTime: number;
-    totalAmountSearchResults?: number;
+    totalAmountSearchResultsCad?: number;
+    totalAmountSearchResultsUsd?: number;
   };
 }
 
 export type NewDataResponse = {
   data: DataResponse[];
   expensesTotal: {
-    totalAmountThisMonth: number;
+    totalAmountThisMonthCad: number;
+    totalAmountThisMonthUsd: number;
     totalAmountAllTime: number;
-    totalAmountSearchResults?: number;
+    totalAmountSearchResultsCad?: number;
+    totalAmountSearchResultsUsd?: number;
   };
 };
 
@@ -37,6 +42,7 @@ export type DataResponse = {
   amount: string;
   year: number;
   month: number;
+  currency: string;
 };
 
 export type GetArgs = {

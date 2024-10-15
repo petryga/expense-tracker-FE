@@ -7,7 +7,8 @@ export interface MonthlyData {
   id: string;
   yearMonth: string;
   type: MonthlyDataTypes;
-  amount: string;
+  amountCad: string;
+  amountUsd: string;
   isNew?: boolean;
 }
 

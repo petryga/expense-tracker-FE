@@ -16,7 +16,7 @@ import type { Data } from '../../../services/expenses/expensesApi.types';
 import { CustomBarShape, CustomTooltip } from './components';
 
 export const VisualizedData = ({ dataByMonth }: { dataByMonth: Data[] }) => {
-  const { dataByCategory, totalSpent } = useMemo(
+  const { dataByCategory, totalSpentCad, totalSpentUsd } = useMemo(
     () => getVisualizedData(dataByMonth),
     [dataByMonth]
   );
@@ -81,7 +81,10 @@ export const VisualizedData = ({ dataByMonth }: { dataByMonth: Data[] }) => {
       </BarChart>
 
       <div className={styles.summary}>
-        <h2>Total Spent Across All Categories (not including rent) - ${totalSpent}</h2>
+        <h2>
+          Total Spent Across All Categories (not including rent) - ${totalSpentCad} (CAD) / $
+          {totalSpentUsd} (USD)
+        </h2>
       </div>
     </div>
   );

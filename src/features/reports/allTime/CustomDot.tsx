@@ -1,5 +1,5 @@
-const formatAmount = (amount: number): string => {
-  return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+const formatAmount = (value: number): string => {
+  return value?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
 
 export const CustomDot = (props: any) => {

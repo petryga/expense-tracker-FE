@@ -13,6 +13,7 @@ export const normalizeGetMonthlyData = (data: MonthlyData[], type?: string) => {
     id: item.id,
     yearMonth: item.yearMonth,
     type: item.type,
-    amount: item.amount,
+    amountCad: item.amountCad,
+    amountUsd: item.amountUsd,
   }));
 };

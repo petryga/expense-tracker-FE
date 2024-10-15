@@ -1,4 +1,4 @@
-import { AccountType, CATEGORIES } from './helpers';
+import { AccountType, CATEGORIES, Currency } from './helpers';
 import { GridColDef, GridRowId, GridRowModes } from '@mui/x-data-grid';
 import { faTrash, faSave, faEdit, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
@@ -98,6 +98,7 @@ export function createTableColumns({
         AccountType.TD_SAVINGS,
         AccountType.AMEX,
         AccountType.ROGERS,
+        AccountType.BOFA,
         AccountType.CASH,
       ],
       editable: true,
@@ -123,6 +124,14 @@ export function createTableColumns({
         );
       },
       renderEditCell,
+    },
+    {
+      field: 'currency',
+      headerName: 'Cur',
+      width: 100,
+      type: 'singleSelect',
+      valueOptions: [Currency.CAD, Currency.USD],
+      editable: true,
     },
     {
       field: 'category',

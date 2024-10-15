@@ -5,6 +5,7 @@ export interface IncomeData {
   date: string;
   description: string;
   category: string;
+  currency: string;
 }
 
 export interface PostArgs {

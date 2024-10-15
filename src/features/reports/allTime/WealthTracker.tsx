@@ -19,9 +19,10 @@ export const WealthTracker = ({ data }: { data?: MonthlyData[] }) => {
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="yearMonth" />
-        <YAxis />
+        <YAxis domain={[0, 135000]} />
         <Tooltip />
-        <Line type="monotone" dataKey="amount" stroke="#8884d8" dot={<CustomDot />} />
+        <Line type="monotone" dataKey="amountCad" stroke="#8884d8" dot={<CustomDot />} />
+        <Line type="monotone" dataKey="amountUsd" stroke="red" dot={<CustomDot />} />
       </LineChart>
     </>
   );
