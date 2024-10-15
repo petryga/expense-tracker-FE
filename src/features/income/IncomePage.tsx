@@ -16,6 +16,7 @@ import type { IncomeData } from '../../services/income/incomeApi.types';
 import { format } from 'date-fns';
 import { getRecurringIncomeEntries } from './helpers';
 import { Context, CustomFooter } from './CustomFooter';
+import { Currency } from '../expenses/helpers';
 
 const IncomePage: FC = () => {
   const { data: incomeData, isLoading, isFetching } = useGetIncomeEntriesQuery({});
@@ -37,11 +38,11 @@ const IncomePage: FC = () => {
   useEffect(() => {
     if (selectedRows.length > 0) {
       const totalCad = selectedRows.reduce(
-        (acc, row) => (row.currency === 'CAD' ? acc + row.amount : acc),
+        (acc, row) => (row.currency === Currency.CAD ? acc + row.amount : acc),
         0
       );
       const totalUsd = selectedRows.reduce(
-        (acc, row) => (row.currency === 'USD' ? acc + row.amount : acc),
+        (acc, row) => (row.currency === Currency.USD ? acc + row.amount : acc),
         0
       );
       setTotalCad(totalCad);
@@ -122,7 +123,7 @@ const IncomePage: FC = () => {
         category: '',
         amount: 0,
         isNew: true,
-        currency: 'CAD',
+        currency: Currency.CAD,
       };
 
       return [newRow, ...oldRows];

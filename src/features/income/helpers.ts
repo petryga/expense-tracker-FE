@@ -1,3 +1,4 @@
+import { Currency } from '../expenses/helpers';
 import type { RecurringIncomeEntries } from './IncomePage.types';
 
 export enum IncomeCategories {
@@ -7,18 +8,42 @@ export enum IncomeCategories {
   CASH = 'cash',
 }
 
-const CATEGORIES = [
-  IncomeCategories.BANK_ACCOUNTS,
-  IncomeCategories.CRYPTO,
-  IncomeCategories.INVESTMENTS,
-  IncomeCategories.CASH,
-];
-
-export const getRecurringIncomeEntries = (): RecurringIncomeEntries[] =>
-  CATEGORIES.map((category) => ({
-    category,
-    amount: 0,
-    description: '',
-    date: '',
-    currency: '',
-  }));
+export const getRecurringIncomeEntries = (): RecurringIncomeEntries[] => {
+  return [
+    {
+      category: IncomeCategories.BANK_ACCOUNTS,
+      amount: 0,
+      description: '',
+      date: '',
+      currency: '',
+    },
+    {
+      category: IncomeCategories.CRYPTO,
+      amount: 0,
+      description: '',
+      date: '',
+      currency: '',
+    },
+    {
+      category: IncomeCategories.INVESTMENTS,
+      amount: 0,
+      description: '',
+      date: '',
+      currency: '',
+    },
+    {
+      category: IncomeCategories.CASH,
+      amount: 0,
+      description: '',
+      date: '',
+      currency: Currency.CAD,
+    },
+    {
+      category: IncomeCategories.CASH,
+      amount: 0,
+      description: '',
+      date: '',
+      currency: Currency.USD,
+    },
+  ];
+};

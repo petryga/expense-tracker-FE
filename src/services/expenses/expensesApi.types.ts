@@ -1,3 +1,5 @@
+import type { Currency } from '../../features/expenses/helpers';
+
 export type Data = {
   id?: string;
   datePosted: string;
@@ -8,7 +10,7 @@ export type Data = {
   isNew?: boolean;
   year?: number;
   month?: number;
-  currency: string;
+  currency: Currency | '';
 };
 
 export interface GetExpensesData {
@@ -42,7 +44,7 @@ export type DataResponse = {
   amount: string;
   year: number;
   month: number;
-  currency: string;
+  currency: Currency | '';
 };
 
 export type GetArgs = {
