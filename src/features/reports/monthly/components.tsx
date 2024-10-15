@@ -1,4 +1,5 @@
 import { DataByCategory } from '../../expenses/ExpensesPage.types';
+import { Currency } from '../../expenses/helpers';
 import styles from './MonthlyReportsPage.module.css';
 
 export const CustomTooltip = ({
@@ -18,7 +19,7 @@ export const CustomTooltip = ({
           {data.details.map(({ description, amount, currency }, index) => (
             <li key={index}>
               {description} - ${amount.toFixed(2)}{' '}
-              {currency === 'USD' && <span className={styles.currency}>{currency}</span>}
+              {currency === Currency.USD && <span className={styles.currency}>{currency}</span>}
             </li>
           ))}
         </ul>

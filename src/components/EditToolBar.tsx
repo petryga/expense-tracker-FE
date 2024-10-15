@@ -7,6 +7,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { format, getDate, parseISO } from 'date-fns';
 import { Data } from '../services/expenses/expensesApi.types';
+import { Currency } from '../features/expenses/helpers';
 
 const styles = {
   ':hover': {
@@ -49,7 +50,7 @@ export function EditToolbar({
         category: '',
         amount: 0,
         isNew: true,
-        currency: 'CAD',
+        currency:   Currency.CAD
       };
 
       return [newRow, ...oldRows];

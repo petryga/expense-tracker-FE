@@ -1,6 +1,6 @@
 import { Data } from '../../../services/expenses/expensesApi.types';
 import { DataByCategory } from '../../expenses/ExpensesPage.types';
-import { BUDGETS } from '../../expenses/helpers';
+import { BUDGETS, Currency } from '../../expenses/helpers';
 
 const colors = [
   '#8884d8',
@@ -45,10 +45,10 @@ export const getVisualizedData = (
       };
     }
 
-    if (currency === 'CAD') {
+    if (currency === Currency.CAD) {
       totalCad += amount;
       sumByCategory[category].total += amount;
-    } else if (currency === 'USD') {
+    } else if (currency === Currency.USD) {
       totalUsd += amount;
       sumByCategory[category].total += amount;
     }

@@ -14,7 +14,7 @@ import { tableStyles } from './styles';
 import { useNavigate, useParams } from 'react-router-dom';
 import WarningModal from '../../components/warningModal/WarningModal';
 import { format } from 'date-fns';
-import { recurringExpenses } from './helpers';
+import { Currency, recurringExpenses } from './helpers';
 import { Context, CustomFooter } from './CustomFooter';
 import ConfirmationModal from './ConfirmationModal';
 
@@ -39,11 +39,11 @@ export const ExpensesDataGrid = () => {
   useEffect(() => {
     if (selectedRows.length > 0) {
       const totalCad = selectedRows.reduce(
-        (acc, row) => (row.currency === 'CAD' ? acc + row.amount : acc),
+        (acc, row) => (row.currency === Currency.CAD ? acc + row.amount : acc),
         0
       );
       const totalUsd = selectedRows.reduce(
-        (acc, row) => (row.currency === 'USD' ? acc + row.amount : acc),
+        (acc, row) => (row.currency === Currency.USD ? acc + row.amount : acc),
         0
       );
       setTotalCad(totalCad);

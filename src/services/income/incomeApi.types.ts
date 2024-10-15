@@ -1,3 +1,5 @@
+import type { Currency } from '../../features/expenses/helpers';
+
 export interface IncomeData {
   id?: string;
   isNew?: boolean;
@@ -5,7 +7,7 @@ export interface IncomeData {
   date: string;
   description: string;
   category: string;
-  currency: string;
+  currency: Currency | '';
 }
 
 export interface PostArgs {

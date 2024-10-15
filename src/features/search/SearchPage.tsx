@@ -8,6 +8,7 @@ import { createSearchColumns } from '../expenses/columns';
 import type { Data } from '../../services/expenses/expensesApi.types';
 
 import styles from './SearchPage.module.css';
+import { Currency } from '../expenses/helpers';
 
 const Context = createContext<{
   totalSelectedCad: number | null;
@@ -63,11 +64,11 @@ const SearchPage: FC = () => {
   useEffect(() => {
     if (selectedRows.length > 0) {
       const totalCad = selectedRows.reduce(
-        (acc, row) => (row.currency === 'CAD' ? acc + row.amount : acc),
+        (acc, row) => (row.currency === Currency.CAD ? acc + row.amount : acc),
         0
       );
       const totalUsd = selectedRows.reduce(
-        (acc, row) => (row.currency === 'USD' ? acc + row.amount : acc),
+        (acc, row) => (row.currency === Currency.USD ? acc + row.amount : acc),
         0
       );
       setTotalCad(totalCad);
