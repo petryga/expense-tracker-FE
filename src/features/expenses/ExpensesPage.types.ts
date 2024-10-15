@@ -18,7 +18,7 @@ export type DataByCategory = {
   category: string;
   total: number;
   fill?: string;
-  details: { description: string; amount: number }[];
+  details: { description: string; amount: number; currency: string }[];
   budget: number | null;
 };
 

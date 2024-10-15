@@ -1,13 +1,12 @@
-import { GetExpensesData, NewDataResponse } from "./expensesApi.types";
+import { GetExpensesData, NewDataResponse } from './expensesApi.types';
 
-export const normalizeGetAllExpensesData = (
-  data: NewDataResponse
-): GetExpensesData => {
+export const normalizeGetAllExpensesData = (data: NewDataResponse): GetExpensesData => {
   if (!data) {
     return {
       data: [],
       expensesTotal: {
-        totalAmountThisMonth: 0,
+        totalAmountThisMonthCad: 0,
+        totalAmountThisMonthUsd: 0,
         totalAmountAllTime: 0,
       },
     };
@@ -22,22 +21,23 @@ export const normalizeGetAllExpensesData = (
   return {
     data: expenseData,
     expensesTotal: {
-      totalAmountThisMonth: data.expensesTotal.totalAmountThisMonth || 0,
+      totalAmountThisMonthCad: data.expensesTotal.totalAmountThisMonthCad || 0,
+      totalAmountThisMonthUsd: data.expensesTotal.totalAmountThisMonthUsd || 0,
       totalAmountAllTime: data.expensesTotal.totalAmountAllTime || 0,
     },
   };
 };
 
-export const normalizeGetAllSearchedData = (
-  data: NewDataResponse
-): GetExpensesData => {
+export const normalizeGetAllSearchedData = (data: NewDataResponse): GetExpensesData => {
   if (!data.data) {
     return {
       data: [],
       expensesTotal: {
-        totalAmountThisMonth: 0,
+        totalAmountThisMonthCad: 0,
+        totalAmountThisMonthUsd: 0,
         totalAmountAllTime: 0,
-        totalAmountSearchResults: 0,
+        totalAmountSearchResultsCad: 0,
+        totalAmountSearchResultsUsd: 0,
       },
     };
   }
@@ -52,9 +52,10 @@ export const normalizeGetAllSearchedData = (
   return {
     data: expenseData,
     expensesTotal: {
-      totalAmountSearchResults:
-        data.expensesTotal.totalAmountSearchResults || 0,
-      totalAmountThisMonth: 0,
+      totalAmountSearchResultsCad: data.expensesTotal.totalAmountSearchResultsCad || 0,
+      totalAmountSearchResultsUsd: data.expensesTotal.totalAmountSearchResultsUsd || 0,
+      totalAmountThisMonthCad: 0,
+      totalAmountThisMonthUsd: 0,
       totalAmountAllTime: 0,
     },
   };

@@ -31,14 +31,24 @@ const IncomePage: FC = () => {
   const [entryId, setEntryId] = useState<string | null>(null);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const [selectedRows, setSelectedRows] = useState<IncomeData[]>([]);
-  const [total, setTotal] = useState<number | null>(null);
+  const [totalCad, setTotalCad] = useState<number | null>(null);
+  const [totalUsd, setTotalUsd] = useState<number | null>(null);
 
   useEffect(() => {
     if (selectedRows.length > 0) {
-      const total = selectedRows.reduce((acc, row) => acc + row.amount, 0);
-      setTotal(total);
+      const totalCad = selectedRows.reduce(
+        (acc, row) => (row.currency === 'CAD' ? acc + row.amount : acc),
+        0
+      );
+      const totalUsd = selectedRows.reduce(
+        (acc, row) => (row.currency === 'USD' ? acc + row.amount : acc),
+        0
+      );
+      setTotalCad(totalCad);
+      setTotalUsd(totalUsd);
     } else {
-      setTotal(null);
+      setTotalCad(null);
+      setTotalUsd(null);
     }
   }, [selectedRows]);
 
@@ -112,6 +122,7 @@ const IncomePage: FC = () => {
         category: '',
         amount: 0,
         isNew: true,
+        currency: 'CAD',
       };
 
       return [newRow, ...oldRows];
@@ -146,7 +157,7 @@ const IncomePage: FC = () => {
 
   return (
     <>
-      <Context.Provider value={{ totalSelected: total }}>
+      <Context.Provider value={{ totalSelectedCad: totalCad, totalSelectedUsd: totalUsd }}>
         <h1>Assets</h1>
         <DataGrid
           rows={isExpensesLoading ? [] : rows}

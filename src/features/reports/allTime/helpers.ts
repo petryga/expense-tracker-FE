@@ -5,7 +5,8 @@ import type {
 
 interface MonthlyExpense {
   yearMonth: string;
-  amount: string;
+  amountCad: string;
+  amountUsd: string;
 }
 
 export const groupMonthlyData = (
@@ -17,16 +18,22 @@ export const groupMonthlyData = (
   const currentYear = new Date().getFullYear();
 
   return expenses.reduce((acc: Record<string, MonthlyExpense>, expense: MonthlyData) => {
-    const { yearMonth, amount, type: expenseType } = expense;
+    const { yearMonth, amountCad, amountUsd, type: expenseType } = expense;
     const year = parseInt(yearMonth.split('-')[0]);
 
-    const parsedAmount = parseFloat(amount).toFixed(2);
+    const parsedAmountCad = parseFloat(amountCad).toFixed(2);
+    const parsedAmountUsd = parseFloat(amountUsd).toFixed(2);
 
-    if (year === currentYear && expenseType === type && parseFloat(amount) > 0) {
+    if (
+      year === currentYear &&
+      expenseType === type &&
+      (parseFloat(amountCad) > 0 || parseFloat(amountUsd) > 0)
+    ) {
       if (!acc[yearMonth]) {
-        acc[yearMonth] = { yearMonth, amount: '' };
+        acc[yearMonth] = { yearMonth, amountCad: '', amountUsd: '' };
       }
-      acc[yearMonth].amount += parsedAmount;
+      acc[yearMonth].amountCad += parsedAmountCad;
+      acc[yearMonth].amountUsd += parsedAmountUsd;
     }
 
     return acc;

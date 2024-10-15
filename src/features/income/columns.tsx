@@ -9,6 +9,7 @@ import styles from '../expenses/ExpensesPage.module.css';
 import { IncomeCategories } from './helpers';
 import { renderEditCell } from '../../components/amountTableCell/AmountTableCell';
 import Checkbox from '@mui/material/Checkbox';
+import { Currency } from '../expenses/helpers';
 
 export function createTableColumns({
   rowModesModel,
@@ -94,6 +95,14 @@ export function createTableColumns({
       editable: true,
       renderCell: (params) => `$${params.value}`,
       renderEditCell,
+    },
+    {
+      field: 'currency',
+      headerName: 'Cur',
+      width: 100,
+      type: 'singleSelect',
+      valueOptions: [Currency.CAD, Currency.USD],
+      editable: true,
     },
     {
       field: 'actions',

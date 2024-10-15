@@ -20,4 +20,5 @@ export const getRecurringIncomeEntries = (): RecurringIncomeEntries[] =>
     amount: 0,
     description: '',
     date: '',
+    currency: '',
   }));

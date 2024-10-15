@@ -8,6 +8,7 @@ import { CustomDot } from './CustomDot';
 
 export const MonthlyExpenses = ({ data }: { data?: MonthlyData[] }) => {
   const monthlyExpenses = Object.values(groupMonthlyData(MonthlyDataTypes.Expense, data));
+
   if (!monthlyExpenses.length) return <div> No data </div>;
 
   return (
@@ -23,7 +24,8 @@ export const MonthlyExpenses = ({ data }: { data?: MonthlyData[] }) => {
         <XAxis dataKey="yearMonth" />
         <YAxis />
         <Tooltip />
-        <Line type="monotone" dataKey="amount" stroke="#8884d8" dot={<CustomDot />} />
+        <Line type="monotone" dataKey="amountCad" stroke="#8884d8" dot={<CustomDot />} />
+        <Line type="monotone" dataKey="amountUsd" stroke="red" dot={<CustomDot />} />
       </LineChart>
     </>
   );

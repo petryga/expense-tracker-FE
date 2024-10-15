@@ -7,7 +7,13 @@ export enum AccountType {
   TD_SAVINGS = 'TD Savings',
   AMEX = 'Amex',
   ROGERS = 'Rogers',
+  BOFA = 'BOFA',
   CASH = 'Cash',
+}
+
+export enum Currency {
+  CAD = 'CAD',
+  USD = 'USD',
 }
 
 export const BUDGETS: Record<string, number> = {
@@ -143,6 +149,7 @@ export const recurringExpenses: RecurringExpense[] = [
     account: AccountType.TD_CREDIT,
     description: 'Mobile Phone',
     category: 'Mobile Phone',
+    currency: Currency.CAD,
     amount: 38.42,
   },
   {
@@ -151,6 +158,7 @@ export const recurringExpenses: RecurringExpense[] = [
     description: 'Amex Fee',
     category: 'Financial Fees',
     amount: 12.99,
+    currency: Currency.CAD,
   },
   {
     dayPosted: '28',
@@ -158,12 +166,14 @@ export const recurringExpenses: RecurringExpense[] = [
     description: 'Chat GPT Subscription',
     category: 'Subscriptions',
     amount: 30,
+    currency: Currency.CAD,
   },
   {
     dayPosted: '14',
     account: AccountType.AMEX,
     description: 'Spotify Subscription',
     category: 'Subscriptions',
+    currency: Currency.CAD,
     amount: 12.31,
   },
 ];

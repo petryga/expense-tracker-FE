@@ -10,17 +10,26 @@ import type { Data } from '../../services/expenses/expensesApi.types';
 import styles from './SearchPage.module.css';
 
 const Context = createContext<{
-  totalSelected: number | null;
-  totalAmountSearchResults?: number;
+  totalSelectedCad: number | null;
+  totalSelectedUsd?: number | null;
+  totalAmountSearchResultsCad?: number;
+  totalAmountSearchResultsUsd?: number;
 } | null>(null);
 
 const CustomFooter = () => {
-  const { totalSelected, totalAmountSearchResults } = useContext(Context) || {};
+  const {
+    totalSelectedCad,
+    totalSelectedUsd,
+    totalAmountSearchResultsCad,
+    totalAmountSearchResultsUsd,
+  } = useContext(Context) || {};
   return (
     <div className={styles.footer}>
-      {totalSelected
-        ? `Total Amount of Selected Entries - ${totalSelected?.toFixed(2)}$`
-        : `Total Amount for these Results - ${totalAmountSearchResults}$`}
+      {totalSelectedCad || totalSelectedUsd
+        ? `Total Amount of Selected Entries - ${totalSelectedCad?.toFixed(
+            2
+          )}$ (CAD) / ${totalSelectedUsd?.toFixed(2)}$ (USD)`
+        : `Total Amount for these Results - ${totalAmountSearchResultsCad}$ (CAD) / ${totalAmountSearchResultsUsd}$ (USD)`}
     </div>
   );
 };
@@ -28,7 +37,8 @@ const CustomFooter = () => {
 const SearchPage: FC = () => {
   const [debouncedValue, setDebouncedValue] = useState('');
   const [selectedRows, setSelectedRows] = useState<Data[]>([]);
-  const [total, setTotal] = useState<number | null>(null);
+  const [totalCad, setTotalCad] = useState<number | null>(null);
+  const [totalUsd, setTotalUsd] = useState<number | null>(null);
   const [rows, setRows] = useState<Data[]>([]);
   const {
     data: { data, expensesTotal } = {},
@@ -52,10 +62,19 @@ const SearchPage: FC = () => {
 
   useEffect(() => {
     if (selectedRows.length > 0) {
-      const total = selectedRows.reduce((acc, row) => acc + row.amount, 0);
-      setTotal(total);
+      const totalCad = selectedRows.reduce(
+        (acc, row) => (row.currency === 'CAD' ? acc + row.amount : acc),
+        0
+      );
+      const totalUsd = selectedRows.reduce(
+        (acc, row) => (row.currency === 'USD' ? acc + row.amount : acc),
+        0
+      );
+      setTotalCad(totalCad);
+      setTotalUsd(totalUsd);
     } else {
-      setTotal(null);
+      setTotalCad(null);
+      setTotalUsd(null);
     }
   }, [debouncedValue, selectedRows]);
 
@@ -80,8 +99,10 @@ const SearchPage: FC = () => {
       {(isFetching || isLoading) && <div>Loading...</div>}
       <Context.Provider
         value={{
-          totalSelected: total,
-          totalAmountSearchResults: expensesTotal?.totalAmountSearchResults,
+          totalSelectedCad: totalCad,
+          totalSelectedUsd: totalUsd,
+          totalAmountSearchResultsCad: expensesTotal?.totalAmountSearchResultsCad,
+          totalAmountSearchResultsUsd: expensesTotal?.totalAmountSearchResultsUsd,
         }}
       >
         <DataGrid

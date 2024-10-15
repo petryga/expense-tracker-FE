@@ -31,16 +31,26 @@ export const ExpensesDataGrid = () => {
   const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
   const [entryId, setEntryId] = useState<string | null>(null);
   const navigate = useNavigate();
-  const [total, setTotal] = useState<number | null>(null);
+  const [totalCad, setTotalCad] = useState<number | null>(null);
+  const [totalUsd, setTotalUsd] = useState<number | null>(null);
   const [selectedRows, setSelectedRows] = useState<Data[]>([]);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
 
   useEffect(() => {
     if (selectedRows.length > 0) {
-      const total = selectedRows.reduce((acc, row) => acc + row.amount, 0);
-      setTotal(total);
+      const totalCad = selectedRows.reduce(
+        (acc, row) => (row.currency === 'CAD' ? acc + row.amount : acc),
+        0
+      );
+      const totalUsd = selectedRows.reduce(
+        (acc, row) => (row.currency === 'USD' ? acc + row.amount : acc),
+        0
+      );
+      setTotalCad(totalCad);
+      setTotalUsd(totalUsd);
     } else {
-      setTotal(null);
+      setTotalCad(null);
+      setTotalUsd(null);
     }
   }, [selectedRows]);
 
@@ -169,8 +179,10 @@ export const ExpensesDataGrid = () => {
     <>
       <Context.Provider
         value={{
-          totalSelected: total,
-          expensesTotalAmount: expensesTotal?.totalAmountThisMonth,
+          totalSelectedCad: totalCad,
+          totalSelectedUsd: totalUsd,
+          expensesTotalAmountCad: expensesTotal?.totalAmountThisMonthCad,
+          expensesTotalAmountUsd: expensesTotal?.totalAmountThisMonthUsd,
         }}
       >
         <DataGrid
