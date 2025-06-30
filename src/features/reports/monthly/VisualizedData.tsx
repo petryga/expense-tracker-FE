@@ -82,8 +82,7 @@ export const VisualizedData = ({ dataByMonth }: { dataByMonth: Data[] }) => {
 
       <div className={styles.summary}>
         <h2>
-          Total Spent Across All Categories (not including rent) - ${totalSpentCad} (CAD) / $
-          {totalSpentUsd} (USD)
+          Total Spent Across All Categories - ${totalSpentCad} (CAD) / ${totalSpentUsd} (USD)
         </h2>
       </div>
     </div>

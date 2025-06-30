@@ -1,9 +1,6 @@
-csv import
 fix add new row when filter is on
 fix invalidate tags between apis
 publish?
-add margin under expenses table
 sort exports by date
 
-autopopulate currency dependian on account
- 
+wealth tracker - compare dates and see % of growth

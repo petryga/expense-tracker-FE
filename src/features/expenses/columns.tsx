@@ -1,4 +1,4 @@
-import { AccountType, CATEGORIES, Currency } from './helpers';
+import { accountCurrencyMap, AccountType, CATEGORIES, Currency, paymentOptions } from './helpers';
 import { GridColDef, GridRowId, GridRowModes } from '@mui/x-data-grid';
 import { faTrash, faSave, faEdit, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
@@ -91,18 +91,28 @@ export function createTableColumns({
     {
       field: 'account',
       headerName: 'Account',
-      width: 100,
+      width: 110,
       type: 'singleSelect',
-      valueOptions: [
-        AccountType.TD_CREDIT,
-        AccountType.TD_SAVINGS,
-        AccountType.AMEX,
-        AccountType.ROGERS,
-        AccountType.BOFA,
-        AccountType.CASH,
-      ],
+      valueOptions: paymentOptions,
       editable: true,
+
+      preProcessEditCellProps: (params) => {
+        if (params.row.isNew) {
+          const newCurrency = accountCurrencyMap[params.props.value as AccountType] || Currency.CAD;
+
+          setRows((prevRows) =>
+            prevRows.map((row) =>
+              row.id === params.row.id
+                ? { ...row, currency: newCurrency, account: params.props.value }
+                : row
+            )
+          );
+        }
+
+        return { ...params.props, value: params.props.value };
+      },
     },
+
     {
       field: 'description',
       headerName: 'Description',
@@ -131,7 +141,7 @@ export function createTableColumns({
       width: 100,
       type: 'singleSelect',
       valueOptions: [Currency.CAD, Currency.USD],
-      editable: true,
+      editable: false,
     },
     {
       field: 'category',
@@ -162,7 +172,24 @@ export function createTableColumns({
 
       getActions: (params) => {
         const { id } = params.row;
+
         const isInEditMode = rowModesModel[id]?.mode === 'edit';
+        const isNewRow = params.row.isNew;
+
+        if (isNewRow) {
+          return [
+            <GridActionsCellItem
+              icon={<FontAwesomeIcon icon={faSave as IconProp} className={styles.icon} />}
+              label="Save"
+              onClick={handleSaveClick(id)}
+            />,
+            <GridActionsCellItem
+              icon={<FontAwesomeIcon icon={faTimes as IconProp} className={styles.icon} />}
+              label="Cancel"
+              onClick={handleCancelClick(id)}
+            />,
+          ];
+        }
 
         if (isInEditMode) {
           return [
@@ -239,7 +266,7 @@ export function createSearchColumns({
       headerName: 'Account',
       width: 100,
       type: 'singleSelect',
-      valueOptions: ['TD Credit', 'TD Savings', 'Amex', 'Rogers', 'Cash'],
+      valueOptions: paymentOptions,
       editable: false,
     },
     {

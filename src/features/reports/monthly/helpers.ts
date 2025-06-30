@@ -31,7 +31,7 @@ export const getVisualizedData = (
   let totalCad = 0;
   let totalUsd = 0;
 
-  const filteredData = data.filter((entry) => entry.category !== 'Rent' && entry.amount > 0);
+  const filteredData = data.filter((entry) => entry.amount > 0);
 
   filteredData.forEach((entry) => {
     const { category, description, amount, currency } = entry;

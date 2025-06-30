@@ -1,8 +1,15 @@
-import { DataGrid, GridRowId, GridRowModesModel } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  FooterPropsOverrides,
+  GridFilterModel,
+  GridRowId,
+  GridRowModesModel,
+} from '@mui/x-data-grid';
 import { createTableColumns } from './columns';
 import { useEffect, useState } from 'react';
 import { EditToolbar } from '../../components/EditToolBar';
 import {
+  handleDownloadExpenses,
   useCreateExpenseMutation,
   useDeleteExpenseMutation,
   useDeleteExpensesMutation,
@@ -25,7 +32,7 @@ export const ExpensesDataGrid = () => {
     isLoading,
     isFetching,
   } = useGetExpensesQuery({ yearMonth });
-
+  const [filterModel, setFilterModel] = useState<GridFilterModel>({ items: [] });
   const [rows, setRows] = useState<Data[]>([]);
   const [openModal, setOpenModal] = useState(false);
   const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
@@ -160,21 +167,6 @@ export const ExpensesDataGrid = () => {
     await createExpense({ data: expensesArray }).unwrap();
   };
 
-  const handleDownloadExpenses = async () => {
-    try {
-      const response = await fetch('http://localhost:3000/export');
-      const blob = await response.blob();
-      const downloadUrl = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = downloadUrl;
-      link.setAttribute('download', 'expenses.csv');
-      document.body.appendChild(link);
-      link.click();
-      link.parentNode?.removeChild(link);
-    } catch (error) {
-      console.error('Error downloading the file:', error);
-    }
-  };
   return (
     <>
       <Context.Provider
@@ -197,12 +189,23 @@ export const ExpensesDataGrid = () => {
             footer: CustomFooter,
           }}
           slotProps={{
-            toolbar: { setRows, setRowModesModel, onAddRecurringButtonClick },
-            footer: { setOpenConfirmationModal } as any,
+            toolbar: {
+              setRows,
+              setRowModesModel,
+              onAddRecurringButtonClick,
+              filterModel,
+            },
+            footer: {
+              setOpenConfirmationModal,
+              filterModel,
+              setFilterModel,
+            } as FooterPropsOverrides,
           }}
           sx={tableStyles}
           hideFooterPagination
           hideFooterSelectedRowCount
+          autoHeight
+          onFilterModelChange={(newModel) => setFilterModel(newModel)}
         />
       </Context.Provider>
 

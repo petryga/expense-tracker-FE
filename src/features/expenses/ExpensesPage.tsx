@@ -1,57 +1,77 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 import { withSidebar } from '../../components/sidebar/withSideBar';
 import { format, parseISO } from 'date-fns';
 import { useGetExpensesQuery } from '../../services/expenses/expensesApi';
 import { ExpensesDataGrid } from './ExpensesDataGrid';
-import { getCurrentMonthPath, getDataByMonth } from './helpers';
-import { Link, Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { getCurrentMonthPath, processExpensesData } from './helpers';
+import { Link as ButtonLink, Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { Button } from '@mui/material';
+import classnames from 'classnames';
 import styles from './ExpensesPage.module.css';
-import classNames from 'classnames';
-import type { Data } from '../../services/expenses/expensesApi.types';
 
 const ExpensesPage: FC = () => {
   const { data: { data: allData } = {}, isLoading } = useGetExpensesQuery({});
-  const [rows, setRows] = useState<Data[]>([]);
-
-  useEffect(() => {
-    if (allData) {
-      setRows(allData);
-    }
-  }, [allData]);
-
-  const dataByMonth = getDataByMonth(rows);
+  const currentYear = new Date().getFullYear().toString();
+  const [selectedYear, setSelectedYear] = useState<string | null>(currentYear);
   const location = useLocation();
+
+  const dataByYear = useMemo(() => {
+    return processExpensesData(allData);
+  }, [allData]);
 
   if (isLoading) return <></>;
 
   return (
-    <div>
-      {Object.keys(dataByMonth).map((month, index) => {
-        const path = `/expenses/${month}`;
-        const isActive = location.pathname.includes(path);
+    <>
+      <div className={styles.yearContainer}>
+        {Object.keys(dataByYear)
+          .sort((a, b) => parseInt(b) - parseInt(a))
+          .map((year) => {
+            const isActive = selectedYear === year;
+            const isNothingSelected = selectedYear === null;
 
-        return (
-          <Link
-            key={index}
-            to={path}
-            className={classNames(styles.monthLink, {
-              [styles.active]: isActive,
-            })}
-          >
-            {format(parseISO(month + '-01'), 'MMMM yyyy')}
-          </Link>
-        );
-      })}
+            return (
+              <div key={year}>
+                <Button
+                  className={classnames(styles.year, {
+                    [styles.inactive]: !isNothingSelected && !isActive,
+                  })}
+                  onClick={() => setSelectedYear((prevYear) => (prevYear === year ? null : year))}
+                >
+                  {year}
+                </Button>
+
+                {selectedYear === year && (
+                  <>
+                    {Object.keys(dataByYear[year])
+                      .sort((a, b) => parseInt(b) - parseInt(a))
+                      .map((month) => {
+                        const yearMonth = `${year}-${month}`;
+                        const path = `/expenses/${yearMonth}`;
+                        const isActive = location.pathname.includes(path);
+                        return (
+                          <ButtonLink
+                            key={month}
+                            to={path}
+                            className={`${styles.monthLink} ${isActive ? styles.active : ''}`}
+                          >
+                            {format(parseISO(`${year}-${month}-01`), 'MMMM')}
+                          </ButtonLink>
+                        );
+                      })}
+                  </>
+                )}
+              </div>
+            );
+          })}
+      </div>
 
       <Routes>
         <Route path="*" element={<Navigate to={getCurrentMonthPath()} />} />
-        {Object.keys(dataByMonth).map((_, index) => (
-          <Route key={index} path=":yearMonth" element={<ExpensesDataGrid />} />
-        ))}
+        <Route path=":yearMonth" element={<ExpensesDataGrid />} />
       </Routes>
-    </div>
+    </>
   );
 };
-
 const ExpensesPageWithSideBar = withSidebar()(ExpensesPage);
 export default ExpensesPageWithSideBar;

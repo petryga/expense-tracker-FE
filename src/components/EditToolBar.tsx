@@ -7,7 +7,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { format, getDate, parseISO } from 'date-fns';
 import { Data } from '../services/expenses/expensesApi.types';
-import { Currency } from '../features/expenses/helpers';
+import { AccountType, Currency } from '../features/expenses/helpers';
 
 const styles = {
   ':hover': {
@@ -21,6 +21,7 @@ export function EditToolbar({
   setRowModesModel,
   onAddButtonClick,
   onAddRecurringButtonClick,
+  filterModel,
 }: EditToolbarProps) {
   const handleAddEntry = () => {
     if (onAddButtonClick) {
@@ -45,12 +46,12 @@ export function EditToolbar({
       const newRow: Data = {
         id,
         datePosted,
-        account: '',
+        account: AccountType.ROGERS,
         description: '',
         category: '',
         amount: 0,
         isNew: true,
-        currency:   Currency.CAD
+        currency: Currency.CAD,
       };
 
       return [newRow, ...oldRows];
@@ -69,6 +70,7 @@ export function EditToolbar({
       return onAddRecurringButtonClick();
     }
   };
+  const buttonDisabled = filterModel?.items.length > 0 || false;
 
   return (
     <GridToolbarContainer style={{ justifyContent: 'space-between' }}>
@@ -76,6 +78,7 @@ export function EditToolbar({
         startIcon={<FontAwesomeIcon className="plusIcon" icon={faPlus as IconProp} />}
         onClick={handleAddEntry}
         sx={styles}
+        disabled={buttonDisabled}
       >
         Add entry
       </Button>
@@ -84,6 +87,7 @@ export function EditToolbar({
         startIcon={<FontAwesomeIcon className="plusIcon" icon={faPlus as IconProp} />}
         onClick={handleAddRecurring}
         sx={styles}
+        disabled={buttonDisabled}
       >
         Add recurring
       </Button>

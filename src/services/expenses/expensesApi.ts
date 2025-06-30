@@ -88,3 +88,19 @@ export const {
   useDeleteExpenseMutation,
   useDeleteExpensesMutation,
 } = expensesApi;
+
+export const handleDownloadExpenses = async () => {
+  try {
+    const response = await fetch('http://localhost:3000/export');
+    const blob = await response.blob();
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.setAttribute('download', 'expenses.csv');
+    document.body.appendChild(link);
+    link.click();
+    link.parentNode?.removeChild(link);
+  } catch (error) {
+    console.error('Error downloading the file:', error);
+  }
+};

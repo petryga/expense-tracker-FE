@@ -14,7 +14,7 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import type { IncomeData } from '../../services/income/incomeApi.types';
 import { format } from 'date-fns';
-import { getRecurringIncomeEntries } from './helpers';
+import { getRecurringIncomeEntries, getRowClassName } from './helpers';
 import { Context, CustomFooter } from './CustomFooter';
 import { Currency } from '../expenses/helpers';
 
@@ -166,9 +166,7 @@ const IncomePage: FC = () => {
           editMode="row"
           processRowUpdate={handleRowUpdate}
           rowModesModel={rowModesModel}
-          onProcessRowUpdateError={(params) => {
-            return params.updatedRow;
-          }}
+          onProcessRowUpdateError={(params) => params.updatedRow}
           slots={{
             toolbar: EditToolbar,
             footer: CustomFooter,
@@ -181,9 +179,12 @@ const IncomePage: FC = () => {
               onAddRecurringButtonClick,
             },
           }}
+          autoHeight
+          getRowHeight={() => 'auto'}
           sx={tableStyles}
           hideFooterPagination
           hideFooterSelectedRowCount
+          getRowClassName={(params) => getRowClassName(params, rows)}
         />
       </Context.Provider>
       <WarningModal open={openModal} setOpen={setOpenModal} onDelete={handleDeleteRow} />
