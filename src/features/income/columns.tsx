@@ -68,12 +68,6 @@ export function createTableColumns({
       type: 'date',
       valueFormatter: (params) => formatDate(params),
     },
-    // {
-    //   field: 'description',
-    //   headerName: 'Description',
-    //   width: 300,
-    //   editable: true,
-    // },
     {
       field: 'category',
       headerName: 'Category',

@@ -1,9 +1,15 @@
+interface CustomDotProps {
+  cx?: number;
+  cy?: number;
+  value?: number;
+}
+
 const formatAmount = (value: number): string => {
   return value?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
 
-export const CustomDot = (props: any) => {
-  const { cx, cy, value } = props as { cx: number; cy: number; value: number };
+export const CustomDot = ({ cx, cy, value }: CustomDotProps) => {
+  if (!cx || !cy || !value) return null;
 
   const textValue = `$${formatAmount(value)}`;
   const textWidth = textValue.length * 8.5;

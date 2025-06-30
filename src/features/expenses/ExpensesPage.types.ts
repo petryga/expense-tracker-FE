@@ -4,6 +4,7 @@ import {
   GridSortModel,
   GridRowId,
   GridRowModes,
+  GridFilterModel,
 } from '@mui/x-data-grid';
 import { Dispatch, SetStateAction } from 'react';
 import type { Data } from '../../services/expenses/expensesApi.types';
@@ -34,6 +35,7 @@ export interface EditToolbarProps {
   setRowModesModel: (newModel: (oldModel: GridRowModesModel) => GridRowModesModel) => void;
   onAddButtonClick: () => void;
   onAddRecurringButtonClick: () => void;
+  filterModel: GridFilterModel;
 }
 
 export interface QueryOptions {

@@ -1,6 +1,8 @@
+import { FC } from 'react';
 import { DataByCategory } from '../../expenses/ExpensesPage.types';
 import { Currency } from '../../expenses/helpers';
 import styles from './MonthlyReportsPage.module.css';
+import { RectangleProps } from 'recharts';
 
 export const CustomTooltip = ({
   active,
@@ -29,7 +31,31 @@ export const CustomTooltip = ({
   return null;
 };
 
-export const CustomBarShape = ({ x, y, width, height, fill, budget, total }: any) => {
+interface CustomBarShapeProps extends RectangleProps {
+  budget?: number;
+  total?: number;
+}
+
+export const CustomBarShape: FC<CustomBarShapeProps> = ({
+  x,
+  y,
+  width,
+  height,
+  fill,
+  budget,
+  total,
+}) => {
+  if (
+    x === undefined ||
+    y === undefined ||
+    width === undefined ||
+    height === undefined ||
+    budget === undefined ||
+    total === undefined
+  ) {
+    return null;
+  }
+
   const budgetX = x + (width * budget) / total;
   const isExceedingBudget = budget && total > budget;
 

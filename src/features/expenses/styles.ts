@@ -37,9 +37,6 @@ export const tableStyles = {
   '& .MuiButton-text': {
     fontWeight: 'bold',
   },
-  '& .MuiDataGrid-virtualScroller': {
-    overflow: 'hidden',
-  },
 };
 
 export const tabsStyles = {
