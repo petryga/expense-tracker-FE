@@ -1,18 +1,18 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { GridRowModes, GridToolbarContainer } from '@mui/x-data-grid';
-import Button from '@mui/material/Button';
-import { v4 as uuidv4 } from 'uuid';
-import { EditToolbarProps } from '../features/expenses/ExpensesPage.types';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { format, getDate, parseISO } from 'date-fns';
-import { Data } from '../services/expenses/expensesApi.types';
-import { AccountType, Currency } from '../features/expenses/helpers';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { GridRowModes, GridToolbarContainer } from "@mui/x-data-grid";
+import Button from "@mui/material/Button";
+import { v4 as uuidv4 } from "uuid";
+import { EditToolbarProps } from "../features/expenses/ExpensesPage.types";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { format, getDate, parseISO } from "date-fns";
+import { Data } from "../services/expenses/expensesApi.types";
+import { AccountType, Currency } from "../features/expenses/helpers";
 
 const styles = {
-  ':hover': {
-    backgroundColor: '#fff',
-    color: '#727272',
+  ":hover": {
+    backgroundColor: "#fff",
+    color: "#727272",
   },
 };
 
@@ -32,26 +32,30 @@ export function EditToolbar({
 
     setRows((oldRows) => {
       const today = new Date();
-      let datePosted = format(today, 'yyyy-MM-dd');
+      let datePosted = format(today, "yyyy-MM-dd");
 
       if (oldRows.length > 0 && oldRows[0].datePosted) {
         const firstRowDate = parseISO(oldRows[0].datePosted);
 
         datePosted = format(
-          new Date(firstRowDate.getFullYear(), firstRowDate.getMonth(), getDate(today)),
-          'yyyy-MM-dd'
+          new Date(
+            firstRowDate.getFullYear(),
+            firstRowDate.getMonth(),
+            getDate(today)
+          ),
+          "yyyy-MM-dd"
         );
       }
 
       const newRow: Data = {
         id,
         datePosted,
-        account: AccountType.ROGERS,
-        description: '',
-        category: '',
+        account: AccountType.AMEX,
+        description: "",
+        category: "",
         amount: 0,
         isNew: true,
-        currency: Currency.CAD,
+        currency: Currency.USD,
       };
 
       return [newRow, ...oldRows];
@@ -60,7 +64,7 @@ export function EditToolbar({
     setRowModesModel((oldModel) => {
       return {
         ...oldModel,
-        [id]: { mode: GridRowModes.Edit, fieldToFocus: 'datePosted' },
+        [id]: { mode: GridRowModes.Edit, fieldToFocus: "datePosted" },
       };
     });
   };
@@ -73,9 +77,11 @@ export function EditToolbar({
   const buttonDisabled = filterModel?.items.length > 0 || false;
 
   return (
-    <GridToolbarContainer style={{ justifyContent: 'space-between' }}>
+    <GridToolbarContainer style={{ justifyContent: "space-between" }}>
       <Button
-        startIcon={<FontAwesomeIcon className="plusIcon" icon={faPlus as IconProp} />}
+        startIcon={
+          <FontAwesomeIcon className="plusIcon" icon={faPlus as IconProp} />
+        }
         onClick={handleAddEntry}
         sx={styles}
         disabled={buttonDisabled}
@@ -84,7 +90,9 @@ export function EditToolbar({
       </Button>
 
       <Button
-        startIcon={<FontAwesomeIcon className="plusIcon" icon={faPlus as IconProp} />}
+        startIcon={
+          <FontAwesomeIcon className="plusIcon" icon={faPlus as IconProp} />
+        }
         onClick={handleAddRecurring}
         sx={styles}
         disabled={buttonDisabled}

@@ -1,16 +1,42 @@
-import type { Currency } from '../../features/expenses/helpers';
+import type { Currency } from "../../features/expenses/helpers";
+type Category =
+  | "Rent"
+  | "Electricity"
+  | "Internet"
+  | "Mobile Phone"
+  | "Financial Fees"
+  | "Legal Fees"
+  | "Groceries"
+  | "Eating Out"
+  | "Coffee Shops"
+  | "Public Transport"
+  | "Taxi & Ride Shares"
+  | "Subscriptions"
+  | "Travel & Vacation"
+  | "Entertainment"
+  | "Books"
+  | "Pets"
+  | "Clothing"
+  | "Household Goods"
+  | "Furniture & Housewares"
+  | "Beauty"
+  | "Hobbies"
+  | "Medical Expenses"
+  | "Pharmacy"
+  | "Wellness & Spa"
+  | "Gifts";
 
 export type Data = {
   id?: string;
   datePosted: string;
   account: string;
   description: string;
-  category: string;
+  category: Category | "";
   amount: number;
   isNew?: boolean;
   year?: number;
   month?: number;
-  currency: Currency | '';
+  currency: Currency | "";
 };
 
 export interface GetExpensesData {
@@ -44,7 +70,7 @@ export type DataResponse = {
   amount: string;
   year: number;
   month: number;
-  currency: Currency | '';
+  currency: Currency | "";
 };
 
 export type GetArgs = {
