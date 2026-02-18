@@ -1,13 +1,13 @@
-import { NavLink, useLocation } from 'react-router-dom';
-import styles from './Sidebar.module.css';
-import { OPTIONS } from './constants';
-import classNames from 'classnames';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectSidebar, toggleSidebar } from './sidebarSlice';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
-import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { NavLink, useLocation } from "react-router-dom";
+import styles from "./Sidebar.module.css";
+import { OPTIONS } from "./constants";
+import classNames from "classnames";
+import { useDispatch, useSelector } from "react-redux";
+import { selectSidebar, toggleSidebar } from "./sidebarSlice";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
+import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
 const Sidebar = (): JSX.Element => {
   const { isVisible } = useSelector(selectSidebar);
@@ -22,22 +22,41 @@ const Sidebar = (): JSX.Element => {
         [styles.visible]: isVisible,
       })}
     >
-      <div className={styles.toggleButton} onClick={() => dispatch(toggleSidebar())}>
+      <div
+        className={styles.toggleButton}
+        onClick={() => dispatch(toggleSidebar())}
+      >
         <FontAwesomeIcon
-          icon={isVisible ? (faChevronLeft as IconProp) : (faChevronRight as IconProp)}
+          icon={
+            isVisible
+              ? (faChevronLeft as IconProp)
+              : (faChevronRight as IconProp)
+          }
         />
       </div>
       <ul>
         {OPTIONS.map((option, i) => {
-          const { text, path, subOptions } = option;
+          const { text, path, subOptions, icon, className = "" } = option;
+          const optionClassName = styles[className as keyof typeof styles];
           const isActive = location.pathname.includes(path!);
 
           return (
-            <li key={i} className={isActive ? styles.active : ''}>
-              {text === 'Reports' ? (
+            <li
+              key={i}
+              className={classNames(optionClassName, isActive ? styles.active : "")}
+            >
+              {text === "Reports" ? (
                 <div className={styles.reportsLi}>Reports</div>
               ) : (
-                <NavLink to={path!}>{text}</NavLink>
+                <NavLink to={path!}>
+                  {icon && (
+                    <FontAwesomeIcon
+                      className={styles.sidebarIcon}
+                      icon={icon as IconProp}
+                    />
+                  )}
+                  {text}
+                </NavLink>
               )}
 
               {subOptions && (
@@ -46,7 +65,10 @@ const Sidebar = (): JSX.Element => {
                     const { text: subText, path: subPath } = subOption;
                     const isActiveSub = location.pathname.includes(subPath!);
                     return (
-                      <li key={subPath} className={isActiveSub ? styles.active : ''}>
+                      <li
+                        key={subPath}
+                        className={isActiveSub ? styles.active : ""}
+                      >
                         <NavLink to={subPath}>{subText}</NavLink>
                       </li>
                     );

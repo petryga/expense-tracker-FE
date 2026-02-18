@@ -1,15 +1,20 @@
-import { GridColDef, GridRowId, GridRowModes } from '@mui/x-data-grid';
-import { faTrash, faSave, faEdit, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { GridActionsCellItem } from '@mui/x-data-grid';
-import { formatDate } from '../../utils';
-import { TableColumns } from './IncomePage.types';
-import styles from '../expenses/ExpensesPage.module.css';
-import { IncomeCategories } from './helpers';
-import { renderEditCell } from '../../components/amountTableCell/AmountTableCell';
-import Checkbox from '@mui/material/Checkbox';
-import { Currency } from '../expenses/helpers';
+import { GridColDef, GridRowId, GridRowModes } from "@mui/x-data-grid";
+import {
+  faTrash,
+  faSave,
+  faEdit,
+  faTimes,
+} from "@fortawesome/free-solid-svg-icons";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { GridActionsCellItem } from "@mui/x-data-grid";
+import { formatDate } from "../../utils";
+import { TableColumns } from "./AssetsPage.types";
+import styles from "../expenses/ExpensesPage.module.css";
+import { IncomeCategories } from "./helpers";
+import { renderEditCell } from "../../components/amountTableCell/AmountTableCell";
+import Checkbox from "@mui/material/Checkbox";
+import { Currency } from "../expenses/helpers";
 
 export function createTableColumns({
   rowModesModel,
@@ -43,80 +48,94 @@ export function createTableColumns({
 
   return [
     {
-      field: 'selection',
+      field: "selection",
       sortable: false,
-      headerName: '',
+      headerName: "",
       disableColumnMenu: true,
-      type: 'boolean',
+      type: "boolean",
       width: 70,
       renderCell: (params) => {
         return (
           <Checkbox
             checked={params.value || selectedRows.includes(params.row)}
-            onChange={(event) => handleCheckboxChange(event, params.id as string)}
+            onChange={(event) =>
+              handleCheckboxChange(event, params.id as string)
+            }
             color="primary"
           />
         );
       },
-      renderHeader: () => <Checkbox onChange={handleHeaderCheckboxChange} color="primary" />,
+      renderHeader: () => (
+        <Checkbox onChange={handleHeaderCheckboxChange} color="primary" />
+      ),
     },
     {
-      field: 'date',
-      headerName: 'Date',
+      field: "date",
+      headerName: "Date",
       width: 120,
       editable: true,
-      type: 'date',
+      type: "date",
       valueFormatter: (params) => formatDate(params),
     },
     {
-      field: 'category',
-      headerName: 'Category',
+      field: "category",
+      headerName: "Category",
       width: 350,
       editable: true,
-      type: 'singleSelect',
+      type: "singleSelect",
       valueOptions: [
-        { value: IncomeCategories.BANK_ACCOUNTS, label: 'Bank Accounts' },
-        { value: IncomeCategories.CRYPTO, label: 'Crypto' },
-        { value: IncomeCategories.INVESTMENTS, label: 'Investments' },
-        { value: IncomeCategories.CASH, label: 'Cash' },
+        { value: IncomeCategories.BANK_ACCOUNTS, label: "Bank Accounts" },
+        { value: IncomeCategories.CRYPTO, label: "Crypto" },
+        { value: IncomeCategories.INVESTMENTS, label: "Investments" },
+        { value: IncomeCategories.CASH, label: "Cash" },
       ],
     },
     {
-      field: 'amount',
-      headerName: 'Amount',
+      field: "amount",
+      headerName: "Amount",
       width: 100,
-      type: 'string',
+      type: "string",
       editable: true,
       renderCell: (params) => `$${params.value}`,
       renderEditCell,
     },
     {
-      field: 'currency',
-      headerName: 'Cur',
+      field: "currency",
+      headerName: "Cur",
       width: 100,
-      type: 'singleSelect',
+      type: "singleSelect",
       valueOptions: [Currency.CAD, Currency.USD],
       editable: true,
     },
     {
-      field: 'actions',
-      type: 'actions',
-      headerName: '',
+      field: "actions",
+      type: "actions",
+      headerName: "",
       width: 100,
       getActions: (params) => {
         const { id } = params.row;
-        const isInEditMode = rowModesModel[id]?.mode === 'edit';
+        const isInEditMode = rowModesModel[id]?.mode === "edit";
 
         if (isInEditMode) {
           return [
             <GridActionsCellItem
-              icon={<FontAwesomeIcon icon={faSave as IconProp} className={styles.icon} />}
+              icon={
+                <FontAwesomeIcon
+                  icon={faSave as IconProp}
+                  className={styles.icon}
+                />
+              }
               label="Save"
               onClick={handleSaveClick(id)}
             />,
 
             <GridActionsCellItem
-              icon={<FontAwesomeIcon icon={faTimes as IconProp} className={styles.icon} />}
+              icon={
+                <FontAwesomeIcon
+                  icon={faTimes as IconProp}
+                  className={styles.icon}
+                />
+              }
               label="Cancel"
               onClick={handleCancelClick(id)}
             />,
@@ -125,14 +144,24 @@ export function createTableColumns({
 
         return [
           <GridActionsCellItem
-            icon={<FontAwesomeIcon icon={faEdit as IconProp} className={styles.icon} />}
+            icon={
+              <FontAwesomeIcon
+                icon={faEdit as IconProp}
+                className={styles.icon}
+              />
+            }
             label="Edit"
             className="textPrimary"
             onClick={handleEditClick(id)}
           />,
 
           <GridActionsCellItem
-            icon={<FontAwesomeIcon icon={faTrash as IconProp} className={styles.icon} />}
+            icon={
+              <FontAwesomeIcon
+                icon={faTrash as IconProp}
+                className={styles.icon}
+              />
+            }
             label="Cancel"
             className="textPrimary"
             onClick={handleOpenModal(id)}

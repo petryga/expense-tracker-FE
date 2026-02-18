@@ -1,6 +1,8 @@
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+
 export const URLS: Record<string, string> = {
   expenses: "/expenses",
-  income: "/income",
+  assets: "/assets",
   monthlyReports: "/monthly-reports",
   allTimeReports: "/all-time-reports",
   sankey: "/sankey",
@@ -14,7 +16,7 @@ export const OPTIONS = [
   },
   {
     text: "Assets",
-    path: URLS.income,
+    path: URLS.assets,
   },
   {
     text: "Reports",
@@ -28,9 +30,6 @@ export const OPTIONS = [
         path: URLS.allTimeReports,
       },
       {
-        // TODO: Monarch money has this Sankey diagram to visualize the income and expenses. I would like to build something like that.
-        // I don't track my income per se but in the assets section I track the total amount of money I have in my bank account every month. the difference between month to month is my income.
-        // Account for bank accounts and cash fields only in the assets section.
         text: "Sankey",
         path: URLS.sankey,
       },
@@ -39,5 +38,7 @@ export const OPTIONS = [
   {
     text: "Search",
     path: URLS.search,
+    icon: faMagnifyingGlass,
+    className: "searchOption",
   },
 ];

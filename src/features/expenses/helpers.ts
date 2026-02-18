@@ -77,6 +77,7 @@ export const CATEGORIES: Category[] = [
       { id: 503, name: "Entertainment" },
       { id: 504, name: "Books" },
       { id: 505, name: "Pets" },
+      { id: 506, name: "Education" },
     ],
   },
   {
@@ -135,12 +136,20 @@ export const getDataByMonth = (
 
 export const recurringExpenses: RecurringExpense[] = [
   {
-    dayPosted: "22",
+    dayPosted: "11",
+    account: AccountType.AMEX,
+    description: "Coffee Subscription",
+    category: "Groceries",
+    currency: Currency.USD,
+    amount: 20.00,
+  },
+  {
+    dayPosted: "17",
     account: AccountType.ROGERS,
     description: "Mobile Phone",
     category: "Mobile Phone",
     currency: Currency.CAD,
-    amount: 38.42,
+    amount: 39.55,
   },
   {
     dayPosted: "28",

@@ -24,8 +24,9 @@ type Category =
   | "Medical Expenses"
   | "Pharmacy"
   | "Wellness & Spa"
-  | "Gifts";
-
+  | "Gifts"
+  | "Education";
+  
 export type Data = {
   id?: string;
   datePosted: string;

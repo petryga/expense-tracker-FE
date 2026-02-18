@@ -1,6 +1,6 @@
 import { GridRowClassNameParams } from "@mui/x-data-grid";
 import { Currency } from "../expenses/helpers";
-import type { RecurringIncomeEntries } from "./IncomePage.types";
+import type { RecurringIncomeEntries } from "./AssetsPage.types";
 import { IncomeData } from "../../services/income/incomeApi.types";
 
 export enum IncomeCategories {
@@ -52,7 +52,7 @@ export const getRecurringIncomeEntries = (): RecurringIncomeEntries[] => {
 
 export const getRowClassName = (
   params: GridRowClassNameParams<IncomeData>,
-  rows: IncomeData[]
+  rows: IncomeData[],
 ) => {
   const currentRowIndex = rows.findIndex((row) => row.id === params.id);
 
