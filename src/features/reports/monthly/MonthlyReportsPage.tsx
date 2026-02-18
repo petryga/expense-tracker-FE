@@ -1,53 +1,149 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { useGetExpensesQuery } from '../../../services/expenses/expensesApi';
-import { getDataByMonth } from '../../expenses/helpers';
+import { getDataByMonth, processExpensesData } from '../../expenses/helpers';
 import { format, parseISO } from 'date-fns';
-import { Tab, Tabs } from '@mui/material';
-import { tabsStyles } from '../../expenses/styles';
+import { Button } from '@mui/material';
 import { withSidebar } from '../../../components/sidebar/withSideBar';
 import { VisualizedData } from './VisualizedData';
+import classnames from 'classnames';
+import styles from './MonthlyReportsPage.module.css';
 
 const MonthlyReportsPage: FC = () => {
   const { data: { data: expenses } = {} } = useGetExpensesQuery({});
-  const [value, setValue] = useState(0);
+  const [selectedYear, setSelectedYear] = useState<string | null>(null);
+  const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
   const dataByMonth = getDataByMonth(expenses);
+  const dataByYear = useMemo(() => processExpensesData(expenses), [expenses]);
+  const sortedYears = useMemo(
+    () => Object.keys(dataByYear).sort((a, b) => Number.parseInt(b) - Number.parseInt(a)),
+    [dataByYear]
+  );
+
+  const getDefaultYearMonth = useCallback(
+    (year: string): string | null => {
+      if (!dataByYear[year]) {
+        return null;
+      }
+
+      const monthsForYear = Object.keys(dataByYear[year]).sort(
+        (a, b) => Number.parseInt(b) - Number.parseInt(a)
+      );
+
+      if (!monthsForYear.length) {
+        return null;
+      }
+
+      const currentYearMonth = format(new Date(), 'yyyy-MM');
+      const [currentYear, currentMonth] = currentYearMonth.split('-');
+      const preferredMonth =
+        year === currentYear && monthsForYear.includes(currentMonth)
+          ? currentMonth
+          : monthsForYear[0];
+
+      return `${year}-${preferredMonth}`;
+    },
+    [dataByYear]
+  );
 
   useEffect(() => {
-    if (expenses) {
-      const currentMonth = format(new Date(), 'yyyy-MM');
-      const months = Object.keys(dataByMonth);
-      const currentMonthIndex = months.indexOf(currentMonth);
-      setValue(currentMonthIndex);
+    if (!sortedYears.length) {
+      setSelectedYear(null);
+      return;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [expenses]);
 
-  const TABLE_CONFIG = Object.keys(dataByMonth)?.map((month) => ({
-    label: format(parseISO(month + '-01'), 'MMMM yyyy'),
-    ContentComponent: VisualizedData,
-    componentProps: {
-      dataByMonth: dataByMonth[month],
-    },
-  }));
+    const currentYear = format(new Date(), 'yyyy');
+    setSelectedYear((previousYear) => {
+      if (previousYear && sortedYears.includes(previousYear)) {
+        return previousYear;
+      }
+      return sortedYears.includes(currentYear) ? currentYear : sortedYears[0];
+    });
+  }, [sortedYears]);
+
+  useEffect(() => {
+    if (!selectedYear || !dataByYear[selectedYear]) {
+      return;
+    }
+    const defaultSelection = getDefaultYearMonth(selectedYear);
+
+    setSelectedMonth((previousMonth) => {
+      if (!defaultSelection) {
+        return null;
+      }
+      if (!previousMonth) {
+        return defaultSelection;
+      }
+      const [prevYear] = previousMonth.split('-');
+      if (prevYear === selectedYear && dataByMonth[previousMonth]) {
+        return previousMonth;
+      }
+      return defaultSelection;
+    });
+  }, [dataByMonth, dataByYear, getDefaultYearMonth, selectedYear]);
+
+  const handleYearClick = (year: string) => {
+    if (selectedYear === year) {
+      setSelectedYear(null);
+      return;
+    }
+
+    setSelectedYear(year);
+    setSelectedMonth((previousMonth) => {
+      if (previousMonth && previousMonth.startsWith(`${year}-`) && dataByMonth[previousMonth]) {
+        return previousMonth;
+      }
+
+      return getDefaultYearMonth(year);
+    });
+  };
 
   return (
     <>
-      <Tabs
-        value={value}
-        onChange={(_, newValue) => setValue(newValue)}
-        variant="fullWidth"
-        sx={tabsStyles}
-      >
-        {TABLE_CONFIG?.map((tab, index) => (
-          <Tab key={index} label={tab.label} id={`tab-${index}`} />
-        ))}
-      </Tabs>
+      <div className={styles.yearContainer}>
+        {sortedYears.map((year) => {
+          const isActive = selectedYear === year;
+          const isNothingSelected = selectedYear === null;
 
-      {TABLE_CONFIG?.map((tab, index) => (
-        <div key={index} role="tabpanel" hidden={value !== index}>
-          {value === index && <tab.ContentComponent {...tab.componentProps} />}
-        </div>
-      ))}
+          return (
+            <div key={year}>
+              <Button
+                className={classnames(styles.year, {
+                  [styles.inactive]: !isNothingSelected && !isActive,
+                })}
+                onClick={() => handleYearClick(year)}
+              >
+                {year}
+              </Button>
+
+              {selectedYear === year &&
+                Object.keys(dataByYear[year])
+                  .sort((a, b) => Number.parseInt(b) - Number.parseInt(a))
+                  .map((month) => {
+                    const yearMonth = `${year}-${month}`;
+                    const isMonthActive = selectedMonth === yearMonth;
+                    return (
+                      <button
+                        key={yearMonth}
+                        type="button"
+                        className={classnames(styles.monthLink, {
+                          [styles.active]: isMonthActive,
+                        })}
+                        onClick={() => setSelectedMonth(yearMonth)}
+                      >
+                        {format(parseISO(`${year}-${month}-01`), 'MMMM')}
+                      </button>
+                    );
+                  })}
+            </div>
+          );
+        })}
+      </div>
+
+      {selectedMonth && dataByMonth[selectedMonth] ? (
+        <VisualizedData dataByMonth={dataByMonth[selectedMonth]} />
+      ) : (
+        <div className={styles.emptySelection}>Select a year and month to view report.</div>
+      )}
     </>
   );
 };

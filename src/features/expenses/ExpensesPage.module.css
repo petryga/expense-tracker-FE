@@ -1,4 +1,8 @@
-.yearContainer {
+.container{
+  margin: 0 auto !important;
+}
+
+.yearsContainer {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -47,7 +51,6 @@
   transition: 0.3s;
 }
 
-
 .active {
   background-color: #eeb12e;
   color: #f8f9fa;
@@ -61,7 +64,6 @@
   color: #eeb12e;
   transition: 0.2s;
 }
-
 
 .amountBold {
   font-weight: 600;
@@ -101,3 +103,5 @@
 .clearFilter {
   cursor: pointer;
 }
+
+ 
