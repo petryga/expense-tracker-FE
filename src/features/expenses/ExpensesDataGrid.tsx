@@ -4,10 +4,10 @@ import {
   GridFilterModel,
   GridRowId,
   GridRowModesModel,
-} from '@mui/x-data-grid';
-import { createTableColumns } from './columns';
-import { useEffect, useState } from 'react';
-import { EditToolbar } from '../../components/EditToolBar';
+} from "@mui/x-data-grid";
+import { createTableColumns } from "./columns";
+import { useEffect, useState } from "react";
+import { EditToolbar } from "../../components/EditToolBar";
 import {
   handleDownloadExpenses,
   useCreateExpenseMutation,
@@ -15,15 +15,16 @@ import {
   useDeleteExpensesMutation,
   useGetExpensesQuery,
   useUpdateExpenseMutation,
-} from '../../services/expenses/expensesApi';
-import type { Data } from '../../services/expenses/expensesApi.types';
-import { tableStyles } from './styles';
-import { useNavigate, useParams } from 'react-router-dom';
-import WarningModal from '../../components/warningModal/WarningModal';
-import { format } from 'date-fns';
-import { Currency, recurringExpenses } from './helpers';
-import { Context, CustomFooter } from './CustomFooter';
-import ConfirmationModal from './ConfirmationModal';
+} from "../../services/expenses/expensesApi";
+import type { Data } from "../../services/expenses/expensesApi.types";
+import { tableStyles } from "./styles";
+import { useNavigate, useParams } from "react-router-dom";
+import WarningModal from "../../components/warningModal/WarningModal";
+import { format } from "date-fns";
+import { Currency, recurringExpenses } from "./helpers";
+import { Context, CustomFooter } from "./CustomFooter";
+import ConfirmationModal from "./ConfirmationModal";
+import styles from "./ExpensesPage.module.css";
 
 export const ExpensesDataGrid = () => {
   const { yearMonth } = useParams();
@@ -32,7 +33,9 @@ export const ExpensesDataGrid = () => {
     isLoading,
     isFetching,
   } = useGetExpensesQuery({ yearMonth });
-  const [filterModel, setFilterModel] = useState<GridFilterModel>({ items: [] });
+  const [filterModel, setFilterModel] = useState<GridFilterModel>({
+    items: [],
+  });
   const [rows, setRows] = useState<Data[]>([]);
   const [openModal, setOpenModal] = useState(false);
   const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
@@ -47,11 +50,11 @@ export const ExpensesDataGrid = () => {
     if (selectedRows.length > 0) {
       const totalCad = selectedRows.reduce(
         (acc, row) => (row.currency === Currency.CAD ? acc + row.amount : acc),
-        0
+        0,
       );
       const totalUsd = selectedRows.reduce(
         (acc, row) => (row.currency === Currency.USD ? acc + row.amount : acc),
-        0
+        0,
       );
       setTotalCad(totalCad);
       setTotalUsd(totalUsd);
@@ -81,12 +84,14 @@ export const ExpensesDataGrid = () => {
     await deleteExpense({ id: entryId! });
 
     if (rows.length === 1) {
-      navigate('/expenses');
+      navigate("/expenses");
     }
   };
 
   const handleDeleteRows = async () => {
-    const selectedIds = selectedRows.filter((row) => row.id).map((row) => row.id as string);
+    const selectedIds = selectedRows
+      .filter((row) => row.id)
+      .map((row) => row.id as string);
     if (selectedIds.length > 0) {
       await deleteExpenses({ ids: selectedIds }).unwrap();
     }
@@ -102,11 +107,13 @@ export const ExpensesDataGrid = () => {
 
     const isNewRowOfTheSameYearMonth = () => {
       const rowDate = new Date(newRow.datePosted);
-      const rowYearMonth = format(rowDate, 'yyyy-MM');
+      const rowYearMonth = format(rowDate, "yyyy-MM");
       return rowYearMonth === yearMonth;
     };
 
-    setRows((rows) => rows?.map((row) => (row.id === newRow.id ? updatedRow : row)));
+    setRows((rows) =>
+      rows?.map((row) => (row.id === newRow.id ? updatedRow : row)),
+    );
 
     if (!isNewRowOfTheSameYearMonth()) {
       setRows((rows) => rows?.filter((row) => row.id !== newRow.id));
@@ -115,7 +122,10 @@ export const ExpensesDataGrid = () => {
     return updatedRow;
   };
 
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>, id: string) => {
+  const handleCheckboxChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    id: string,
+  ) => {
     const { checked } = event.target;
     const selectedRow = rows.find((row) => row.id === id);
 
@@ -126,7 +136,9 @@ export const ExpensesDataGrid = () => {
     }
   };
 
-  const handleHeaderCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleHeaderCheckboxChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const { checked } = event.target;
 
     if (checked) {
@@ -151,12 +163,15 @@ export const ExpensesDataGrid = () => {
 
   const onAddRecurringButtonClick = async () => {
     const expensesArray: Data[] = [];
-    const year = parseInt(yearMonth?.split('-')[0] as string);
-    const month = parseInt(yearMonth?.split('-')[1] as string);
+    const year = parseInt(yearMonth?.split("-")[0] as string);
+    const month = parseInt(yearMonth?.split("-")[1] as string);
 
     recurringExpenses.forEach((expense) => {
       const { dayPosted, ...recurringExpense } = expense;
-      const datePosted = format(new Date(year, month - 1, parseInt(dayPosted)), 'yyyy-MM-dd');
+      const datePosted = format(
+        new Date(year, month - 1, parseInt(dayPosted)),
+        "yyyy-MM-dd",
+      );
 
       expensesArray.push({
         ...recurringExpense,
@@ -206,6 +221,7 @@ export const ExpensesDataGrid = () => {
           hideFooterSelectedRowCount
           autoHeight
           onFilterModelChange={(newModel) => setFilterModel(newModel)}
+          getRowHeight={() => "auto"}
         />
       </Context.Provider>
 

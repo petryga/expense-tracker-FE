@@ -1,5 +1,71 @@
+.yearContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.monthLink {
+  background-color: #f8f9fa;
+  border: 1px solid #eeb12e;
+  border-radius: 0;
+  color: #eeb12e;
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.15);
+  padding: 10px 14px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 10px 5px 15px 5px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 17px;
+}
+
+.monthLink:hover {
+  background-color: #eeb12e;
+  color: #f8f9fa;
+  transition: 0.3s;
+}
+
+.monthLink:focus,
+.monthLink:focus-visible {
+  outline: none;
+  border-color: #eeb12e;
+}
+
+.year {
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.15) !important;
+  padding: 10px 15px !important;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 10px 10px 15px 10px !important;
+  font-weight: 600 !important;
+  font-size: 17px !important;
+  background-color: #fafafa !important;
+  color: #757575 !important;
+  border: 1px solid #757575 !important;
+  border-radius: 0 !important;
+  height: 47.5px !important;
+}
+
+.year:hover {
+  color: #eeb12e !important;
+  border: 1px solid #eeb12e !important;
+  transition: 0.3s;
+}
+
+.active {
+  background-color: #eeb12e;
+  color: #f8f9fa;
+}
+
+.inactive {
+  display: none !important;
+}
+
 .container {
-  margin-top: 20px;
+ margin: 0 auto !important;
 }
 
 .summary p {
@@ -31,4 +97,10 @@ text {
 
 .currency {
   color: red;
+}
+
+.emptySelection {
+  margin-top: 20px;
+  color: #727272;
+  font-weight: 600;
 }

@@ -95,3 +95,16 @@
   transition: transform 0.3s ease-in-out;
   transform: translate3d(0, 0, 0) !important;
 }
+
+.searchOption {
+  margin-top: 20px !important;
+}
+
+.searchOption a {
+  font-size: 16px !important;
+}
+
+.searchOption a svg {
+  height: 16px !important;
+  width: 16px !important;
+}

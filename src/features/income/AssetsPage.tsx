@@ -1,25 +1,34 @@
-import { DataGrid, GridRowId, GridRowModes, GridRowModesModel } from '@mui/x-data-grid';
-import { FC, useEffect, useState } from 'react';
-import { EditToolbar } from '../../components/EditToolBar';
-import WarningModal from '../../components/warningModal/WarningModal';
-import { tableStyles } from '../expenses/styles';
-import { createTableColumns } from './columns';
-import { withSidebar } from '../../components/sidebar/withSideBar';
+import {
+  DataGrid,
+  GridRowId,
+  GridRowModes,
+  GridRowModesModel,
+} from "@mui/x-data-grid";
+import { FC, useEffect, useState } from "react";
+import { EditToolbar } from "../../components/EditToolBar";
+import WarningModal from "../../components/warningModal/WarningModal";
+import { tableStyles } from "../expenses/styles";
+import { createTableColumns } from "./columns";
+import { withSidebar } from "../../components/sidebar/withSideBar";
 import {
   useCreateIncomeEntryMutation,
   useGetIncomeEntriesQuery,
   useDeleteIncomeEntryMutation,
   useUpdateIncomeEntryMutation,
-} from '../../services/income/incomeApi';
-import { v4 as uuidv4 } from 'uuid';
-import type { IncomeData } from '../../services/income/incomeApi.types';
-import { format } from 'date-fns';
-import { getRecurringIncomeEntries, getRowClassName } from './helpers';
-import { Context, CustomFooter } from './CustomFooter';
-import { Currency } from '../expenses/helpers';
+} from "../../services/income/incomeApi";
+import { v4 as uuidv4 } from "uuid";
+import type { IncomeData } from "../../services/income/incomeApi.types";
+import { format } from "date-fns";
+import { getRecurringIncomeEntries, getRowClassName } from "./helpers";
+import { Context, CustomFooter } from "./CustomFooter";
+import { Currency } from "../expenses/helpers";
 
-const IncomePage: FC = () => {
-  const { data: incomeData, isLoading, isFetching } = useGetIncomeEntriesQuery({});
+const AssetsPage: FC = () => {
+  const {
+    data: incomeData,
+    isLoading,
+    isFetching,
+  } = useGetIncomeEntriesQuery({});
 
   useEffect(() => {
     if (incomeData) {
@@ -39,11 +48,11 @@ const IncomePage: FC = () => {
     if (selectedRows.length > 0) {
       const totalCad = selectedRows.reduce(
         (acc, row) => (row.currency === Currency.CAD ? acc + row.amount : acc),
-        0
+        0,
       );
       const totalUsd = selectedRows.reduce(
         (acc, row) => (row.currency === Currency.USD ? acc + row.amount : acc),
-        0
+        0,
       );
       setTotalCad(totalCad);
       setTotalUsd(totalUsd);
@@ -73,11 +82,16 @@ const IncomePage: FC = () => {
       await updateIncomeEntry({ id: newRow.id!, data: newRow }).unwrap();
     }
     const updatedRow = { ...newRow, isNew: false };
-    setRows((rows) => rows?.map((row) => (row.id === newRow.id ? updatedRow : row)));
+    setRows((rows) =>
+      rows?.map((row) => (row.id === newRow.id ? updatedRow : row)),
+    );
     return updatedRow;
   };
 
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>, id: string) => {
+  const handleCheckboxChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    id: string,
+  ) => {
     const { checked } = event.target;
     const selectedRow = rows.find((row) => row.id === id);
 
@@ -88,7 +102,9 @@ const IncomePage: FC = () => {
     }
   };
 
-  const handleHeaderCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleHeaderCheckboxChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const { checked } = event.target;
 
     if (checked) {
@@ -115,12 +131,12 @@ const IncomePage: FC = () => {
     setRows((oldRows) => {
       const today = new Date();
 
-      const date = format(today, 'yyyy-MM-dd');
+      const date = format(today, "yyyy-MM-dd");
       const newRow = {
         id,
         date,
-        description: '',
-        category: '',
+        description: "",
+        category: "",
         amount: 0,
         isNew: true,
         currency: Currency.CAD,
@@ -132,7 +148,7 @@ const IncomePage: FC = () => {
     setRowModesModel((oldModel) => {
       return {
         ...oldModel,
-        [id]: { mode: GridRowModes.Edit, fieldToFocus: 'date' },
+        [id]: { mode: GridRowModes.Edit, fieldToFocus: "date" },
       };
     });
   };
@@ -142,7 +158,7 @@ const IncomePage: FC = () => {
 
   const onAddRecurringButtonClick = async () => {
     const today = new Date();
-    const todayFormatted = format(today, 'yyyy-MM-dd');
+    const todayFormatted = format(today, "yyyy-MM-dd");
 
     const incomeEntriesArray: IncomeData[] = [];
 
@@ -158,7 +174,9 @@ const IncomePage: FC = () => {
 
   return (
     <>
-      <Context.Provider value={{ totalSelectedCad: totalCad, totalSelectedUsd: totalUsd }}>
+      <Context.Provider
+        value={{ totalSelectedCad: totalCad, totalSelectedUsd: totalUsd }}
+      >
         <h1>Assets</h1>
         <DataGrid
           rows={isExpensesLoading ? [] : rows}
@@ -180,17 +198,21 @@ const IncomePage: FC = () => {
             },
           }}
           autoHeight
-          getRowHeight={() => 'auto'}
+          getRowHeight={() => "auto"}
           sx={tableStyles}
           hideFooterPagination
           hideFooterSelectedRowCount
           getRowClassName={(params) => getRowClassName(params, rows)}
         />
       </Context.Provider>
-      <WarningModal open={openModal} setOpen={setOpenModal} onDelete={handleDeleteRow} />
+      <WarningModal
+        open={openModal}
+        setOpen={setOpenModal}
+        onDelete={handleDeleteRow}
+      />
     </>
   );
 };
 
-const IncomePageWithSidebar = withSidebar()(IncomePage);
-export default IncomePageWithSidebar;
+const AssetsPageWithSidebar = withSidebar()(AssetsPage);
+export default AssetsPageWithSidebar;
