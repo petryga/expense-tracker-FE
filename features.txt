@@ -4,3 +4,4 @@ publish?
 sort exports by date
 
 wealth tracker - compare dates and see % of growth
+monthly expense tracker and wealth tracker are getting crowded - add range

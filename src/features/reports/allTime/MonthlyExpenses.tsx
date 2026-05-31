@@ -23,7 +23,10 @@ export const MonthlyExpenses = ({ data }: { data?: MonthlyData[] }) => {
     <>
       <h1>Monthly Expense Tracker</h1>
       <ResponsiveContainer width={1000} height={600}>
-        <LineChart data={monthlyExpenses} margin={{ right: 50, left: -20 }}>
+        <LineChart
+          data={monthlyExpenses}
+          margin={{ right: 50, left: -15, top: 15 }}
+        >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="yearMonth" />
           <YAxis domain={[0, 6000]} />

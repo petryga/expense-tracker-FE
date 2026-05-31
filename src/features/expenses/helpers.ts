@@ -18,18 +18,18 @@ export enum Currency {
 export const BUDGETS: Record<string, number> = {
   // Electricity: 60,
   // Groceries: 400,
-  "Eating Out": 100,
-  "Coffee Shops": 50,
+  // "Eating Out": 100,
+  // "Coffee Shops": 50,
   // "Taxi & Ride Shares": 50,
   "Travel & Vacation": 50,
   Entertainment: 50,
   // Books: 0,
-  Clothing: 100,
+  Clothing: 50,
   Beauty: 50,
   "Furniture & Housewares": 100,
-  Gifts: 100,
-  Subscriptions: 50,
-  Pharmacy: 50,
+  // Gifts: 100,
+  Subscriptions: 40,
+  // Pharmacy: 50,
 };
 
 export const CATEGORIES: Category[] = [
@@ -108,7 +108,7 @@ export const CATEGORIES: Category[] = [
 ];
 
 export const getDataByMonth = (
-  expenses?: Data[]
+  expenses?: Data[],
 ): {
   [key: string]: Data[];
 } => {
@@ -136,12 +136,12 @@ export const getDataByMonth = (
 
 export const recurringExpenses: RecurringExpense[] = [
   {
-    dayPosted: "11",
+    dayPosted: "06",
     account: AccountType.AMEX,
     description: "Coffee Subscription",
     category: "Groceries",
     currency: Currency.USD,
-    amount: 20.00,
+    amount: 20.0,
   },
   {
     dayPosted: "17",
@@ -152,29 +152,29 @@ export const recurringExpenses: RecurringExpense[] = [
     amount: 39.55,
   },
   {
+    dayPosted: "18",
+    account: AccountType.AMEX,
+    description: "Claude Subscription",
+    category: "Subscriptions",
+    currency: Currency.USD,
+    amount: 20.0,
+  },
+  {
+    dayPosted: "26",
+    account: AccountType.AMEX,
+    description: "iCloud+ Subscription",
+    category: "Subscriptions",
+    currency: Currency.USD,
+    amount: 0.99,
+  },
+  {
     dayPosted: "28",
     account: AccountType.TD_SAVINGS,
     description: "Account Fee",
-    category: "Legal Fees",
+    category: "Financial Fees",
     currency: Currency.CAD,
     amount: 3.95,
   },
-  {
-    dayPosted: "24",
-    account: AccountType.AMEX,
-    description: "Youtube Premium",
-    category: "Subscriptions",
-    currency: Currency.USD,
-    amount: 13.99,
-  },
-  // {
-  //   dayPosted: "25",
-  //   account: AccountType.AMEX,
-  //   description: "ChatGPT",
-  //   category: "Subscriptions",
-  //   currency: Currency.USD,
-  //   amount: 20.0,
-  // },
 ];
 
 export const getCurrentMonthPath = () => {
@@ -191,7 +191,7 @@ export const accountCurrencyMap: Record<AccountType, Currency> = {
 };
 
 export const processExpensesData = (
-  expenses?: Data[]
+  expenses?: Data[],
 ): { [key: string]: { [key: string]: Data[] } } => {
   // If no expenses, return default structure for current month
   if (!expenses || !expenses.length) {
@@ -209,12 +209,12 @@ export const processExpensesData = (
       acc[month].push(expense);
       return acc;
     },
-    {}
+    {},
   );
 
   // Sort months in descending order
   const sortedMonths = Object.keys(dataByMonth).sort((a, b) =>
-    a < b ? 1 : -1
+    a < b ? 1 : -1,
   );
 
   // Group data by year, maintaining the sorted order
@@ -225,7 +225,7 @@ export const processExpensesData = (
       acc[year][month] = dataByMonth[yearMonth];
       return acc;
     },
-    {}
+    {},
   );
 };
 
