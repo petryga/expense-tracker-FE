@@ -11,11 +11,12 @@ import type {
   PostArgs,
 } from './expensesApi.types';
 import { getExpensesByIdUrl, getExpensesUrl } from './helpers';
+import { API_BASE_URL, getApiUrl } from '../api';
 
 export const expensesApi = createApi({
   reducerPath: 'expensesApi',
   tagTypes: ['Expense', 'MonthlyData'],
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000/' }),
+  baseQuery: fetchBaseQuery({ baseUrl: `${API_BASE_URL}/` }),
 
   endpoints: (builder) => ({
     getExpenses: builder.query<GetExpensesData, GetArgs>({
@@ -91,7 +92,7 @@ export const {
 
 export const handleDownloadExpenses = async () => {
   try {
-    const response = await fetch('http://localhost:3000/export');
+    const response = await fetch(getApiUrl('/export'));
     const blob = await response.blob();
     const downloadUrl = window.URL.createObjectURL(blob);
     const link = document.createElement('a');

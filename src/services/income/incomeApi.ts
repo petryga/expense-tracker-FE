@@ -7,11 +7,12 @@ import type {
   DeleteIncomeEntryArgs,
 } from './incomeApi.types';
 import { getIncomeEntriesUrl, getIncomeEntriesByIdUrl } from './helpers';
+import { API_BASE_URL } from '../api';
 
 export const incomeApi = createApi({
   reducerPath: 'incomeApi',
   tagTypes: ['Income', 'MonthlyData'],
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000/' }),
+  baseQuery: fetchBaseQuery({ baseUrl: `${API_BASE_URL}/` }),
 
   endpoints: (builder) => ({
     getIncomeEntries: builder.query<IncomeData[], GetArgs>({

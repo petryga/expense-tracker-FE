@@ -42,7 +42,7 @@ export const getRecurringIncomeEntries = (): RecurringIncomeEntries[] => {
     },
     {
       category: IncomeCategories.CASH,
-      amount: 3,
+      amount: 0,
       description: "",
       date: "",
       currency: Currency.USD,
