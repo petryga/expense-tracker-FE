@@ -24,7 +24,6 @@ import { format } from "date-fns";
 import { Currency, recurringExpenses } from "./helpers";
 import { Context, CustomFooter } from "./CustomFooter";
 import ConfirmationModal from "./ConfirmationModal";
-import styles from "./ExpensesPage.module.css";
 
 export const ExpensesDataGrid = () => {
   const { yearMonth } = useParams();
