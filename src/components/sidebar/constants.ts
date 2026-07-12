@@ -1,4 +1,10 @@
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import {
+  faReceipt,
+  faWallet,
+  faChartPie,
+  faGear,
+  faMagnifyingGlass,
+} from "@fortawesome/free-solid-svg-icons";
 
 export const URLS: Record<string, string> = {
   expenses: "/expenses",
@@ -7,19 +13,23 @@ export const URLS: Record<string, string> = {
   allTimeReports: "/all-time-reports",
   sankey: "/sankey",
   search: "/search",
+  settings: "/settings",
 };
 
 export const OPTIONS = [
   {
     text: "Expenses",
     path: URLS.expenses,
+    icon: faReceipt,
   },
   {
     text: "Assets",
     path: URLS.assets,
+    icon: faWallet,
   },
   {
     text: "Reports",
+    icon: faChartPie,
     subOptions: [
       {
         text: "Monthly",
@@ -39,6 +49,12 @@ export const OPTIONS = [
     text: "Search",
     path: URLS.search,
     icon: faMagnifyingGlass,
-    className: "searchOption",
+    className: "pushToBottom bottomFontItem",
+  },
+  {
+    text: "Settings",
+    path: URLS.settings,
+    icon: faGear,
+    className: "bottomFontItem",
   },
 ];

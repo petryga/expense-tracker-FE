@@ -1,7 +1,10 @@
 export const getExpensesUrl = (searchTerm?: string, yearMonth?: string) => {
-  return `expenses${searchTerm ? `?search=${searchTerm}` : ""}${
-    yearMonth ? `?yearMonth=${yearMonth}` : ""
-  }`;
+  const params = new URLSearchParams();
+  if (searchTerm) params.set("search", searchTerm);
+  if (yearMonth) params.set("yearMonth", yearMonth);
+
+  const queryString = params.toString();
+  return `expenses${queryString ? `?${queryString}` : ""}`;
 };
 
 export const getExpensesByIdUrl = (id: string) => {

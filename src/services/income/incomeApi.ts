@@ -1,4 +1,4 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
 import type {
   PostArgs,
   IncomeData,
@@ -7,12 +7,12 @@ import type {
   DeleteIncomeEntryArgs,
 } from './incomeApi.types';
 import { getIncomeEntriesUrl, getIncomeEntriesByIdUrl } from './helpers';
-import { API_BASE_URL } from '../api';
+import { baseQueryWithAuth } from '../api';
 
 export const incomeApi = createApi({
   reducerPath: 'incomeApi',
   tagTypes: ['Income', 'MonthlyData'],
-  baseQuery: fetchBaseQuery({ baseUrl: `${API_BASE_URL}/` }),
+  baseQuery: baseQueryWithAuth,
 
   endpoints: (builder) => ({
     getIncomeEntries: builder.query<IncomeData[], GetArgs>({

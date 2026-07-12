@@ -10,9 +10,9 @@ import { Dispatch, SetStateAction } from 'react';
 import type { Data } from '../../services/expenses/expensesApi.types';
 
 export type Category = {
-  id: number;
+  id: string;
   name: string;
-  subcategories: { id: number; name: string }[];
+  subcategories: { id: string; name: string }[];
 };
 
 export type DataByCategory = {
@@ -28,14 +28,13 @@ export interface TabPanelProps {
   index: number;
   value: number;
 }
-export type RecurringExpense = Omit<Data, 'datePosted' | 'id'> & { dayPosted: string };
-
 export interface EditToolbarProps {
   setRows: Dispatch<SetStateAction<Data[]>>;
   setRowModesModel: (newModel: (oldModel: GridRowModesModel) => GridRowModesModel) => void;
   onAddButtonClick: () => void;
   onAddRecurringButtonClick: () => void;
   filterModel: GridFilterModel;
+  recurringDisabled?: boolean;
 }
 
 export interface QueryOptions {
@@ -61,4 +60,5 @@ export type TableColumns = {
   handleCheckboxChange: (event: React.ChangeEvent<HTMLInputElement>, id: string) => void;
   handleHeaderCheckboxChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   selectedRows: Data[];
+  categories: Category[];
 };

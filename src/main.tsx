@@ -6,6 +6,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { store } from './store';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
+import { AuthProvider } from './features/auth/AuthContext';
 
 const theme = createTheme({
   components: {
@@ -37,9 +38,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <Provider store={store}>
       <BrowserRouter>
         <ThemeProvider theme={theme}>
-          <Suspense fallback={<></>}>
-            <App />
-          </Suspense>
+          <AuthProvider>
+            <Suspense fallback={<></>}>
+              <App />
+            </Suspense>
+          </AuthProvider>
         </ThemeProvider>
       </BrowserRouter>
     </Provider>
