@@ -184,6 +184,7 @@ const AssetsPage: FC = () => {
         <h1>Assets</h1>
         <DataGrid
           rows={isExpensesLoading ? [] : rows}
+          loading={isExpensesLoading}
           columns={columns}
           editMode="row"
           processRowUpdate={handleRowUpdate}

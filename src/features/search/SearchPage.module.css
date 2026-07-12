@@ -27,3 +27,11 @@
 .searchBar svg {
   color: #eeb12e;
 }
+
+.noRowsOverlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #9b9b9b;
+}

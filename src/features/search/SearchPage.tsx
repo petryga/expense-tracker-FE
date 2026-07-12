@@ -18,6 +18,12 @@ const Context = createContext<{
   totalAmountSearchResultsUsd?: number;
 } | null>(null);
 
+const NoRowsOverlay = ({ hasSearched }: { hasSearched: boolean }) => (
+  <div className={styles.noRowsOverlay}>
+    {hasSearched ? 'No results found' : 'Start typing to search'}
+  </div>
+);
+
 const CustomFooter = () => {
   const {
     totalSelectedCad,
@@ -102,7 +108,6 @@ const SearchPage: FC = () => {
   return (
     <>
       <SearchBar setDebouncedValue={setDebouncedValue} />
-      {(isFetching || isLoading) && <div>Loading...</div>}
       <Context.Provider
         value={{
           totalSelectedCad: totalCad,
@@ -114,12 +119,17 @@ const SearchPage: FC = () => {
         <DataGrid
           autoHeight
           rows={rows || []}
+          loading={isFetching || isLoading}
           columns={columns}
           sx={tableStyles}
           hideFooterPagination
           hideFooterSelectedRowCount
           slots={{
             footer: CustomFooter,
+            noRowsOverlay: NoRowsOverlay,
+          }}
+          slotProps={{
+            noRowsOverlay: { hasSearched: Boolean(debouncedValue) } as object,
           }}
         />
       </Context.Provider>
