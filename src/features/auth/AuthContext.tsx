@@ -2,6 +2,7 @@ import {
   createContext,
   useContext,
   useEffect,
+  useRef,
   useState,
   type FC,
   type ReactNode,
@@ -27,12 +28,18 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(isAuthEnabled);
+  // Supabase re-fires 'SIGNED_IN' on things like tab/window focus, not just
+  // an actual login - track the last known user id so we only treat it as a
+  // real sign-in when the identity actually changes, not on every re-fire
+  // for an already-active session.
+  const lastUserIdRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (!isAuthEnabled || !supabase) return;
 
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);
+      lastUserIdRef.current = data.session?.user?.id ?? null;
       setIsLoading(false);
     });
 
@@ -42,7 +49,11 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
       setSession(newSession);
       setIsLoading(false);
 
-      if (event === 'SIGNED_IN') {
+      const newUserId = newSession?.user?.id ?? null;
+      const isNewSignIn = event === 'SIGNED_IN' && newUserId !== lastUserIdRef.current;
+      lastUserIdRef.current = newUserId;
+
+      if (isNewSignIn) {
         try {
           await fetch(getApiUrl('/demo/reset'), {
             method: 'POST',
@@ -53,7 +64,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
         }
       }
 
-      if (event === 'SIGNED_OUT' || event === 'SIGNED_IN') {
+      if (event === 'SIGNED_OUT' || isNewSignIn) {
         store.dispatch(expensesApi.util.resetApiState());
         store.dispatch(incomeApi.util.resetApiState());
         store.dispatch(monthlyDataApi.util.resetApiState());
