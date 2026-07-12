@@ -122,7 +122,8 @@ export const getYAxisMax = (data: MonthlyExpense[]): number => {
     (max, item) => Math.max(max, item.amountCad, item.amountUsd),
     0
   );
-  return maxValue > 0 ? Math.ceil(maxValue * 1.1) : 100;
+  if (maxValue <= 0) return 100;
+  return Math.ceil((maxValue * 1.1) / 100) * 100;
 };
 
 export const buildYearlyComparisonData = ({

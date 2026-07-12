@@ -14,13 +14,21 @@ const entry = (overrides: Partial<MonthlyData>): MonthlyData => ({
 });
 
 describe('getYAxisMax', () => {
-  it('rounds up to 10% above the highest amount across both currencies', () => {
+  it('adds 10% headroom above the highest amount across both currencies, rounded up to the nearest 100', () => {
     const data = [
       { yearMonth: '2026-01', amountCad: 4000, amountUsd: 100 },
       { yearMonth: '2026-02', amountCad: 500, amountUsd: 5000 },
     ];
 
-    expect(getYAxisMax(data)).toBe(Math.ceil(5000 * 1.1));
+    // 5000 * 1.1 = 5500, already a round hundred
+    expect(getYAxisMax(data)).toBe(5500);
+  });
+
+  it('rounds a non-round padded value up to the next hundred', () => {
+    const data = [{ yearMonth: '2026-01', amountCad: 123, amountUsd: 0 }];
+
+    // 123 * 1.1 = 135.3, rounds up to 200
+    expect(getYAxisMax(data)).toBe(200);
   });
 
   it('falls back to a default when every amount is zero', () => {
