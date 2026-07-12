@@ -223,6 +223,7 @@ export const ExpensesDataGrid = () => {
       >
         <DataGrid
           rows={isExpensesLoading ? [] : rows}
+          loading={isExpensesLoading}
           columns={columns}
           editMode="row"
           processRowUpdate={handleRowUpdate}

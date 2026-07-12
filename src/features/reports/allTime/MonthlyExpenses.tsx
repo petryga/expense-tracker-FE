@@ -7,7 +7,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { groupMonthlyData } from "./helpers";
+import { groupMonthlyData, getYAxisMax } from "./helpers";
 import {
   type MonthlyData,
   MonthlyDataTypes,
@@ -38,7 +38,7 @@ export const MonthlyExpenses = ({
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="yearMonth" />
-          <YAxis domain={[0, 6000]} />
+          <YAxis domain={[0, getYAxisMax(monthlyExpenses)]} />
           <Tooltip />
           <Line
             type="monotone"

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildYearlyComparisonData, groupMonthlyData } from './helpers';
+import { buildYearlyComparisonData, groupMonthlyData, getYAxisMax } from './helpers';
 import { MonthlyDataTypes, type MonthlyData } from '../../../services/monthlyData/monthlyData.types';
 import { Currency } from '../../expenses/helpers';
 import type { FxRateConfig } from '../../../utils/currency';
@@ -11,6 +11,27 @@ const entry = (overrides: Partial<MonthlyData>): MonthlyData => ({
   amountCad: '0',
   amountUsd: '0',
   ...overrides,
+});
+
+describe('getYAxisMax', () => {
+  it('rounds up to 10% above the highest amount across both currencies', () => {
+    const data = [
+      { yearMonth: '2026-01', amountCad: 4000, amountUsd: 100 },
+      { yearMonth: '2026-02', amountCad: 500, amountUsd: 5000 },
+    ];
+
+    expect(getYAxisMax(data)).toBe(Math.ceil(5000 * 1.1));
+  });
+
+  it('falls back to a default when every amount is zero', () => {
+    const data = [{ yearMonth: '2026-01', amountCad: 0, amountUsd: 0 }];
+
+    expect(getYAxisMax(data)).toBe(100);
+  });
+
+  it('returns the default for an empty dataset', () => {
+    expect(getYAxisMax([])).toBe(100);
+  });
 });
 
 describe('groupMonthlyData', () => {

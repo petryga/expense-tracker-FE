@@ -7,7 +7,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { groupMonthlyData } from "./helpers";
+import { groupMonthlyData, getYAxisMax } from "./helpers";
 import {
   MonthlyData,
   MonthlyDataTypes,
@@ -37,7 +37,7 @@ export const WealthTracker = ({
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="yearMonth" />
-          <YAxis domain={[0, 200000]} />
+          <YAxis domain={[0, getYAxisMax(monthlyAssets)]} />
           <Tooltip />
           <Line
             type="monotone"
