@@ -1,6 +1,6 @@
 import { Data } from '../../../services/expenses/expensesApi.types';
 import { DataByCategory } from '../../expenses/ExpensesPage.types';
-import { BUDGETS, Currency } from '../../expenses/helpers';
+import { Currency } from '../../expenses/helpers';
 
 const colors = [
   '#8884d8',
@@ -21,7 +21,8 @@ const getColor = (index: number) => {
 };
 
 export const getVisualizedData = (
-  data?: Data[]
+  data?: Data[],
+  budgetsByCategory: Record<string, number | null> = {}
 ): { dataByCategory: DataByCategory[]; totalSpentCad: number; totalSpentUsd: number } => {
   if (!data) {
     return { dataByCategory: [], totalSpentCad: 0, totalSpentUsd: 0 };
@@ -41,7 +42,7 @@ export const getVisualizedData = (
         total: 0,
         details: [],
         fill: getColor(Object.keys(sumByCategory).length),
-        budget: BUDGETS[category] || null,
+        budget: budgetsByCategory[category] ?? null,
       };
     }
 

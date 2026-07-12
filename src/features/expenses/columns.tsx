@@ -1,7 +1,6 @@
 import {
   accountCurrencyMap,
   AccountType,
-  CATEGORIES,
   Currency,
   paymentOptions,
 } from "./helpers";
@@ -17,7 +16,7 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { GridActionsCellItem } from "@mui/x-data-grid";
 import { formatDate, transformCategoriesForDropdown } from "../../utils";
-import type { TableColumns } from "./ExpensesPage.types";
+import type { Category, TableColumns } from "./ExpensesPage.types";
 import { Checkbox } from "@mui/material";
 import styles from "./ExpensesPage.module.css";
 import type { Data } from "../../services/expenses/expensesApi.types";
@@ -33,6 +32,7 @@ export function createTableColumns({
   handleCheckboxChange,
   handleHeaderCheckboxChange,
   selectedRows,
+  categories,
 }: TableColumns): GridColDef[] {
   const handleEditClick = (id: GridRowId) => () => {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
@@ -168,7 +168,7 @@ export function createTableColumns({
       headerName: "Category",
       width: 250,
       type: "singleSelect",
-      valueOptions: transformCategoriesForDropdown(CATEGORIES),
+      valueOptions: transformCategoriesForDropdown(categories),
       editable: true,
     },
     {
@@ -294,11 +294,13 @@ export function createTableColumns({
 
 export function createSearchColumns({
   handleCheckboxChange,
+  categories,
 }: {
   handleCheckboxChange: (
     event: React.ChangeEvent<HTMLInputElement>,
     id: string,
   ) => void;
+  categories: Category[];
 }): GridColDef[] {
   return [
     {
@@ -352,7 +354,7 @@ export function createSearchColumns({
       headerName: "Category",
       width: 250,
       type: "singleSelect",
-      valueOptions: transformCategoriesForDropdown(CATEGORIES),
+      valueOptions: transformCategoriesForDropdown(categories),
       editable: false,
     },
   ];

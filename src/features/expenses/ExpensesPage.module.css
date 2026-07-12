@@ -1,4 +1,4 @@
-.container{
+.container {
   margin: 0 auto !important;
 }
 
@@ -104,4 +104,16 @@
   cursor: pointer;
 }
 
- 
+.noRowsOverlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 140px;
+}
+
+.noRowsMonth {
+  font-weight: 600;
+  color: #4a4a4a;
+}

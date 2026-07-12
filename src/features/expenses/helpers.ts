@@ -1,6 +1,7 @@
 import { format } from "date-fns";
 import type { Data } from "../../services/expenses/expensesApi.types";
-import type { Category, RecurringExpense } from "./ExpensesPage.types";
+import type { Category } from "./ExpensesPage.types";
+import type { CategoryRecord } from "../../services/categories/categoriesApi.types";
 
 export enum AccountType {
   TD_SAVINGS = "TD Savings",
@@ -15,97 +16,17 @@ export enum Currency {
   USD = "USD",
 }
 
-export const BUDGETS: Record<string, number> = {
-  // Electricity: 60,
-  // Groceries: 400,
-  // "Eating Out": 100,
-  // "Coffee Shops": 50,
-  // "Taxi & Ride Shares": 50,
-  "Travel & Vacation": 50,
-  Entertainment: 50,
-  // Books: 0,
-  Clothing: 50,
-  Beauty: 50,
-  "Furniture & Housewares": 100,
-  // Gifts: 100,
-  Subscriptions: 40,
-  // Pharmacy: 50,
-};
+export const buildCategoryTree = (categories: CategoryRecord[]): Category[] => {
+  const topLevel = categories.filter((category) => !category.parentCategoryId);
 
-export const CATEGORIES: Category[] = [
-  {
-    id: 1,
-    name: "Bills",
-    subcategories: [
-      { id: 101, name: "Rent" },
-      { id: 102, name: "Electricity" },
-      { id: 103, name: "Internet" },
-      { id: 104, name: "Mobile Phone" },
-    ],
-  },
-  {
-    id: 2,
-    name: "Fees",
-    subcategories: [
-      { id: 201, name: "Financial Fees" },
-      { id: 202, name: "Legal Fees" },
-    ],
-  },
-  {
-    id: 3,
-    name: "Food & Dining",
-    subcategories: [
-      { id: 301, name: "Groceries" },
-      { id: 302, name: "Eating Out" },
-      { id: 303, name: "Coffee Shops" },
-    ],
-  },
-  {
-    id: 4,
-    name: "Transportation",
-    subcategories: [
-      { id: 401, name: "Public Transport" },
-      { id: 402, name: "Taxi & Ride Shares" },
-    ],
-  },
-  {
-    id: 5,
-    name: "Lifestyle",
-    subcategories: [
-      { id: 501, name: "Subscriptions" },
-      { id: 502, name: "Travel & Vacation" },
-      { id: 503, name: "Entertainment" },
-      { id: 504, name: "Books" },
-      { id: 505, name: "Pets" },
-      { id: 506, name: "Education" },
-    ],
-  },
-  {
-    id: 6,
-    name: "Shopping",
-    subcategories: [
-      { id: 601, name: "Clothing" },
-      { id: 602, name: "Household Goods" },
-      { id: 603, name: "Furniture & Housewares" },
-      { id: 604, name: "Beauty" },
-      { id: 605, name: "Hobbies" },
-    ],
-  },
-  {
-    id: 7,
-    name: "Health",
-    subcategories: [
-      { id: 701, name: "Medical Expenses" },
-      { id: 702, name: "Pharmacy" },
-      { id: 703, name: "Wellness & Spa" },
-    ],
-  },
-  {
-    id: 8,
-    name: "Gifts",
-    subcategories: [{ id: 901, name: "Gifts" }],
-  },
-];
+  return topLevel.map((category) => ({
+    id: category.id,
+    name: category.name,
+    subcategories: categories
+      .filter((subcategory) => subcategory.parentCategoryId === category.id)
+      .map((subcategory) => ({ id: subcategory.id, name: subcategory.name })),
+  }));
+};
 
 export const getDataByMonth = (
   expenses?: Data[],
@@ -134,49 +55,6 @@ export const getDataByMonth = (
     }, {});
 };
 
-export const recurringExpenses: RecurringExpense[] = [
-  {
-    dayPosted: "06",
-    account: AccountType.AMEX,
-    description: "Coffee Subscription",
-    category: "Groceries",
-    currency: Currency.USD,
-    amount: 20.0,
-  },
-  {
-    dayPosted: "17",
-    account: AccountType.ROGERS,
-    description: "Mobile Phone",
-    category: "Mobile Phone",
-    currency: Currency.CAD,
-    amount: 39.55,
-  },
-  {
-    dayPosted: "18",
-    account: AccountType.AMEX,
-    description: "Claude Subscription",
-    category: "Subscriptions",
-    currency: Currency.USD,
-    amount: 20.0,
-  },
-  {
-    dayPosted: "26",
-    account: AccountType.AMEX,
-    description: "iCloud+ Subscription",
-    category: "Subscriptions",
-    currency: Currency.USD,
-    amount: 0.99,
-  },
-  {
-    dayPosted: "28",
-    account: AccountType.TD_SAVINGS,
-    description: "Account Fee",
-    category: "Financial Fees",
-    currency: Currency.CAD,
-    amount: 3.95,
-  },
-];
-
 export const getCurrentMonthPath = () => {
   const currentMonth = format(new Date(), "yyyy-MM");
   return `/expenses/${currentMonth}`;
@@ -193,14 +71,8 @@ export const accountCurrencyMap: Record<AccountType, Currency> = {
 export const processExpensesData = (
   expenses?: Data[],
 ): { [key: string]: { [key: string]: Data[] } } => {
-  // If no expenses, return default structure for current month
-  if (!expenses || !expenses.length) {
-    const thisMonthAndYear = new Date().toISOString().slice(0, 7);
-    return { [thisMonthAndYear.split("-")[0]]: {} };
-  }
-
   // Transform data into month-based grouping
-  const dataByMonth = expenses.reduce<{ [key: string]: Data[] }>(
+  const dataByMonth = (expenses ?? []).reduce<{ [key: string]: Data[] }>(
     (acc, expense) => {
       const month = new Date(expense.datePosted).toISOString().slice(0, 7);
       if (!acc[month]) {
@@ -211,6 +83,15 @@ export const processExpensesData = (
     },
     {},
   );
+
+  // Always keep the current month reachable in the year/month navigation,
+  // even with no expenses posted yet — otherwise it disappears from the
+  // list entirely as soon as you browse to a different month, with no way
+  // back to it short of re-navigating to Expenses from elsewhere.
+  const currentYearMonth = new Date().toISOString().slice(0, 7);
+  if (!dataByMonth[currentYearMonth]) {
+    dataByMonth[currentYearMonth] = [];
+  }
 
   // Sort months in descending order
   const sortedMonths = Object.keys(dataByMonth).sort((a, b) =>

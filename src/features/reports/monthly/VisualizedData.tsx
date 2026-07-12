@@ -15,11 +15,21 @@ import { getVisualizedData } from "./helpers";
 import styles from "./MonthlyReportsPage.module.css";
 import type { Data } from "../../../services/expenses/expensesApi.types";
 import { CustomBarShape, CustomTooltip } from "./components";
+import { useGetCategoriesQuery } from "../../../services/categories/categoriesApi";
 
 export const VisualizedData = ({ dataByMonth }: { dataByMonth: Data[] }) => {
+  const { data: categoryRecords } = useGetCategoriesQuery({});
+  const budgetsByCategory = useMemo(
+    () =>
+      Object.fromEntries(
+        (categoryRecords ?? []).map((category) => [category.name, category.budget]),
+      ),
+    [categoryRecords],
+  );
+
   const { dataByCategory, totalSpentCad, totalSpentUsd } = useMemo(
-    () => getVisualizedData(dataByMonth),
-    [dataByMonth],
+    () => getVisualizedData(dataByMonth, budgetsByCategory),
+    [dataByMonth, budgetsByCategory],
   );
 
   const maxSpent = Math.max(...dataByCategory.map((item) => item.total));

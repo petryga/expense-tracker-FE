@@ -15,7 +15,7 @@ const textFieldStyles = {
   },
 };
 
-const evaluateExpression = (expression: string) => {
+export const evaluateExpression = (expression: string) => {
   try {
     return new Function('return (' + expression + ')')();
   } catch (error) {

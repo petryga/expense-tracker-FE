@@ -1,38 +1,12 @@
 import type { Currency } from "../../features/expenses/helpers";
-type Category =
-  | "Rent"
-  | "Electricity"
-  | "Internet"
-  | "Mobile Phone"
-  | "Financial Fees"
-  | "Legal Fees"
-  | "Groceries"
-  | "Eating Out"
-  | "Coffee Shops"
-  | "Public Transport"
-  | "Taxi & Ride Shares"
-  | "Subscriptions"
-  | "Travel & Vacation"
-  | "Entertainment"
-  | "Books"
-  | "Pets"
-  | "Clothing"
-  | "Household Goods"
-  | "Furniture & Housewares"
-  | "Beauty"
-  | "Hobbies"
-  | "Medical Expenses"
-  | "Pharmacy"
-  | "Wellness & Spa"
-  | "Gifts"
-  | "Education";
-  
+
 export type Data = {
   id?: string;
   datePosted: string;
   account: string;
   description: string;
-  category: Category | "";
+  // Categories are user-editable (see services/categories), not a fixed set.
+  category: string;
   amount: number;
   isNew?: boolean;
   year?: number;

@@ -1,0 +1,102 @@
+.page {
+  /* position: fixed + inset instead of a normal-flow min-height:100vh:
+     #root is shrink-wrapped to its content's natural width by a global
+     `body { display: flex }` rule (left as-is elsewhere in the app), so a
+     normal-flow full-width container here would collapse to whatever
+     width this page's own content happens to need. Fixed positioning
+     sizes against the viewport directly, sidestepping that entirely. */
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f2f2f2;
+}
+
+.card {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  border: solid 1px #9b9b9b;
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.15);
+  padding: 36px 36px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.brandIcon {
+  color: #eeb12e;
+  font-size: 18px;
+}
+
+.brandText {
+  font-weight: 700;
+  color: #4a4a4a;
+  font-size: 17px;
+}
+
+.title {
+  text-align: center;
+  margin-top: 12px !important;
+  margin-bottom: 8px !important;
+  font-weight: 600 !important;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif !important;
+}
+
+.alert {
+  margin-top: 10px;
+}
+
+.field {
+  width: 260px !important;
+  max-width: 100%;
+  align-self: center;
+  margin-top: 10px !important;
+}
+
+.field :global(.MuiInputLabel-root) {
+  font-size: 0.85rem;
+}
+
+/* Matches the year/month selector buttons (ExpensesPage.module.css .year /
+   .monthLink): sharp corners, the same shadow, border and type scale, amber
+   fill for the "active/selected" look since this is the primary action. */
+.submitButton {
+  width: 260px !important;
+  max-width: 100%;
+  align-self: center;
+  margin-top: 16px !important;
+  background-color: #eeb12e !important;
+  color: #f8f9fa !important;
+  font-weight: 600 !important;
+  font-size: 17px !important;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif !important;
+  border: 1px solid #eeb12e !important;
+  border-radius: 0 !important;
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.15) !important;
+  height: 47.5px;
+}
+
+.submitButton:hover,
+.submitButton:active,
+.submitButton:focus {
+  background-color: #d99f28 !important;
+  border: 1px solid #d99f28 !important;
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.15) !important;
+}
+
+.footerText {
+  text-align: center;
+  margin-top: 24px !important;
+}
+
+.link {
+  color: #eeb12e !important;
+}

@@ -1,0 +1,10 @@
+.recurringGroup {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.warningIcon {
+  color: #eeb12e;
+  cursor: help;
+}

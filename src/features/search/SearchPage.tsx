@@ -1,4 +1,4 @@
-import { FC, createContext, useContext, useEffect, useState } from 'react';
+import { FC, createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { withSidebar } from '../../components/sidebar/withSideBar';
 import { SearchBar } from './SearchBar';
 import { useGetExpensesQuery } from '../../services/expenses/expensesApi';
@@ -8,7 +8,8 @@ import { createSearchColumns } from '../expenses/columns';
 import type { Data } from '../../services/expenses/expensesApi.types';
 
 import styles from './SearchPage.module.css';
-import { Currency } from '../expenses/helpers';
+import { buildCategoryTree, Currency } from '../expenses/helpers';
+import { useGetCategoriesQuery } from '../../services/categories/categoriesApi';
 
 const Context = createContext<{
   totalSelectedCad: number | null;
@@ -90,8 +91,12 @@ const SearchPage: FC = () => {
     }
   };
 
+  const { data: categoryRecords } = useGetCategoriesQuery({});
+  const categories = useMemo(() => buildCategoryTree(categoryRecords ?? []), [categoryRecords]);
+
   const columns = createSearchColumns({
     handleCheckboxChange,
+    categories,
   });
 
   return (
