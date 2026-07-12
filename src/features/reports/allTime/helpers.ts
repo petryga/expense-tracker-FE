@@ -117,6 +117,14 @@ export const groupMonthlyData = (
     }));
 };
 
+export const getYAxisMax = (data: MonthlyExpense[]): number => {
+  const maxValue = data.reduce(
+    (max, item) => Math.max(max, item.amountCad, item.amountUsd),
+    0
+  );
+  return maxValue > 0 ? Math.ceil(maxValue * 1.1) : 100;
+};
+
 export const buildYearlyComparisonData = ({
   data,
   mode,
