@@ -61,4 +61,5 @@ export type TableColumns = {
   handleHeaderCheckboxChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   selectedRows: Data[];
   categories: Category[];
+  budgetByCategory: Record<string, number>;
 };

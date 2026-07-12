@@ -33,6 +33,7 @@ export function createTableColumns({
   handleHeaderCheckboxChange,
   selectedRows,
   categories,
+  budgetByCategory,
 }: TableColumns): GridColDef[] {
   const handleEditClick = (id: GridRowId) => () => {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
@@ -144,11 +145,11 @@ export function createTableColumns({
       type: "string",
       editable: true,
       renderCell: (params) => {
-        const isRent = params.row.category === "Rent";
-        const isBigExpense = params.value > 100;
+        const budget = budgetByCategory[params.row.category as string];
+        const isOverBudget = budget !== undefined && params.value > budget;
 
         return (
-          <div className={!isRent && isBigExpense ? styles.amountBold : ""}>
+          <div className={isOverBudget ? styles.amountBold : ""}>
             ${params.value}
           </div>
         );

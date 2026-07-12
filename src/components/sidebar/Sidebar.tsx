@@ -13,9 +13,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { isAuthEnabled, supabase } from "../../lib/supabaseClient";
+import { useAuth } from "../../features/auth/AuthContext";
 
 const Sidebar = (): JSX.Element => {
   const { isVisible } = useSelector(selectSidebar);
+  const { session } = useAuth();
 
   const dispatch = useDispatch();
   const location = useLocation();
@@ -102,6 +104,11 @@ const Sidebar = (): JSX.Element => {
           );
         })}
       </ul>
+      {isAuthEnabled && session?.user?.email && (
+        <div className={styles.userEmail} title={session.user.email}>
+          {session.user.email}
+        </div>
+      )}
       {isAuthEnabled && (
         <button
           type="button"
