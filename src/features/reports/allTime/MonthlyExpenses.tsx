@@ -14,8 +14,17 @@ import {
 } from "../../../services/monthlyData/monthlyData.types";
 import { CustomDot } from "./CustomDot";
 
-export const MonthlyExpenses = ({ data }: { data?: MonthlyData[] }) => {
-  const monthlyExpenses = groupMonthlyData(MonthlyDataTypes.Expense, data);
+export const MonthlyExpenses = ({
+  data,
+  monthRange = null,
+}: {
+  data?: MonthlyData[];
+  monthRange?: number | null;
+}) => {
+  const allMonthlyExpenses = groupMonthlyData(MonthlyDataTypes.Expense, data);
+  const monthlyExpenses = monthRange
+    ? allMonthlyExpenses.slice(-monthRange)
+    : allMonthlyExpenses;
 
   if (!monthlyExpenses.length) return <div>No data</div>;
 

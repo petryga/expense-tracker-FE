@@ -6,7 +6,7 @@ import {
   GridRowModesModel,
 } from "@mui/x-data-grid";
 import { createTableColumns } from "./columns";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { EditToolbar } from "../../components/EditToolBar";
 import {
   handleDownloadExpenses,
@@ -20,10 +20,24 @@ import type { Data } from "../../services/expenses/expensesApi.types";
 import { tableStyles } from "./styles";
 import { useNavigate, useParams } from "react-router-dom";
 import WarningModal from "../../components/warningModal/WarningModal";
-import { format } from "date-fns";
-import { Currency, recurringExpenses } from "./helpers";
+import { format, parseISO } from "date-fns";
+import { buildCategoryTree, Currency } from "./helpers";
 import { Context, CustomFooter } from "./CustomFooter";
 import ConfirmationModal from "./ConfirmationModal";
+import { useGetRecurringExpensesQuery } from "../../services/recurringExpenses/recurringExpensesApi";
+import { useGetCategoriesQuery } from "../../services/categories/categoriesApi";
+import styles from "./ExpensesPage.module.css";
+
+const NoRowsOverlay = ({ yearMonth }: { yearMonth?: string }) => (
+  <div className={styles.noRowsOverlay}>
+    {yearMonth && (
+      <div className={styles.noRowsMonth}>
+        {format(parseISO(`${yearMonth}-01`), "MMMM yyyy")}
+      </div>
+    )}
+    <div>No rows</div>
+  </div>
+);
 
 export const ExpensesDataGrid = () => {
   const { yearMonth } = useParams();
@@ -69,6 +83,9 @@ export const ExpensesDataGrid = () => {
     }
   }, [expenses]);
 
+  const { data: recurringExpenses } = useGetRecurringExpensesQuery({});
+  const { data: categoryRecords } = useGetCategoriesQuery({});
+  const categories = useMemo(() => buildCategoryTree(categoryRecords ?? []), [categoryRecords]);
   const [createExpense] = useCreateExpenseMutation();
   const [deleteExpense] = useDeleteExpenseMutation();
   const [deleteExpenses] = useDeleteExpensesMutation();
@@ -156,19 +173,22 @@ export const ExpensesDataGrid = () => {
     handleCheckboxChange,
     handleHeaderCheckboxChange,
     selectedRows,
+    categories,
   });
 
   const isExpensesLoading = isLoading || isFetching;
 
   const onAddRecurringButtonClick = async () => {
+    if (!recurringExpenses?.length) return;
+
     const expensesArray: Data[] = [];
     const year = parseInt(yearMonth?.split("-")[0] as string);
     const month = parseInt(yearMonth?.split("-")[1] as string);
 
     recurringExpenses.forEach((expense) => {
-      const { dayPosted, ...recurringExpense } = expense;
+      const { id, dayOfMonth, isNew, ...recurringExpense } = expense;
       const datePosted = format(
-        new Date(year, month - 1, parseInt(dayPosted)),
+        new Date(year, month - 1, dayOfMonth),
         "yyyy-MM-dd",
       );
 
@@ -201,6 +221,7 @@ export const ExpensesDataGrid = () => {
           slots={{
             toolbar: EditToolbar,
             footer: CustomFooter,
+            noRowsOverlay: NoRowsOverlay,
           }}
           slotProps={{
             toolbar: {
@@ -208,12 +229,15 @@ export const ExpensesDataGrid = () => {
               setRowModesModel,
               onAddRecurringButtonClick,
               filterModel,
+              recurringDisabled: recurringExpenses !== undefined && recurringExpenses.length === 0,
             },
             footer: {
               setOpenConfirmationModal,
               filterModel,
               setFilterModel,
+              hasEntries: rows.some((row) => !row.isNew),
             } as FooterPropsOverrides,
+            noRowsOverlay: { yearMonth } as object,
           }}
           sx={tableStyles}
           hideFooterPagination

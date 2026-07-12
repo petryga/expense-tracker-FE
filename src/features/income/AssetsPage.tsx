@@ -19,9 +19,10 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import type { IncomeData } from "../../services/income/incomeApi.types";
 import { format } from "date-fns";
-import { getRecurringIncomeEntries, getRowClassName } from "./helpers";
+import { getRowClassName } from "./helpers";
 import { Context, CustomFooter } from "./CustomFooter";
 import { Currency } from "../expenses/helpers";
+import { useGetRecurringIncomeQuery } from "../../services/recurringIncome/recurringIncomeApi";
 
 const AssetsPage: FC = () => {
   const {
@@ -154,17 +155,20 @@ const AssetsPage: FC = () => {
   };
 
   const isExpensesLoading = isLoading || isFetching;
-  const recurringIncomeEntries = getRecurringIncomeEntries();
+  const { data: recurringIncomeEntries } = useGetRecurringIncomeQuery({});
 
   const onAddRecurringButtonClick = async () => {
+    if (!recurringIncomeEntries?.length) return;
+
     const today = new Date();
     const todayFormatted = format(today, "yyyy-MM-dd");
 
     const incomeEntriesArray: IncomeData[] = [];
 
     recurringIncomeEntries.forEach((entry) => {
+      const { id, isNew, ...recurringEntry } = entry;
       incomeEntriesArray.push({
-        ...entry,
+        ...recurringEntry,
         date: todayFormatted,
       });
     });
@@ -195,6 +199,8 @@ const AssetsPage: FC = () => {
               setRowModesModel,
               onAddButtonClick: onCreateNewRow,
               onAddRecurringButtonClick,
+              recurringDisabled:
+                recurringIncomeEntries !== undefined && recurringIncomeEntries.length === 0,
             },
           }}
           autoHeight

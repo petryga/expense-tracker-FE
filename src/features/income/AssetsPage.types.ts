@@ -14,5 +14,3 @@ export type TableColumns = {
   handleHeaderCheckboxChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   selectedRows: IncomeData[];
 };
-
-export type RecurringIncomeEntries = Omit<IncomeData, 'id'>;

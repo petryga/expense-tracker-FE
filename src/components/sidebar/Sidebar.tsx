@@ -5,9 +5,14 @@ import classNames from "classnames";
 import { useDispatch, useSelector } from "react-redux";
 import { selectSidebar, toggleSidebar } from "./sidebarSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
-import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronLeft,
+  faChevronRight,
+  faSackDollar,
+  faRightFromBracket,
+} from "@fortawesome/free-solid-svg-icons";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { isAuthEnabled, supabase } from "../../lib/supabaseClient";
 
 const Sidebar = (): JSX.Element => {
   const { isVisible } = useSelector(selectSidebar);
@@ -34,19 +39,37 @@ const Sidebar = (): JSX.Element => {
           }
         />
       </div>
+      <div className={styles.brand}>
+        <FontAwesomeIcon
+          className={styles.brandIcon}
+          icon={faSackDollar as IconProp}
+        />
+        <span className={styles.brandText}>Expense Tracker</span>
+      </div>
       <ul>
         {OPTIONS.map((option, i) => {
           const { text, path, subOptions, icon, className = "" } = option;
-          const optionClassName = styles[className as keyof typeof styles];
+          const optionClassNames = className
+            .split(" ")
+            .filter(Boolean)
+            .map((c) => styles[c as keyof typeof styles]);
           const isActive = location.pathname.includes(path!);
 
           return (
             <li
               key={i}
-              className={classNames(optionClassName, isActive ? styles.active : "")}
+              className={classNames(...optionClassNames, isActive ? styles.active : "")}
             >
               {text === "Reports" ? (
-                <div className={styles.reportsLi}>Reports</div>
+                <div className={styles.reportsLi}>
+                  {icon && (
+                    <FontAwesomeIcon
+                      className={styles.sectionIcon}
+                      icon={icon as IconProp}
+                    />
+                  )}
+                  Reports
+                </div>
               ) : (
                 <NavLink to={path!}>
                   {icon && (
@@ -79,6 +102,19 @@ const Sidebar = (): JSX.Element => {
           );
         })}
       </ul>
+      {isAuthEnabled && (
+        <button
+          type="button"
+          className={styles.logoutButton}
+          onClick={() => supabase?.auth.signOut()}
+        >
+          <FontAwesomeIcon
+            className={styles.sidebarIcon}
+            icon={faRightFromBracket as IconProp}
+          />
+          Log out
+        </button>
+      )}
     </div>
   );
 };

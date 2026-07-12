@@ -1,13 +1,15 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { GridRowModes, GridToolbarContainer } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
+import Tooltip from "@mui/material/Tooltip";
 import { v4 as uuidv4 } from "uuid";
 import { EditToolbarProps } from "../features/expenses/ExpensesPage.types";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faCircleExclamation, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { format, getDate, parseISO } from "date-fns";
 import { Data } from "../services/expenses/expensesApi.types";
 import { AccountType, Currency } from "../features/expenses/helpers";
+import toolbarStyles from "./EditToolBar.module.css";
 
 const styles = {
   ":hover": {
@@ -22,6 +24,7 @@ export function EditToolbar({
   onAddButtonClick,
   onAddRecurringButtonClick,
   filterModel,
+  recurringDisabled,
 }: EditToolbarProps) {
   const handleAddEntry = () => {
     if (onAddButtonClick) {
@@ -78,6 +81,28 @@ export function EditToolbar({
 
   return (
     <GridToolbarContainer style={{ justifyContent: "space-between" }}>
+      <div className={toolbarStyles.recurringGroup}>
+        <Button
+          startIcon={
+            <FontAwesomeIcon className="plusIcon" icon={faPlus as IconProp} />
+          }
+          onClick={handleAddRecurring}
+          sx={styles}
+          disabled={buttonDisabled || recurringDisabled}
+        >
+          Add recurring
+        </Button>
+
+        {recurringDisabled && (
+          <Tooltip title="Set your recurring entries in Settings first">
+            <FontAwesomeIcon
+              icon={faCircleExclamation as IconProp}
+              className={toolbarStyles.warningIcon}
+            />
+          </Tooltip>
+        )}
+      </div>
+
       <Button
         startIcon={
           <FontAwesomeIcon className="plusIcon" icon={faPlus as IconProp} />
@@ -87,17 +112,6 @@ export function EditToolbar({
         disabled={buttonDisabled}
       >
         Add entry
-      </Button>
-
-      <Button
-        startIcon={
-          <FontAwesomeIcon className="plusIcon" icon={faPlus as IconProp} />
-        }
-        onClick={handleAddRecurring}
-        sx={styles}
-        disabled={buttonDisabled}
-      >
-        Add recurring
       </Button>
     </GridToolbarContainer>
   );

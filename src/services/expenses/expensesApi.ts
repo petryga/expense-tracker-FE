@@ -1,4 +1,4 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
 import { normalizeGetAllExpensesData, normalizeGetAllSearchedData } from './normalizers';
 import type {
   Data,
@@ -11,12 +11,12 @@ import type {
   PostArgs,
 } from './expensesApi.types';
 import { getExpensesByIdUrl, getExpensesUrl } from './helpers';
-import { API_BASE_URL, getApiUrl } from '../api';
+import { baseQueryWithAuth, getApiUrl, getAuthHeader } from '../api';
 
 export const expensesApi = createApi({
   reducerPath: 'expensesApi',
   tagTypes: ['Expense', 'MonthlyData'],
-  baseQuery: fetchBaseQuery({ baseUrl: `${API_BASE_URL}/` }),
+  baseQuery: baseQueryWithAuth,
 
   endpoints: (builder) => ({
     getExpenses: builder.query<GetExpensesData, GetArgs>({
@@ -92,7 +92,8 @@ export const {
 
 export const handleDownloadExpenses = async () => {
   try {
-    const response = await fetch(getApiUrl('/export'));
+    const headers = await getAuthHeader();
+    const response = await fetch(getApiUrl('/export'), { headers });
     const blob = await response.blob();
     const downloadUrl = window.URL.createObjectURL(blob);
     const link = document.createElement('a');

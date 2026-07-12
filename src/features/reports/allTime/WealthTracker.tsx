@@ -15,8 +15,15 @@ import {
 import { CustomDot } from "./CustomDot";
 import styles from "./YearlyComparison.module.css";
 
-export const WealthTracker = ({ data }: { data?: MonthlyData[] }) => {
-  const monthlyAssets = groupMonthlyData(MonthlyDataTypes.Income, data);
+export const WealthTracker = ({
+  data,
+  monthRange = null,
+}: {
+  data?: MonthlyData[];
+  monthRange?: number | null;
+}) => {
+  const allMonthlyAssets = groupMonthlyData(MonthlyDataTypes.Income, data);
+  const monthlyAssets = monthRange ? allMonthlyAssets.slice(-monthRange) : allMonthlyAssets;
 
   if (!monthlyAssets.length) return <div> No data</div>;
 

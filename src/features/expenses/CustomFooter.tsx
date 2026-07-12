@@ -7,6 +7,7 @@ interface FooterProps {
   setOpenConfirmationModal: Dispatch<React.SetStateAction<boolean>>;
   filterModel: GridFilterModel;
   setFilterModel: Dispatch<SetStateAction<GridFilterModel>>;
+  hasEntries: boolean;
 }
 
 export const Context = createContext<{
@@ -19,23 +20,35 @@ export const Context = createContext<{
 export const CustomFooter = ({
   setOpenConfirmationModal,
   filterModel,
-  setFilterModel,
+  setFilterModel: _setFilterModel,
+  hasEntries,
 }: FooterProps) => {
   const { totalSelectedCad, totalSelectedUsd, expensesTotalAmountCad, expensesTotalAmountUsd } =
     useContext(Context) || {};
 
   const isFilterOn = filterModel.items.length > 0;
+
+  const formatAmounts = (cad?: number | null, usd?: number | null) => {
+    const cadAmount = Number(cad) || 0;
+    const usdAmount = Number(usd) || 0;
+    return [
+      cadAmount > 0 ? `${cadAmount.toFixed(2)}$ (CAD)` : null,
+      usdAmount > 0 ? `${usdAmount.toFixed(2)}$ (USD)` : null,
+    ].filter(Boolean);
+  };
+
+  const selectedTotalParts = formatAmounts(totalSelectedCad, totalSelectedUsd);
+  const monthlyTotalParts = formatAmounts(expensesTotalAmountCad, expensesTotalAmountUsd);
+
   return (
     <div className={styles.footer}>
-      {totalSelectedCad || totalSelectedUsd
-        ? `Total Amount of Selected Entries - ${totalSelectedCad?.toFixed(
-            2
-          )}$ (CAD) / ${totalSelectedUsd?.toFixed(2)}$ (USD)`
-        : isFilterOn
+      {selectedTotalParts.length
+        ? `Total Amount of Selected Entries - ${selectedTotalParts.join(' / ')}`
+        : isFilterOn || !monthlyTotalParts.length
         ? null
-        : `Total Expenses This Month - ${expensesTotalAmountCad}$ (CAD) / ${expensesTotalAmountUsd}$ (USD)`}
+        : `Total Expenses This Month - ${monthlyTotalParts.join(' / ')}`}
 
-      {!isFilterOn && (
+      {!isFilterOn && hasEntries && (
         <div
           title="Download All Expenses"
           className={styles.downloadButton}
