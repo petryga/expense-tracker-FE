@@ -86,6 +86,15 @@ export const ExpensesDataGrid = () => {
   const { data: recurringExpenses } = useGetRecurringExpensesQuery({});
   const { data: categoryRecords } = useGetCategoriesQuery({});
   const categories = useMemo(() => buildCategoryTree(categoryRecords ?? []), [categoryRecords]);
+  const budgetByCategory = useMemo(
+    () =>
+      Object.fromEntries(
+        (categoryRecords ?? [])
+          .filter((category) => category.budget !== null)
+          .map((category) => [category.name, category.budget as number]),
+      ),
+    [categoryRecords],
+  );
   const [createExpense] = useCreateExpenseMutation();
   const [deleteExpense] = useDeleteExpenseMutation();
   const [deleteExpenses] = useDeleteExpensesMutation();
@@ -174,6 +183,7 @@ export const ExpensesDataGrid = () => {
     handleHeaderCheckboxChange,
     selectedRows,
     categories,
+    budgetByCategory,
   });
 
   const isExpensesLoading = isLoading || isFetching;
