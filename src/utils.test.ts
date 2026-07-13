@@ -38,8 +38,8 @@ describe('transformCategoriesForDropdown', () => {
 });
 
 describe('formatDate', () => {
-  it('formats a Date value as yyyy/mm/dd using UTC fields', () => {
-    const result = formatDate({ value: new Date('2026-07-05T12:00:00.000Z') } as any);
+  it('formats a Date value as yyyy/mm/dd using local fields', () => {
+    const result = formatDate({ value: new Date(2026, 6, 5) } as any);
     expect(result).toBe('2026/07/05');
   });
 
