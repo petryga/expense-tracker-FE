@@ -1,7 +1,7 @@
 import { FC, useState } from 'react';
 import { Button, IconButton, TextField } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import {
   useCreateCategoryMutation,
@@ -28,6 +28,7 @@ export const CategoriesPanel: FC = () => {
 
   const [newCategoryName, setNewCategoryName] = useState('');
   const [subcategoryDrafts, setSubcategoryDrafts] = useState<Record<string, string>>({});
+  const [budgetDrafts, setBudgetDrafts] = useState<Record<string, string>>({});
   const [openModal, setOpenModal] = useState(false);
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
 
@@ -54,7 +55,16 @@ export const CategoriesPanel: FC = () => {
     setSubcategoryDrafts((drafts) => ({ ...drafts, [parentCategoryId]: '' }));
   };
 
-  const handleBudgetChange = (id: string, value: string) => {
+  const getBudgetDraft = (id: string, savedBudget: number | null) =>
+    budgetDrafts[id] ?? (savedBudget !== null ? String(savedBudget) : '');
+
+  const handleBudgetDraftChange = (id: string, value: string) => {
+    setBudgetDrafts((drafts) => ({ ...drafts, [id]: value }));
+  };
+
+  const handleBudgetSave = (id: string) => {
+    const value = budgetDrafts[id];
+    if (value === undefined) return;
     const budget = value.trim() === '' ? null : parseFloat(value);
     updateCategoryBudget({ id, budget });
   };
@@ -94,7 +104,7 @@ export const CategoriesPanel: FC = () => {
             {category.isDefault && <span className={styles.defaultLabel}>Default</span>}
             {!category.isDefault && (
               <IconButton size="small" onClick={() => handleDeleteClick(category.id)}>
-                <FontAwesomeIcon icon={faTrash as IconProp} className={styles.icon} />
+                <FontAwesomeIcon icon={faTrash as IconProp} className={styles.icon} size="xs" />
               </IconButton>
             )}
           </div>
@@ -111,12 +121,22 @@ export const CategoriesPanel: FC = () => {
                 variant="standard"
                 type="number"
                 sx={budgetInputStyles}
-                defaultValue={subcategory.budget ?? ''}
-                onBlur={(event) => handleBudgetChange(subcategory.id, event.target.value)}
+                value={getBudgetDraft(subcategory.id, subcategory.budget)}
+                onChange={(event) =>
+                  handleBudgetDraftChange(subcategory.id, event.target.value)
+                }
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    handleBudgetSave(subcategory.id);
+                  }
+                }}
               />
+              <IconButton size="small" onClick={() => handleBudgetSave(subcategory.id)}>
+                <FontAwesomeIcon icon={faCheck as IconProp} className={styles.icon} />
+              </IconButton>
               {!subcategory.isDefault ? (
                 <IconButton size="small" onClick={() => handleDeleteClick(subcategory.id)}>
-                  <FontAwesomeIcon icon={faTrash as IconProp} className={styles.icon} />
+                  <FontAwesomeIcon icon={faTrash as IconProp} className={styles.icon} size="xs" />
                 </IconButton>
               ) : (
                 <span />
