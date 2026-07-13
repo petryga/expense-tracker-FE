@@ -8,7 +8,6 @@ import {
   Cell,
   LabelList,
   Tooltip,
-  ReferenceLine,
   ResponsiveContainer,
 } from "recharts";
 import { getVisualizedData } from "./helpers";
@@ -73,32 +72,6 @@ export const VisualizedData = ({ dataByMonth }: { dataByMonth: Data[] }) => {
               overflow={"extendDomain"}
             />
           </Bar>
-
-          {dataByCategory.map(({ budget, total, category }, index) => {
-            const isShown = budget && budget < total;
-
-            return (
-              <>
-                {isShown ? (
-                  <ReferenceLine
-                    key={`ref-${index}`}
-                    y={category}
-                    stroke="transparent"
-                    strokeDasharray="2 3"
-                    label={{
-                      value: `$${budget}`,
-                      position: "insideRight",
-                      fill: "red",
-                      fontWeight: "bold",
-                    }}
-                    ifOverflow="extendDomain"
-                  />
-                ) : (
-                  <></>
-                )}
-              </>
-            );
-          })}
         </BarChart>
       </ResponsiveContainer>
 
