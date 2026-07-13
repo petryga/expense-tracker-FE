@@ -65,6 +65,16 @@ export const CustomBarShape: FC<CustomBarShapeProps> = ({
       {isExceedingBudget && (
         <>
           <line x1={budgetX} y1={y} x2={budgetX} y2={y + height} stroke="red" strokeWidth={1} />
+          <text
+            x={budgetX}
+            y={y - 4}
+            textAnchor="middle"
+            fill="red"
+            fontWeight="bold"
+            fontSize={12}
+          >
+            ${budget}
+          </text>
         </>
       )}
     </g>

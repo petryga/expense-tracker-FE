@@ -131,8 +131,7 @@ export const ExpensesDataGrid = () => {
     const updatedRow = { ...newRow, isNew: false };
 
     const isNewRowOfTheSameYearMonth = () => {
-      const rowDate = new Date(newRow.datePosted);
-      const rowYearMonth = format(rowDate, "yyyy-MM");
+      const rowYearMonth = newRow.datePosted.slice(0, 7);
       return rowYearMonth === yearMonth;
     };
 

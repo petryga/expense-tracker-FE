@@ -10,6 +10,9 @@ export const tableStyles = {
     borderRight: "0.5px solid #e0e0e0",
     borderLeft: "0.5px solid #e0e0e0",
   },
+  "& .MuiDataGrid-cellContent": {
+    textAlign: "left",
+  },
   "& .MuiDataGrid-columnHeaders": {
     backgroundColor: "#fafafa",
     color: "#4A4A4A",
