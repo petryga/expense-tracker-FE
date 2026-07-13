@@ -8,6 +8,7 @@ import {
 } from '@mui/x-data-grid';
 import { Dispatch, SetStateAction } from 'react';
 import type { Data } from '../../services/expenses/expensesApi.types';
+import type { AccountRecord } from '../../services/accounts/accountsApi.types';
 
 export type Category = {
   id: string;
@@ -35,6 +36,7 @@ export interface EditToolbarProps {
   onAddRecurringButtonClick: () => void;
   filterModel: GridFilterModel;
   recurringDisabled?: boolean;
+  accounts: AccountRecord[];
 }
 
 export interface QueryOptions {
@@ -62,4 +64,5 @@ export type TableColumns = {
   selectedRows: Data[];
   categories: Category[];
   budgetByCategory: Record<string, number>;
+  accounts: AccountRecord[];
 };

@@ -5,6 +5,7 @@ import { monthlyDataApi } from './services/monthlyData/monthlyDataApi';
 import { recurringExpensesApi } from './services/recurringExpenses/recurringExpensesApi';
 import { recurringIncomeApi } from './services/recurringIncome/recurringIncomeApi';
 import { categoriesApi } from './services/categories/categoriesApi';
+import { accountsApi } from './services/accounts/accountsApi';
 import sidebarReducer from './components/sidebar/sidebarSlice';
 
 export const store = configureStore({
@@ -15,6 +16,7 @@ export const store = configureStore({
     [recurringExpensesApi.reducerPath]: recurringExpensesApi.reducer,
     [recurringIncomeApi.reducerPath]: recurringIncomeApi.reducer,
     [categoriesApi.reducerPath]: categoriesApi.reducer,
+    [accountsApi.reducerPath]: accountsApi.reducer,
     rightSidebar: sidebarReducer,
   },
 
@@ -25,7 +27,8 @@ export const store = configureStore({
       incomeApi.middleware,
       recurringExpensesApi.middleware,
       recurringIncomeApi.middleware,
-      categoriesApi.middleware
+      categoriesApi.middleware,
+      accountsApi.middleware
     ),
 });
 
@@ -36,6 +39,7 @@ export const rootReducer = {
   recurringExpenses: recurringExpensesApi.reducer,
   recurringIncome: recurringIncomeApi.reducer,
   categories: categoriesApi.reducer,
+  accounts: accountsApi.reducer,
 };
 
 export type RootState = ReturnType<typeof store.getState>;

@@ -6,6 +6,7 @@ import { format, parseISO } from "date-fns";
 import { ResponsiveSankey } from "@nivo/sankey";
 import styles from "./SankeyPage.module.css";
 import { buildSankeyData, COLORS } from "./helpers";
+import { SankeyChartLink, SankeyChartNode } from "./SankeyPage.types";
 
 const SankeyPage: FC = () => {
   const [selectedMonth, setSelectedMonth] = useState<string | undefined>(
@@ -37,7 +38,7 @@ const SankeyPage: FC = () => {
     return {
       nodes: nodes.map((node, idx) => ({
         id: String(idx),
-        label: node.name,
+        name: node.name,
         color: nodeColors[idx],
       })),
       links: links.map((link) => ({
@@ -96,7 +97,7 @@ const SankeyPage: FC = () => {
 
       <div className={styles.chart}>
         {sankeyData ? (
-          <ResponsiveSankey
+          <ResponsiveSankey<SankeyChartNode, SankeyChartLink>
             data={sankeyData}
             margin={{ top: 24, right: 200, bottom: 24, left: 100 }}
             nodeThickness={18}
@@ -105,7 +106,7 @@ const SankeyPage: FC = () => {
             nodeOpacity={0.95}
             linkOpacity={0.35}
             colors={{ datum: "color" }}
-            label={(node) => (node as any).label ?? ""}
+            label={(node) => node.name}
             labelPosition="outside"
             labelPadding={10}
             labelTextColor="#0f172a"

@@ -3,14 +3,6 @@ import type { Data } from "../../services/expenses/expensesApi.types";
 import type { Category } from "./ExpensesPage.types";
 import type { CategoryRecord } from "../../services/categories/categoriesApi.types";
 
-export enum AccountType {
-  TD_SAVINGS = "TD Savings",
-  AMEX = "Amex",
-  BOFA_SAVINGS = "BofA Debit",
-  CASH = "Cash",
-  ROGERS = "Rogers",
-}
-
 export enum Currency {
   CAD = "CAD",
   USD = "USD",
@@ -60,14 +52,6 @@ export const getCurrentMonthPath = () => {
   return `/expenses/${currentMonth}`;
 };
 
-export const accountCurrencyMap: Record<AccountType, Currency> = {
-  [AccountType.TD_SAVINGS]: Currency.CAD,
-  [AccountType.AMEX]: Currency.USD,
-  [AccountType.BOFA_SAVINGS]: Currency.USD,
-  [AccountType.CASH]: Currency.USD,
-  [AccountType.ROGERS]: Currency.CAD,
-};
-
 export const processExpensesData = (
   expenses?: Data[],
 ): { [key: string]: { [key: string]: Data[] } } => {
@@ -109,11 +93,3 @@ export const processExpensesData = (
     {},
   );
 };
-
-export const paymentOptions = [
-  AccountType.TD_SAVINGS,
-  AccountType.AMEX,
-  AccountType.BOFA_SAVINGS,
-  AccountType.CASH,
-  AccountType.ROGERS,
-];

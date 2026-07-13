@@ -4,7 +4,7 @@ import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { GridActionsCellItem } from '@mui/x-data-grid';
 import styles from '../expenses/ExpensesPage.module.css';
-import { Currency, paymentOptions } from '../expenses/helpers';
+import { Currency } from '../expenses/helpers';
 import { transformCategoriesForDropdown } from '../../utils';
 import { renderEditCell } from '../../components/amountTableCell/AmountTableCell';
 import { RecurringExpenseTableColumns } from './SettingsPage.types';
@@ -16,6 +16,7 @@ export function createRecurringExpenseColumns({
   setRows,
   handleOpenModal,
   categories,
+  accounts,
 }: RecurringExpenseTableColumns): GridColDef[] {
   const handleEditClick = (id: GridRowId) => () => {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
@@ -43,7 +44,7 @@ export function createRecurringExpenseColumns({
       headerName: 'Account',
       width: 130,
       type: 'singleSelect',
-      valueOptions: paymentOptions,
+      valueOptions: accounts.map((account) => account.name),
       editable: true,
     },
     {
