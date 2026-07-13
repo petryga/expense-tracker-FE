@@ -8,7 +8,7 @@ import { faCircleExclamation, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { format, getDate, parseISO } from "date-fns";
 import { Data } from "../services/expenses/expensesApi.types";
-import { AccountType, Currency } from "../features/expenses/helpers";
+import { Currency } from "../features/expenses/helpers";
 import toolbarStyles from "./EditToolBar.module.css";
 
 const styles = {
@@ -25,6 +25,7 @@ export function EditToolbar({
   onAddRecurringButtonClick,
   filterModel,
   recurringDisabled,
+  accounts,
 }: EditToolbarProps) {
   const handleAddEntry = () => {
     if (onAddButtonClick) {
@@ -50,15 +51,17 @@ export function EditToolbar({
         );
       }
 
+      const defaultAccount = accounts[0];
+
       const newRow: Data = {
         id,
         datePosted,
-        account: AccountType.AMEX,
+        account: defaultAccount?.name ?? "",
         description: "",
         category: "",
         amount: 0,
         isNew: true,
-        currency: Currency.USD,
+        currency: defaultAccount?.currency ?? Currency.USD,
       };
 
       return [newRow, ...oldRows];
