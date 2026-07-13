@@ -6,10 +6,10 @@ import { tableStyles } from '../expenses/styles';
 import { DataGrid } from '@mui/x-data-grid';
 import { createSearchColumns } from '../expenses/columns';
 import type { Data } from '../../services/expenses/expensesApi.types';
-
 import styles from './SearchPage.module.css';
 import { buildCategoryTree, Currency } from '../expenses/helpers';
 import { useGetCategoriesQuery } from '../../services/categories/categoriesApi';
+import { useGetAccountsQuery } from '../../services/accounts/accountsApi';
 
 const Context = createContext<{
   totalSelectedCad: number | null;
@@ -35,8 +35,8 @@ const CustomFooter = () => {
     <div className={styles.footer}>
       {totalSelectedCad || totalSelectedUsd
         ? `Total Amount of Selected Entries - ${totalSelectedCad?.toFixed(
-            2
-          )}$ (CAD) / ${totalSelectedUsd?.toFixed(2)}$ (USD)`
+          2
+        )}$ (CAD) / ${totalSelectedUsd?.toFixed(2)}$ (USD)`
         : `Total Amount for these Results - ${totalAmountSearchResultsCad}$ (CAD) / ${totalAmountSearchResultsUsd}$ (USD)`}
     </div>
   );
@@ -99,10 +99,12 @@ const SearchPage: FC = () => {
 
   const { data: categoryRecords } = useGetCategoriesQuery({});
   const categories = useMemo(() => buildCategoryTree(categoryRecords ?? []), [categoryRecords]);
+  const { data: accounts } = useGetAccountsQuery({});
 
   const columns = createSearchColumns({
     handleCheckboxChange,
     categories,
+    accounts: accounts ?? [],
   });
 
   return (

@@ -1,10 +1,6 @@
-import {
-  accountCurrencyMap,
-  AccountType,
-  Currency,
-  paymentOptions,
-} from "./helpers";
+import { Currency } from "./helpers";
 import { GridColDef, GridRowId, GridRowModes } from "@mui/x-data-grid";
+import type { AccountRecord } from "../../services/accounts/accountsApi.types";
 import {
   faTrash,
   faSave,
@@ -34,6 +30,7 @@ export function createTableColumns({
   selectedRows,
   categories,
   budgetByCategory,
+  accounts,
 }: TableColumns): GridColDef[] {
   const handleEditClick = (id: GridRowId) => () => {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
@@ -124,14 +121,14 @@ export function createTableColumns({
       headerName: "Account",
       width: 95,
       type: "singleSelect",
-      valueOptions: paymentOptions,
+      valueOptions: accounts.map((account) => account.name),
       editable: true,
 
       preProcessEditCellProps: (params) => {
         if (params.row.isNew) {
           const newCurrency =
-            accountCurrencyMap[params.props.value as AccountType] ||
-            Currency.CAD;
+            accounts.find((account) => account.name === params.props.value)
+              ?.currency || Currency.CAD;
 
           setRows((prevRows) =>
             prevRows.map((row) =>
@@ -310,12 +307,14 @@ export function createTableColumns({
 export function createSearchColumns({
   handleCheckboxChange,
   categories,
+  accounts,
 }: {
   handleCheckboxChange: (
     event: React.ChangeEvent<HTMLInputElement>,
     id: string,
   ) => void;
   categories: Category[];
+  accounts: AccountRecord[];
 }): GridColDef[] {
   return [
     {
@@ -348,7 +347,7 @@ export function createSearchColumns({
       headerName: "Account",
       width: 100,
       type: "singleSelect",
-      valueOptions: paymentOptions,
+      valueOptions: accounts.map((account) => account.name),
       editable: false,
     },
     {

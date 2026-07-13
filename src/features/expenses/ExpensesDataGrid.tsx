@@ -26,6 +26,7 @@ import { Context, CustomFooter } from "./CustomFooter";
 import ConfirmationModal from "./ConfirmationModal";
 import { useGetRecurringExpensesQuery } from "../../services/recurringExpenses/recurringExpensesApi";
 import { useGetCategoriesQuery } from "../../services/categories/categoriesApi";
+import { useGetAccountsQuery } from "../../services/accounts/accountsApi";
 import styles from "./ExpensesPage.module.css";
 
 const NoRowsOverlay = ({ yearMonth }: { yearMonth?: string }) => (
@@ -95,6 +96,7 @@ export const ExpensesDataGrid = () => {
       ),
     [categoryRecords],
   );
+  const { data: accounts } = useGetAccountsQuery({});
   const [createExpense] = useCreateExpenseMutation();
   const [deleteExpense] = useDeleteExpenseMutation();
   const [deleteExpenses] = useDeleteExpensesMutation();
@@ -183,6 +185,7 @@ export const ExpensesDataGrid = () => {
     selectedRows,
     categories,
     budgetByCategory,
+    accounts: accounts ?? [],
   });
 
   const isExpensesLoading = isLoading || isFetching;
@@ -240,6 +243,7 @@ export const ExpensesDataGrid = () => {
               onAddRecurringButtonClick,
               filterModel,
               recurringDisabled: recurringExpenses !== undefined && recurringExpenses.length === 0,
+              accounts: accounts ?? [],
             },
             footer: {
               setOpenConfirmationModal,

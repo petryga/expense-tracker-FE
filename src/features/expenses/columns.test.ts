@@ -15,6 +15,7 @@ const getDatePostedColumn = () => {
     selectedRows: [],
     categories: [],
     budgetByCategory: {},
+    accounts: [],
   });
 
   const column = columns.find((col) => col.field === 'datePosted' && col.editable);

@@ -3,7 +3,7 @@ import { FC, useEffect, useMemo, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import WarningModal from '../../components/warningModal/WarningModal';
 import { tableStyles } from '../expenses/styles';
-import { AccountType, buildCategoryTree, Currency } from '../expenses/helpers';
+import { buildCategoryTree, Currency } from '../expenses/helpers';
 import {
   useCreateRecurringExpenseMutation,
   useDeleteRecurringExpenseMutation,
@@ -12,6 +12,7 @@ import {
 } from '../../services/recurringExpenses/recurringExpensesApi';
 import type { RecurringExpenseData } from '../../services/recurringExpenses/recurringExpensesApi.types';
 import { useGetCategoriesQuery } from '../../services/categories/categoriesApi';
+import { useGetAccountsQuery } from '../../services/accounts/accountsApi';
 import { createRecurringExpenseColumns } from './recurringExpensesColumns';
 import { AddEntryToolbar } from './AddEntryToolbar';
 
@@ -19,6 +20,7 @@ export const RecurringExpensesGrid: FC = () => {
   const { data: recurringExpenses, isLoading, isFetching } = useGetRecurringExpensesQuery({});
   const { data: categoryRecords } = useGetCategoriesQuery({});
   const categories = useMemo(() => buildCategoryTree(categoryRecords ?? []), [categoryRecords]);
+  const { data: accounts } = useGetAccountsQuery({});
   const [rows, setRows] = useState<RecurringExpenseData[]>([]);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const [openModal, setOpenModal] = useState(false);
@@ -58,14 +60,15 @@ export const RecurringExpensesGrid: FC = () => {
 
   const onAddButtonClick = () => {
     const id = uuidv4();
+    const defaultAccount = accounts?.[0];
 
     setRows((oldRows) => [
       {
         id,
-        account: AccountType.AMEX,
+        account: defaultAccount?.name ?? '',
         description: '',
         category: '',
-        currency: Currency.USD,
+        currency: defaultAccount?.currency ?? Currency.USD,
         amount: 0,
         dayOfMonth: 1,
         isNew: true,
@@ -86,6 +89,7 @@ export const RecurringExpensesGrid: FC = () => {
     setRows,
     handleOpenModal,
     categories,
+    accounts: accounts ?? [],
   });
 
   return (
