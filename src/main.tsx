@@ -14,6 +14,13 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           color: '#eeb12e',
+          lineHeight: 'normal',
+        },
+        startIcon: {
+          display: 'inline',
+        },
+        endIcon: {
+          display: 'inline',
         },
       },
     },

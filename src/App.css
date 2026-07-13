@@ -3,3 +3,11 @@
   margin: 0 auto;
   text-align: center;
 }
+
+.fa-plus {
+  font-size: 16px !important;
+}
+
+.svg-inline--fa {
+  vertical-align: baseline;
+}

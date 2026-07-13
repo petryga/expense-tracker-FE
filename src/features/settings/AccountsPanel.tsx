@@ -69,13 +69,14 @@ export const AccountsPanel: FC = () => {
 
       {(accounts ?? []).map((account) => (
         <div key={account.id} className={styles.accountRow}>
-          <span className={styles.accountName}>{account.name}</span>
+          <div className={styles.nameGroup}>
+            <span className={styles.accountName}>{account.name}</span>
+            {account.isDefault && <span className={styles.defaultLabel}>Default</span>}
+          </div>
           <span className={styles.currencyLabel}>{account.currency}</span>
-          {account.isDefault && <span className={styles.defaultLabel}>Default</span>}
-          {!account.isDefault && <span />}
           {!account.isDefault ? (
             <IconButton size="small" onClick={() => handleDeleteClick(account.id)}>
-              <FontAwesomeIcon icon={faTrash as IconProp} className={styles.icon} />
+              <FontAwesomeIcon icon={faTrash as IconProp} className={styles.icon} size="xs" />
             </IconButton>
           ) : (
             <span />
