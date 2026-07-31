@@ -198,7 +198,7 @@ export const ExpensesDataGrid = () => {
     const month = parseInt(yearMonth?.split("-")[1] as string);
 
     recurringExpenses.forEach((expense) => {
-      const { id, dayOfMonth, isNew, ...recurringExpense } = expense;
+      const { id: _id, dayOfMonth, isNew: _isNew, ...recurringExpense } = expense;
       const datePosted = format(
         new Date(year, month - 1, dayOfMonth),
         "yyyy-MM-dd",

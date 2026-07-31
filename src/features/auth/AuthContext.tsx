@@ -1,12 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-  type FC,
-  type ReactNode,
-} from 'react';
+import { useEffect, useRef, useState, type FC, type ReactNode } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import { isAuthEnabled, supabase } from '../../lib/supabaseClient';
 import { store } from '../../store';
@@ -17,13 +9,7 @@ import { recurringExpensesApi } from '../../services/recurringExpenses/recurring
 import { recurringIncomeApi } from '../../services/recurringIncome/recurringIncomeApi';
 import { categoriesApi } from '../../services/categories/categoriesApi';
 import { getApiUrl, getAuthHeader } from '../../services/api';
-
-interface AuthContextValue {
-  session: Session | null;
-  isLoading: boolean;
-}
-
-const AuthContext = createContext<AuthContextValue | undefined>(undefined);
+import { AuthContext } from './useAuth';
 
 export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [session, setSession] = useState<Session | null>(null);
@@ -80,12 +66,4 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <AuthContext.Provider value={{ session, isLoading }}>{children}</AuthContext.Provider>
   );
-};
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
 };

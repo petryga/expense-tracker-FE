@@ -2,7 +2,7 @@ import { type FC, useState, type FormEvent } from 'react';
 import { Link as RouterLink, Navigate, useLocation } from 'react-router-dom';
 import { Button, Link, TextField, Typography, Alert } from '@mui/material';
 import { isAuthEnabled, supabase } from '../../lib/supabaseClient';
-import { useAuth } from './AuthContext';
+import { useAuth } from './useAuth';
 import { URLS } from '../../components/sidebar/constants';
 import { AuthCard } from './AuthCard';
 import styles from './AuthCard.module.css';
