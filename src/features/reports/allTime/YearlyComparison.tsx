@@ -70,8 +70,6 @@ export const YearlyComparison = ({ data }: { data?: MonthlyData[] }) => {
 
   return (
     <>
-      <h1>Yearly Spending Comparison</h1>
-
       <div className={styles.controls}>
         <label>
           Comparison

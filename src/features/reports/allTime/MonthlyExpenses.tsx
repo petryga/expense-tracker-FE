@@ -30,7 +30,6 @@ export const MonthlyExpenses = ({
 
   return (
     <>
-      <h1>Monthly Expense Tracker</h1>
       <ResponsiveContainer width={1000} height={600}>
         <LineChart
           data={monthlyExpenses}
