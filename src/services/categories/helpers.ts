@@ -9,3 +9,7 @@ export const getCategoryBudgetUrl = (id: string) => {
 export const getCategoryByIdUrl = (id: string) => {
   return `/categories/${id}`;
 };
+
+export const parseBudgetInput = (value: string): number | null => {
+  return value.trim() === '' ? null : parseFloat(value);
+};
