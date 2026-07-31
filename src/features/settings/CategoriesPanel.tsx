@@ -1,7 +1,7 @@
 import { FC, useState } from 'react';
 import { Button, IconButton, TextField } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faPlus, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import {
   useCreateCategoryMutation,
@@ -9,6 +9,7 @@ import {
   useGetCategoriesQuery,
   useUpdateCategoryBudgetMutation,
 } from '../../services/categories/categoriesApi';
+import { parseBudgetInput } from '../../services/categories/helpers';
 import WarningModal from '../../components/warningModal/WarningModal';
 import styles from './CategoriesPanel.module.css';
 
@@ -65,8 +66,12 @@ export const CategoriesPanel: FC = () => {
   const handleBudgetSave = (id: string) => {
     const value = budgetDrafts[id];
     if (value === undefined) return;
-    const budget = value.trim() === '' ? null : parseFloat(value);
-    updateCategoryBudget({ id, budget });
+    updateCategoryBudget({ id, budget: parseBudgetInput(value) });
+  };
+
+  const handleBudgetClear = (id: string) => {
+    setBudgetDrafts((drafts) => ({ ...drafts, [id]: '' }));
+    updateCategoryBudget({ id, budget: null });
   };
 
   const handleDeleteClick = (id: string) => {
@@ -133,6 +138,13 @@ export const CategoriesPanel: FC = () => {
               />
               <IconButton size="small" onClick={() => handleBudgetSave(subcategory.id)}>
                 <FontAwesomeIcon icon={faCheck as IconProp} className={styles.icon} />
+              </IconButton>
+              <IconButton
+                size="small"
+                onClick={() => handleBudgetClear(subcategory.id)}
+                disabled={getBudgetDraft(subcategory.id, subcategory.budget) === ''}
+              >
+                <FontAwesomeIcon icon={faTimes as IconProp} className={styles.icon} size="xs" />
               </IconButton>
               {!subcategory.isDefault ? (
                 <IconButton size="small" onClick={() => handleDeleteClick(subcategory.id)}>
