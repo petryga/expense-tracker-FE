@@ -11,7 +11,7 @@ const SearchPage = lazy(() => import("./features/search/SearchPage"));
 const ExpensesPage = lazy(() => import("./features/expenses/ExpensesPage"));
 const AssetsPage = lazy(() => import("./features/income/AssetsPage"));
 const AllTimeReportsPage = lazy(
-  () => import("./features/reports/allTime/ReportsPageTabs"),
+  () => import("./features/reports/allTime/AllTimeReportsPage"),
 );
 const SankeyPage = lazy(() => import("./features/sankey/SankeyPage"));
 const LoginPage = lazy(() => import("./features/auth/LoginPage"));
