@@ -1,6 +1,6 @@
 import { type FC, type ReactNode } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from './AuthContext';
+import { useAuth } from './useAuth';
 import { isAuthEnabled } from '../../lib/supabaseClient';
 
 export const RequireAuth: FC<{ children: ReactNode }> = ({ children }) => {

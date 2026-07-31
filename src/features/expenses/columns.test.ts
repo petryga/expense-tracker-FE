@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
+import type { GridValueGetterParams, GridValueSetterParams } from '@mui/x-data-grid';
 import { createTableColumns } from './columns';
 import { Currency } from './helpers';
 import type { Data } from '../../services/expenses/expensesApi.types';
@@ -36,7 +37,9 @@ const makeRow = (overrides: Partial<Data> = {}): Data => ({
 describe('datePosted column valueGetter', () => {
   it('parses a plain yyyy-MM-dd string into a local Date on the correct day', () => {
     const column = getDatePostedColumn();
-    const result = column.valueGetter!({ value: '2026-07-13', row: makeRow() } as any);
+    const result = column.valueGetter!(
+      { value: '2026-07-13', row: makeRow() } as unknown as GridValueGetterParams<Data>
+    );
 
     expect(result).toBeInstanceOf(Date);
     expect((result as Date).getFullYear()).toBe(2026);
@@ -49,7 +52,7 @@ describe('datePosted column valueGetter', () => {
     const result = column.valueGetter!({
       value: '2026-06-30T07:00:00.000Z',
       row: makeRow({ datePosted: '2026-06-30T07:00:00.000Z' }),
-    } as any);
+    } as unknown as GridValueGetterParams<Data>);
 
     expect(result).toBeInstanceOf(Date);
     expect(Number.isNaN((result as Date).getTime())).toBe(false);
@@ -61,15 +64,15 @@ describe('datePosted column valueGetter', () => {
   it('passes through an existing Date instance unchanged', () => {
     const column = getDatePostedColumn();
     const date = new Date(2026, 6, 13);
-    const result = column.valueGetter!({ value: date, row: makeRow() } as any);
+    const result = column.valueGetter!({ value: date, row: makeRow() } as unknown as GridValueGetterParams<Data>);
 
     expect(result).toBe(date);
   });
 
   it('passes through a falsy value unchanged', () => {
     const column = getDatePostedColumn();
-    expect(column.valueGetter!({ value: '', row: makeRow() } as any)).toBe('');
-    expect(column.valueGetter!({ value: null, row: makeRow() } as any)).toBe(null);
+    expect(column.valueGetter!({ value: '', row: makeRow() } as unknown as GridValueGetterParams<Data>)).toBe('');
+    expect(column.valueGetter!({ value: null, row: makeRow() } as unknown as GridValueGetterParams<Data>)).toBe(null);
   });
 });
 
@@ -79,7 +82,7 @@ describe('datePosted column valueSetter', () => {
     const row = makeRow();
     const date = new Date(2026, 6, 13);
 
-    const result = column.valueSetter!({ value: date, row } as any);
+    const result = column.valueSetter!({ value: date, row } as unknown as GridValueSetterParams<Data>);
 
     expect(result.datePosted).toBe('2026-07-13');
   });
@@ -89,7 +92,7 @@ describe('datePosted column valueSetter', () => {
     const row = makeRow();
     const date = new Date(2026, 0, 5);
 
-    const result = column.valueSetter!({ value: date, row } as any);
+    const result = column.valueSetter!({ value: date, row } as unknown as GridValueSetterParams<Data>);
 
     expect(result.datePosted).toBe('2026-01-05');
   });
