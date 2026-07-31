@@ -85,7 +85,9 @@ describe('normalizeGetAllSearchedData', () => {
   });
 
   it('returns an empty result when there is no data array', () => {
-    const result = normalizeGetAllSearchedData({ data: undefined as any, expensesTotal: {} as any });
+    const result = normalizeGetAllSearchedData(
+      { data: undefined, expensesTotal: {} } as unknown as NewDataResponse
+    );
     expect(result.data).toEqual([]);
     expect(result.expensesTotal.totalAmountSearchResultsCad).toBe(0);
   });

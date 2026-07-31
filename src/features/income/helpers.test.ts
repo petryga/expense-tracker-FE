@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import type { GridRowClassNameParams } from '@mui/x-data-grid';
 import { getRowClassName } from './helpers';
 import type { IncomeData } from '../../services/income/incomeApi.types';
 import { Currency } from '../expenses/helpers';
@@ -11,17 +12,17 @@ const rows: IncomeData[] = [
 
 describe('getRowClassName', () => {
   it('returns empty for the first row (no previous row to compare against)', () => {
-    const result = getRowClassName({ id: 'a', row: rows[0] } as any, rows);
-    expect(result).toBe('');
+    const params = { id: 'a', row: rows[0] } as unknown as GridRowClassNameParams<IncomeData>;
+    expect(getRowClassName(params, rows)).toBe('');
   });
 
   it('returns empty when the previous row is in the same month', () => {
-    const result = getRowClassName({ id: 'b', row: rows[1] } as any, rows);
-    expect(result).toBe('');
+    const params = { id: 'b', row: rows[1] } as unknown as GridRowClassNameParams<IncomeData>;
+    expect(getRowClassName(params, rows)).toBe('');
   });
 
   it('flags "new-month-row" for a first-of-the-month date without rolling back to the previous month locally', () => {
-    const result = getRowClassName({ id: 'c', row: rows[2] } as any, rows);
-    expect(result).toBe('new-month-row');
+    const params = { id: 'c', row: rows[2] } as unknown as GridRowClassNameParams<IncomeData>;
+    expect(getRowClassName(params, rows)).toBe('new-month-row');
   });
 });

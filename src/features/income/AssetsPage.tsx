@@ -166,7 +166,7 @@ const AssetsPage: FC = () => {
     const incomeEntriesArray: IncomeData[] = [];
 
     recurringIncomeEntries.forEach((entry) => {
-      const { id, isNew, ...recurringEntry } = entry;
+      const { id: _id, isNew: _isNew, ...recurringEntry } = entry;
       incomeEntriesArray.push({
         ...recurringEntry,
         date: todayFormatted,

@@ -13,7 +13,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { isAuthEnabled, supabase } from "../../lib/supabaseClient";
-import { useAuth } from "../../features/auth/AuthContext";
+import { useAuth } from "../../features/auth/useAuth";
 
 const Sidebar = (): JSX.Element => {
   const { isVisible } = useSelector(selectSidebar);
