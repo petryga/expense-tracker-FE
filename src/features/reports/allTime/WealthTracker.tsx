@@ -29,7 +29,6 @@ export const WealthTracker = ({
 
   return (
     <div className={styles.chartWrap}>
-      <h1>Wealth Tracker</h1>
       <ResponsiveContainer width={1000} height={600}>
         <LineChart
           data={monthlyAssets}

@@ -41,17 +41,3 @@ export const tableStyles = {
     fontWeight: "bold",
   },
 };
-
-export const tabsStyles = {
-  ".MuiTab-root.Mui-selected": {
-    color: "#eeb12e",
-  },
-  ".MuiTab-root": {
-    color: "#727272",
-  },
-  ".MuiTabs-indicator": {
-    // backgroundColor: "#eeb12e",
-    // height: "2px",
-    display: "none",
-  },
-};

@@ -24,11 +24,6 @@ export type DataByCategory = {
   budget: number | null;
 };
 
-export interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
 export interface EditToolbarProps {
   setRows: Dispatch<SetStateAction<Data[]>>;
   setRowModesModel: (newModel: (oldModel: GridRowModesModel) => GridRowModesModel) => void;
