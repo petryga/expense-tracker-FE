@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-and-test:
+    name: Lint, typecheck, test, build
+    runs-on: ubuntu-latest
+
+    env:
+      HUSKY: 0 # don't install git hooks in CI; `npm ci` would otherwise run `prepare`
+
+      # VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY are deliberately unset, so
+      # isAuthEnabled is false and the app builds in its no-auth mode (see
+      # src/lib/supabaseClient.ts). VITE_API_BASE_URL is only read at runtime.
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20 # matches local (v20.18.1)
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint # --max-warnings 0: any warning fails the build
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Tests
+        run: npm test
+
+      # Catches anything that only breaks in a production build - the same `tsc &&
+      # vite build` Vercel runs on deploy.
+      - name: Build
+        run: npm run build
