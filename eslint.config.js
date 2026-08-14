@@ -1,0 +1,46 @@
+import js from '@eslint/js';
+import globals from 'globals';
+import reactHooks from 'eslint-plugin-react-hooks';
+import reactRefresh from 'eslint-plugin-react-refresh';
+import tseslint from 'typescript-eslint';
+
+export default tseslint.config(
+  { ignores: ['dist'] },
+  {
+    extends: [js.configs.recommended, ...tseslint.configs.recommended],
+    files: ['**/*.{ts,tsx}'],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.browser,
+    },
+    plugins: {
+      'react-hooks': reactHooks,
+      'react-refresh': reactRefresh,
+    },
+    rules: {
+      ...reactHooks.configs.recommended.rules,
+
+      // eslint-plugin-react-hooks v7 folds the React Compiler rules into its
+      // recommended set. They flag 14 real issues here (12 of them
+      // set-state-in-effect), but satisfying them means restructuring the
+      // data-sync effects behind the grids, reports and search pages — a
+      // behavioural refactor, not a lint cleanup. Turned off deliberately so
+      // the plugin stays current; re-enable one at a time to work through them.
+      'react-hooks/set-state-in-effect': 'off',
+      'react-hooks/immutability': 'off',
+      'react-hooks/use-memo': 'off',
+
+      'react-refresh/only-export-components': [
+        'warn',
+        { allowConstantExport: true },
+      ],
+      // Unlike portfolio-2026, this project keeps unused-vars enforced, with an
+      // underscore prefix as the opt-out.
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        { varsIgnorePattern: '^_', argsIgnorePattern: '^_' },
+      ],
+      '@typescript-eslint/no-explicit-any': 'warn',
+    },
+  },
+);

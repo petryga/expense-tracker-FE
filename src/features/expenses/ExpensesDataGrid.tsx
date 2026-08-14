@@ -22,7 +22,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import WarningModal from "../../components/warningModal/WarningModal";
 import { format, parseISO } from "date-fns";
 import { buildCategoryTree, Currency } from "./helpers";
-import { Context, CustomFooter } from "./CustomFooter";
+import { CustomFooter } from "./CustomFooter";
+import { Context } from "./FooterContext";
 import ConfirmationModal from "./ConfirmationModal";
 import { useGetRecurringExpensesQuery } from "../../services/recurringExpenses/recurringExpensesApi";
 import { useGetCategoriesQuery } from "../../services/categories/categoriesApi";
@@ -104,7 +105,7 @@ export const ExpensesDataGrid = () => {
 
   const handleOpenModal = (id?: GridRowId) => () => {
     setOpenModal(true);
-    id ? setEntryId(id as string) : setEntryId(null);
+    setEntryId(id ? (id as string) : null);
   };
 
   const handleDeleteRow = async () => {

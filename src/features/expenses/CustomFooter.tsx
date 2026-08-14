@@ -1,7 +1,8 @@
-import { createContext, Dispatch, SetStateAction, useContext } from 'react';
+import { Dispatch, SetStateAction, useContext } from 'react';
 import DownloadIcon from '@mui/icons-material/Download';
 import styles from './ExpensesPage.module.css';
 import { GridFilterModel } from '@mui/x-data-grid';
+import { Context } from './FooterContext';
 
 interface FooterProps {
   setOpenConfirmationModal: Dispatch<React.SetStateAction<boolean>>;
@@ -9,13 +10,6 @@ interface FooterProps {
   setFilterModel: Dispatch<SetStateAction<GridFilterModel>>;
   hasEntries: boolean;
 }
-
-export const Context = createContext<{
-  totalSelectedCad: number | null;
-  totalSelectedUsd: number | null;
-  expensesTotalAmountCad?: number;
-  expensesTotalAmountUsd?: number;
-} | null>(null);
 
 export const CustomFooter = ({
   setOpenConfirmationModal,

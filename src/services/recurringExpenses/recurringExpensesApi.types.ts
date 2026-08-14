@@ -11,7 +11,7 @@ export type RecurringExpenseData = {
   isNew?: boolean;
 };
 
-export interface GetArgs {}
+export type GetArgs = Record<string, never>;
 
 export interface PostArgs {
   data: RecurringExpenseData;
