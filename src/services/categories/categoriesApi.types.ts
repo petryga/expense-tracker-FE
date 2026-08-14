@@ -6,7 +6,7 @@ export type CategoryRecord = {
   budget: number | null;
 };
 
-export interface GetArgs {}
+export type GetArgs = Record<string, never>;
 
 export interface PostArgs {
   data: {

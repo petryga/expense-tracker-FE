@@ -20,7 +20,8 @@ import { v4 as uuidv4 } from "uuid";
 import type { IncomeData } from "../../services/income/incomeApi.types";
 import { format } from "date-fns";
 import { getRowClassName } from "./helpers";
-import { Context, CustomFooter } from "./CustomFooter";
+import { CustomFooter } from "./CustomFooter";
+import { Context } from "./FooterContext";
 import { Currency } from "../expenses/helpers";
 import { useGetRecurringIncomeQuery } from "../../services/recurringIncome/recurringIncomeApi";
 

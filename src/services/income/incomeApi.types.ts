@@ -19,7 +19,7 @@ export interface PutArgs {
   data: IncomeData;
 }
 
-export interface GetArgs {}
+export type GetArgs = Record<string, never>;
 
 export interface DeleteIncomeEntryArgs {
   id: string;

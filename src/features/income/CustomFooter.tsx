@@ -1,10 +1,6 @@
-import { createContext, useContext } from "react";
+import { useContext } from "react";
 import styles from "./AssetsPage.module.css";
-
-export const Context = createContext<{
-  totalSelectedCad: number | null;
-  totalSelectedUsd?: number | null;
-} | null>(null);
+import { Context } from "./FooterContext";
 
 export const CustomFooter = () => {
   const { totalSelectedCad, totalSelectedUsd } = useContext(Context) || {};

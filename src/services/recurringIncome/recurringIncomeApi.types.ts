@@ -9,7 +9,7 @@ export type RecurringIncomeData = {
   isNew?: boolean;
 };
 
-export interface GetArgs {}
+export type GetArgs = Record<string, never>;
 
 export interface PostArgs {
   data: RecurringIncomeData;
