@@ -6,6 +6,7 @@ import {
 } from "@mui/x-data-grid";
 import { FC, useMemo, useState } from "react";
 import { EditToolbar } from "../../components/EditToolBar";
+import type { EditToolbarProps } from "../expenses/ExpensesPage.types";
 import WarningModal from "../../components/warningModal/WarningModal";
 import { tableStyles } from "../expenses/styles";
 import { createTableColumns } from "./columns";
@@ -196,7 +197,12 @@ const AssetsPage: FC = () => {
           }}
           slotProps={{
             toolbar: {
-              setRows,
+              // EditToolbar's setRows is typed for expenses' Data[] since it's
+              // shared with ExpensesDataGrid, but that fallback branch only
+              // runs when onAddButtonClick is absent — here it's always
+              // provided (onCreateNewRow), so setRows is never actually
+              // invoked by EditToolbar in this usage.
+              setRows: setRows as unknown as EditToolbarProps["setRows"],
               setRowModesModel,
               onAddButtonClick: onCreateNewRow,
               onAddRecurringButtonClick,

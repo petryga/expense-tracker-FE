@@ -1,8 +1,25 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { GridValueGetterParams, GridValueSetterParams } from '@mui/x-data-grid';
 import { createTableColumns } from './columns';
 import { Currency } from './helpers';
 import type { Data } from '../../services/expenses/expensesApi.types';
+
+// createTableColumns returns a bare GridColDef[], which widens each column's
+// valueGetter/valueSetter to MUI's defaults (value: never for valueGetter).
+// The datePosted getter/setter under test never inspect column/apiRef, only
+// value/row, so cast once to a signature matching the real implementation in
+// columns.tsx rather than fighting MUI's generic defaults.
+type DatePostedValueGetter = (
+  value: Date | string | null,
+  row: Data,
+  column: unknown,
+  apiRef: unknown,
+) => Date | string | null;
+type DatePostedValueSetter = (
+  value: Date,
+  row: Data,
+  column: unknown,
+  apiRef: unknown,
+) => Data;
 
 const getDatePostedColumn = () => {
   const columns = createTableColumns({
@@ -21,7 +38,10 @@ const getDatePostedColumn = () => {
 
   const column = columns.find((col) => col.field === 'datePosted' && col.editable);
   if (!column) throw new Error('Editable datePosted column not found');
-  return column;
+  return {
+    valueGetter: column.valueGetter as unknown as DatePostedValueGetter,
+    valueSetter: column.valueSetter as unknown as DatePostedValueSetter,
+  };
 };
 
 const makeRow = (overrides: Partial<Data> = {}): Data => ({
@@ -36,10 +56,8 @@ const makeRow = (overrides: Partial<Data> = {}): Data => ({
 
 describe('datePosted column valueGetter', () => {
   it('parses a plain yyyy-MM-dd string into a local Date on the correct day', () => {
-    const column = getDatePostedColumn();
-    const result = column.valueGetter!(
-      { value: '2026-07-13', row: makeRow() } as unknown as GridValueGetterParams<Data>
-    );
+    const { valueGetter } = getDatePostedColumn();
+    const result = valueGetter('2026-07-13', makeRow(), undefined, undefined);
 
     expect(result).toBeInstanceOf(Date);
     expect((result as Date).getFullYear()).toBe(2026);
@@ -48,11 +66,13 @@ describe('datePosted column valueGetter', () => {
   });
 
   it('parses a full ISO timestamp string without producing an Invalid Date', () => {
-    const column = getDatePostedColumn();
-    const result = column.valueGetter!({
-      value: '2026-06-30T07:00:00.000Z',
-      row: makeRow({ datePosted: '2026-06-30T07:00:00.000Z' }),
-    } as unknown as GridValueGetterParams<Data>);
+    const { valueGetter } = getDatePostedColumn();
+    const result = valueGetter(
+      '2026-06-30T07:00:00.000Z',
+      makeRow({ datePosted: '2026-06-30T07:00:00.000Z' }),
+      undefined,
+      undefined,
+    );
 
     expect(result).toBeInstanceOf(Date);
     expect(Number.isNaN((result as Date).getTime())).toBe(false);
@@ -62,37 +82,37 @@ describe('datePosted column valueGetter', () => {
   });
 
   it('passes through an existing Date instance unchanged', () => {
-    const column = getDatePostedColumn();
+    const { valueGetter } = getDatePostedColumn();
     const date = new Date(2026, 6, 13);
-    const result = column.valueGetter!({ value: date, row: makeRow() } as unknown as GridValueGetterParams<Data>);
+    const result = valueGetter(date, makeRow(), undefined, undefined);
 
     expect(result).toBe(date);
   });
 
   it('passes through a falsy value unchanged', () => {
-    const column = getDatePostedColumn();
-    expect(column.valueGetter!({ value: '', row: makeRow() } as unknown as GridValueGetterParams<Data>)).toBe('');
-    expect(column.valueGetter!({ value: null, row: makeRow() } as unknown as GridValueGetterParams<Data>)).toBe(null);
+    const { valueGetter } = getDatePostedColumn();
+    expect(valueGetter('', makeRow(), undefined, undefined)).toBe('');
+    expect(valueGetter(null, makeRow(), undefined, undefined)).toBe(null);
   });
 });
 
 describe('datePosted column valueSetter', () => {
   it('converts an edited local Date back into a yyyy-MM-dd string', () => {
-    const column = getDatePostedColumn();
+    const { valueSetter } = getDatePostedColumn();
     const row = makeRow();
     const date = new Date(2026, 6, 13);
 
-    const result = column.valueSetter!({ value: date, row } as unknown as GridValueSetterParams<Data>);
+    const result = valueSetter(date, row, undefined, undefined);
 
     expect(result.datePosted).toBe('2026-07-13');
   });
 
   it('pads single-digit month and day', () => {
-    const column = getDatePostedColumn();
+    const { valueSetter } = getDatePostedColumn();
     const row = makeRow();
     const date = new Date(2026, 0, 5);
 
-    const result = column.valueSetter!({ value: date, row } as unknown as GridValueSetterParams<Data>);
+    const result = valueSetter(date, row, undefined, undefined);
 
     expect(result.datePosted).toBe('2026-01-05');
   });

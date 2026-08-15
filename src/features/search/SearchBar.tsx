@@ -46,15 +46,17 @@ export function SearchBar({
         className={styles.searchBar}
         onChange={handleSearchChange}
         placeholder="Search"
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <FontAwesomeIcon
-                icon={searchValue ? (faTimes as IconProp) : (faSearch as IconProp)}
-                onClick={resetSearch}
-              />
-            </InputAdornment>
-          ),
+        slotProps={{
+          input: {
+            startAdornment: (
+              <InputAdornment position="start">
+                <FontAwesomeIcon
+                  icon={searchValue ? (faTimes as IconProp) : (faSearch as IconProp)}
+                  onClick={resetSearch}
+                />
+              </InputAdornment>
+            ),
+          },
         }}
       />
     </>
