@@ -1,3 +1,5 @@
+import type { JSX } from "react";
+
 export interface ConfirmModalProps {
   onConfirm: () => void;
   onSecondary: () => void;
