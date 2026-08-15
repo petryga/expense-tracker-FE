@@ -47,7 +47,7 @@ export const ExpensesDataGrid = () => {
     data: { data: expenses, expensesTotal } = {},
     isLoading,
     isFetching,
-  } = useGetExpensesQuery({ yearMonth });
+  } = useGetExpensesQuery({ yearMonth }, { refetchOnMountOrArgChange: true });
   const [filterModel, setFilterModel] = useState<GridFilterModel>({
     items: [],
   });
