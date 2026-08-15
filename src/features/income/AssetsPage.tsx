@@ -191,6 +191,7 @@ const AssetsPage: FC = () => {
           processRowUpdate={handleRowUpdate}
           rowModesModel={rowModesModel}
           onProcessRowUpdateError={(params) => params.updatedRow}
+          showToolbar
           slots={{
             toolbar: EditToolbar,
             footer: CustomFooter,
