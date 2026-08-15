@@ -1,3 +1,4 @@
+import type { JSX } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import styles from "./Sidebar.module.css";
 import { OPTIONS } from "./constants";
