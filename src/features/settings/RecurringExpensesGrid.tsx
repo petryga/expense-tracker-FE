@@ -104,6 +104,7 @@ export const RecurringExpensesGrid: FC = () => {
         processRowUpdate={handleRowUpdate}
         rowModesModel={rowModesModel}
         onProcessRowUpdateError={(params) => params.updatedRow}
+        showToolbar
         slots={{ toolbar: AddEntryToolbar }}
         slotProps={{ toolbar: { onAddButtonClick } }}
         sx={tableStyles}
