@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import type { GridValueFormatterParams } from '@mui/x-data-grid';
 import { formatDate, transformCategoriesForDropdown } from './utils';
 import type { Category } from './features/expenses/ExpensesPage.types';
 
@@ -40,14 +39,10 @@ describe('transformCategoriesForDropdown', () => {
 
 describe('formatDate', () => {
   it('formats a Date value as yyyy/mm/dd using local fields', () => {
-    const params = { value: new Date(2026, 6, 5) } as unknown as GridValueFormatterParams;
-    expect(formatDate(params)).toBe('2026/07/05');
+    expect(formatDate(new Date(2026, 6, 5))).toBe('2026/07/05');
   });
 
   it('formats a date string value', () => {
-    const params = {
-      value: '2026-01-09T00:00:00.000Z',
-    } as unknown as GridValueFormatterParams;
-    expect(formatDate(params)).toBe('2026/01/09');
+    expect(formatDate('2026-01-09T00:00:00.000Z')).toBe('2026/01/09');
   });
 });

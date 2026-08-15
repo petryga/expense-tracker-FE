@@ -83,7 +83,7 @@ const SignupPage: FC = () => {
         required
         autoComplete="new-password"
         className={styles.field}
-        inputProps={{ minLength: 6 }}
+        slotProps={{ htmlInput: { minLength: 6 } }}
       />
       <TextField
         label="Confirm Password"
@@ -93,7 +93,7 @@ const SignupPage: FC = () => {
         required
         autoComplete="new-password"
         className={styles.field}
-        inputProps={{ minLength: 6 }}
+        slotProps={{ htmlInput: { minLength: 6 } }}
       />
       <Button
         type="submit"

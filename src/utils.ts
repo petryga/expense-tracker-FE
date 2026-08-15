@@ -1,4 +1,3 @@
-import { GridValueFormatterParams } from '@mui/x-data-grid';
 import { Category } from './features/expenses/ExpensesPage.types';
 
 export const transformCategoriesForDropdown = (categories: Category[]) => {
@@ -10,20 +9,20 @@ export const transformCategoriesForDropdown = (categories: Category[]) => {
   );
 };
 
-export const formatDate = (date: GridValueFormatterParams) => {
+export const formatDate = (value: Date | string) => {
   // A Date instance here was built locally (see the datePosted valueGetter) and
   // already represents the intended local calendar day, so read it with local
   // getters. A raw "yyyy-MM-dd" string is parsed as UTC midnight by `new Date`,
   // so it must be read with UTC getters to avoid a timezone-shifted day.
-  if (date.value instanceof Date) {
-    const dd = String(date.value.getDate()).padStart(2, '0');
-    const mm = String(date.value.getMonth() + 1).padStart(2, '0');
-    const yyyy = date.value.getFullYear();
+  if (value instanceof Date) {
+    const dd = String(value.getDate()).padStart(2, '0');
+    const mm = String(value.getMonth() + 1).padStart(2, '0');
+    const yyyy = value.getFullYear();
 
     return `${yyyy}/${mm}/${dd}`;
   }
 
-  const valueFormatted = new Date(date.value);
+  const valueFormatted = new Date(value);
 
   const dd = String(valueFormatted.getUTCDate()).padStart(2, '0');
   const mm = String(valueFormatted.getUTCMonth() + 1).padStart(2, '0');

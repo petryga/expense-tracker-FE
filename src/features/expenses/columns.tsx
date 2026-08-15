@@ -100,21 +100,21 @@ export function createTableColumns({
       width: 100,
       editable: true,
       type: "date",
-      valueGetter: (params) => {
-        if (!params.value) return params.value;
-        if (params.value instanceof Date) return params.value;
-        const datePart = (params.value as string).slice(0, 10);
+      valueGetter: (value: Date | string | null) => {
+        if (!value) return value;
+        if (value instanceof Date) return value;
+        const datePart = value.slice(0, 10);
         const [year, month, day] = datePart.split("-").map(Number);
         return new Date(year, month - 1, day);
       },
-      valueSetter: (params) => {
-        const date = params.value as Date;
+      valueSetter: (value: Date, row: Data) => {
+        const date = value;
         const yyyy = date.getFullYear();
         const mm = String(date.getMonth() + 1).padStart(2, "0");
         const dd = String(date.getDate()).padStart(2, "0");
-        return { ...params.row, datePosted: `${yyyy}-${mm}-${dd}` };
+        return { ...row, datePosted: `${yyyy}-${mm}-${dd}` };
       },
-      valueFormatter: (params) => formatDate(params),
+      valueFormatter: (value) => formatDate(value),
     },
     {
       field: "account",
@@ -340,7 +340,7 @@ export function createSearchColumns({
       width: 100,
       editable: false,
       type: "date",
-      valueFormatter: (params) => formatDate(params),
+      valueFormatter: (value) => formatDate(value),
     },
     {
       field: "account",

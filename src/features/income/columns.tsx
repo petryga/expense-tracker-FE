@@ -75,7 +75,7 @@ export function createTableColumns({
       width: 120,
       editable: true,
       type: "date",
-      valueFormatter: (params) => formatDate(params),
+      valueFormatter: (value) => formatDate(value),
     },
     {
       field: "category",
