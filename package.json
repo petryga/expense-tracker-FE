@@ -21,7 +21,7 @@
     "@mui/icons-material": "^5.15.21",
     "@mui/material": "^5.10.6",
     "@mui/x-data-grid": "^6.16.3",
-    "@nivo/sankey": "^0.85.0",
+    "@nivo/sankey": "^0.99.0",
     "@reduxjs/toolkit": "^2.2.3",
     "@supabase/supabase-js": "^2.109.0",
     "classnames": "^2.5.1",
