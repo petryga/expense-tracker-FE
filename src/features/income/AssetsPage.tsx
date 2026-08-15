@@ -5,6 +5,7 @@ import {
   GridRowModesModel,
 } from "@mui/x-data-grid";
 import { FC, useMemo, useState } from "react";
+import { useSyncedRows } from "../../hooks/useSyncedRows";
 import { EditToolbar } from "../../components/EditToolBar";
 import type { EditToolbarProps } from "../expenses/ExpensesPage.types";
 import WarningModal from "../../components/warningModal/WarningModal";
@@ -33,21 +34,11 @@ const AssetsPage: FC = () => {
     isFetching,
   } = useGetIncomeEntriesQuery({}, { refetchOnMountOrArgChange: true });
 
-  const [rows, setRows] = useState<IncomeData[]>([]);
+  const [rows, setRows] = useSyncedRows(incomeData);
   const [openModal, setOpenModal] = useState(false);
   const [entryId, setEntryId] = useState<string | null>(null);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const [selectedRows, setSelectedRows] = useState<IncomeData[]>([]);
-
-  // Rows are locally mutable (inline edits and added rows), so query data is
-  // copied into state. Adjusted during render rather than in an effect -- which
-  // also fixes the sync effect previously sitting above these declarations and
-  // calling setRows before it was defined.
-  const [syncedIncome, setSyncedIncome] = useState(incomeData);
-  if (incomeData && incomeData !== syncedIncome) {
-    setSyncedIncome(incomeData);
-    setRows(incomeData);
-  }
 
   // Selected-row totals are a pure function of the selection.
   const [totalCad, totalUsd] = useMemo<[number | null, number | null]>(() => {

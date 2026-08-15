@@ -7,6 +7,7 @@ import {
 } from "@mui/x-data-grid";
 import { createTableColumns } from "./columns";
 import { useMemo, useState } from "react";
+import { useSyncedRows } from "../../hooks/useSyncedRows";
 import { EditToolbar } from "../../components/EditToolBar";
 import {
   handleDownloadExpenses,
@@ -51,7 +52,7 @@ export const ExpensesDataGrid = () => {
   const [filterModel, setFilterModel] = useState<GridFilterModel>({
     items: [],
   });
-  const [rows, setRows] = useState<Data[]>([]);
+  const [rows, setRows] = useSyncedRows(expenses);
   const [openModal, setOpenModal] = useState(false);
   const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
   const [entryId, setEntryId] = useState<string | null>(null);
@@ -74,15 +75,6 @@ export const ExpensesDataGrid = () => {
       ),
     ];
   }, [selectedRows]);
-
-  // Rows are locally mutable (inline edits, added rows, optimistic deletes),
-  // so query data is copied into state. Adjusting during render rather than in
-  // an effect avoids the extra commit a sync effect would cause.
-  const [syncedExpenses, setSyncedExpenses] = useState(expenses);
-  if (expenses && expenses !== syncedExpenses) {
-    setSyncedExpenses(expenses);
-    setRows(expenses);
-  }
 
   const { data: recurringExpenses } = useGetRecurringExpensesQuery({});
   const { data: categoryRecords } = useGetCategoriesQuery({});
