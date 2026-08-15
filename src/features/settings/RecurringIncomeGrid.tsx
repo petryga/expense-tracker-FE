@@ -1,5 +1,6 @@
 import { DataGrid, GridRowId, GridRowModes, GridRowModesModel } from '@mui/x-data-grid';
 import { FC, useState } from 'react';
+import { useSyncedRows } from '../../hooks/useSyncedRows';
 import { v4 as uuidv4 } from 'uuid';
 import WarningModal from '../../components/warningModal/WarningModal';
 import { tableStyles } from '../expenses/styles';
@@ -17,19 +18,10 @@ import { AddEntryToolbar } from './AddEntryToolbar';
 
 export const RecurringIncomeGrid: FC = () => {
   const { data: recurringIncome, isLoading, isFetching } = useGetRecurringIncomeQuery({});
-  const [rows, setRows] = useState<RecurringIncomeData[]>([]);
+  const [rows, setRows] = useSyncedRows(recurringIncome);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const [openModal, setOpenModal] = useState(false);
   const [entryId, setEntryId] = useState<string | null>(null);
-
-  // Rows are locally mutable (inline edits and added rows), so query data is
-  // copied into state rather than read directly. Adjusting it during render
-  // instead of in an effect avoids the extra commit a sync effect would cause.
-  const [syncedIncome, setSyncedIncome] = useState(recurringIncome);
-  if (recurringIncome && recurringIncome !== syncedIncome) {
-    setSyncedIncome(recurringIncome);
-    setRows(recurringIncome);
-  }
 
   const [createRecurringIncome] = useCreateRecurringIncomeMutation();
   const [updateRecurringIncome] = useUpdateRecurringIncomeMutation();
