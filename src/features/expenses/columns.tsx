@@ -362,6 +362,15 @@ export function createSearchColumns({
       width: 100,
       type: "number",
       editable: false,
+      renderCell: (params) => <div>${params.value}</div>,
+    },
+    {
+      field: "currency",
+      headerName: "Cur",
+      width: 60,
+      type: "singleSelect",
+      valueOptions: [Currency.CAD, Currency.USD],
+      editable: false,
     },
     {
       field: "category",
