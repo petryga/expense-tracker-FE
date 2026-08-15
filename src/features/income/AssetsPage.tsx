@@ -27,7 +27,7 @@ import { Context } from "./FooterContext";
 import { Currency } from "../expenses/helpers";
 import { useGetRecurringIncomeQuery } from "../../services/recurringIncome/recurringIncomeApi";
 
-const AssetsPage: FC = () => {
+export const AssetsPage: FC = () => {
   const {
     data: incomeData,
     isLoading,
