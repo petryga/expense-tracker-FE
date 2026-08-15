@@ -9,6 +9,7 @@ import {
   LabelList,
   Tooltip,
   ResponsiveContainer,
+  type RenderableText,
 } from "recharts";
 import { getVisualizedData } from "./helpers";
 import styles from "./MonthlyReportsPage.module.css";
@@ -68,7 +69,7 @@ export const VisualizedData = ({ dataByMonth }: { dataByMonth: Data[] }) => {
               dataKey="total"
               position="right"
               style={{ fill: "#666", fontWeight: "bold" }}
-              formatter={(value: number) => `$${value.toFixed(2)}`}
+              formatter={(value: RenderableText) => `$${Number(value ?? 0).toFixed(2)}`}
               overflow={"extendDomain"}
             />
           </Bar>

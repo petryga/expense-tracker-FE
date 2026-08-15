@@ -7,6 +7,7 @@ import {
   Legend,
   ResponsiveContainer,
   Tooltip,
+  type TooltipValueType,
   XAxis,
   YAxis,
 } from "recharts";
@@ -181,14 +182,11 @@ export const YearlyComparison = ({ data }: { data?: MonthlyData[] }) => {
               <XAxis dataKey="year" />
               <YAxis />
               <Tooltip
-                formatter={(
-                  value: number | string | Array<number | string>,
-                  name,
-                ) => {
+                formatter={(value: TooltipValueType | undefined, name) => {
                   const normalizedName = String(name);
                   const numericValue = Array.isArray(value)
                     ? Number(value[0])
-                    : Number(value);
+                    : Number(value ?? 0);
                   if (normalizedName === "Converted Total") {
                     return formatMoney(numericValue, baseCurrency);
                   }
