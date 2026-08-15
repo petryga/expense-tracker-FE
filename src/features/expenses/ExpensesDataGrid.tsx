@@ -6,7 +6,7 @@ import {
   GridRowModesModel,
 } from "@mui/x-data-grid";
 import { createTableColumns } from "./columns";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { EditToolbar } from "../../components/EditToolBar";
 import {
   handleDownloadExpenses,
@@ -56,34 +56,33 @@ export const ExpensesDataGrid = () => {
   const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
   const [entryId, setEntryId] = useState<string | null>(null);
   const navigate = useNavigate();
-  const [totalCad, setTotalCad] = useState<number | null>(null);
-  const [totalUsd, setTotalUsd] = useState<number | null>(null);
   const [selectedRows, setSelectedRows] = useState<Data[]>([]);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
 
-  useEffect(() => {
-    if (selectedRows.length > 0) {
-      const totalCad = selectedRows.reduce(
+  // Selected-row totals are a pure function of the selection, so they are
+  // derived during render rather than mirrored into state by an effect.
+  const [totalCad, totalUsd] = useMemo<[number | null, number | null]>(() => {
+    if (selectedRows.length === 0) return [null, null];
+    return [
+      selectedRows.reduce(
         (acc, row) => (row.currency === Currency.CAD ? acc + row.amount : acc),
         0,
-      );
-      const totalUsd = selectedRows.reduce(
+      ),
+      selectedRows.reduce(
         (acc, row) => (row.currency === Currency.USD ? acc + row.amount : acc),
         0,
-      );
-      setTotalCad(totalCad);
-      setTotalUsd(totalUsd);
-    } else {
-      setTotalCad(null);
-      setTotalUsd(null);
-    }
+      ),
+    ];
   }, [selectedRows]);
 
-  useEffect(() => {
-    if (expenses) {
-      setRows(expenses);
-    }
-  }, [expenses]);
+  // Rows are locally mutable (inline edits, added rows, optimistic deletes),
+  // so query data is copied into state. Adjusting during render rather than in
+  // an effect avoids the extra commit a sync effect would cause.
+  const [syncedExpenses, setSyncedExpenses] = useState(expenses);
+  if (expenses && expenses !== syncedExpenses) {
+    setSyncedExpenses(expenses);
+    setRows(expenses);
+  }
 
   const { data: recurringExpenses } = useGetRecurringExpensesQuery({});
   const { data: categoryRecords } = useGetCategoriesQuery({});

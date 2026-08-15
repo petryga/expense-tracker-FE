@@ -20,16 +20,6 @@ export default tseslint.config(
     rules: {
       ...reactHooks.configs.recommended.rules,
 
-      // eslint-plugin-react-hooks v7 folds the React Compiler rules into its
-      // recommended set. They flag 14 real issues here (12 of them
-      // set-state-in-effect), but satisfying them means restructuring the
-      // data-sync effects behind the grids, reports and search pages — a
-      // behavioural refactor, not a lint cleanup. Turned off deliberately so
-      // the plugin stays current; re-enable one at a time to work through them.
-      'react-hooks/set-state-in-effect': 'off',
-      'react-hooks/immutability': 'off',
-      'react-hooks/use-memo': 'off',
-
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },

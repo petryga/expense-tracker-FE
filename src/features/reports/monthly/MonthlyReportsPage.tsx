@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { FC, useCallback, useMemo, useState } from 'react';
 import { useGetExpensesQuery } from '../../../services/expenses/expensesApi';
 import { getDataByMonth, processExpensesData } from '../../expenses/helpers';
 import { format, parseISO } from 'date-fns';
@@ -45,41 +45,35 @@ const MonthlyReportsPage: FC = () => {
     [dataByYear]
   );
 
-  useEffect(() => {
-    if (!sortedYears.length) {
-      setSelectedYear(null);
-      return;
-    }
-
+  // Both selections are reconciled against the data during render rather than
+  // in effects. Each computes the value it wants and only writes when it
+  // differs from current state, so they converge in one extra render pass
+  // instead of committing an intermediate, briefly-wrong selection.
+  const desiredYear = (() => {
+    if (!sortedYears.length) return null;
+    if (selectedYear && sortedYears.includes(selectedYear)) return selectedYear;
     const currentYear = format(new Date(), 'yyyy');
-    setSelectedYear((previousYear) => {
-      if (previousYear && sortedYears.includes(previousYear)) {
-        return previousYear;
-      }
-      return sortedYears.includes(currentYear) ? currentYear : sortedYears[0];
-    });
-  }, [sortedYears]);
+    return sortedYears.includes(currentYear) ? currentYear : sortedYears[0];
+  })();
+  if (desiredYear !== selectedYear) {
+    setSelectedYear(desiredYear);
+  }
 
-  useEffect(() => {
-    if (!selectedYear || !dataByYear[selectedYear]) {
-      return;
-    }
+  if (selectedYear && dataByYear[selectedYear]) {
     const defaultSelection = getDefaultYearMonth(selectedYear);
-
-    setSelectedMonth((previousMonth) => {
-      if (!defaultSelection) {
-        return null;
-      }
-      if (!previousMonth) {
-        return defaultSelection;
-      }
-      const [prevYear] = previousMonth.split('-');
-      if (prevYear === selectedYear && dataByMonth[previousMonth]) {
-        return previousMonth;
+    const desiredMonth = (() => {
+      if (!defaultSelection) return null;
+      if (!selectedMonth) return defaultSelection;
+      const [prevYear] = selectedMonth.split('-');
+      if (prevYear === selectedYear && dataByMonth[selectedMonth]) {
+        return selectedMonth;
       }
       return defaultSelection;
-    });
-  }, [dataByMonth, dataByYear, getDefaultYearMonth, selectedYear]);
+    })();
+    if (desiredMonth !== selectedMonth) {
+      setSelectedMonth(desiredMonth);
+    }
+  }
 
   const handleYearClick = (year: string) => {
     if (selectedYear === year) {

@@ -4,7 +4,7 @@ import {
   GridRowModes,
   GridRowModesModel,
 } from "@mui/x-data-grid";
-import { FC, useEffect, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import { EditToolbar } from "../../components/EditToolBar";
 import WarningModal from "../../components/warningModal/WarningModal";
 import { tableStyles } from "../expenses/styles";
@@ -32,36 +32,35 @@ const AssetsPage: FC = () => {
     isFetching,
   } = useGetIncomeEntriesQuery({});
 
-  useEffect(() => {
-    if (incomeData) {
-      setRows(incomeData);
-    }
-  }, [incomeData]);
-
   const [rows, setRows] = useState<IncomeData[]>([]);
   const [openModal, setOpenModal] = useState(false);
   const [entryId, setEntryId] = useState<string | null>(null);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const [selectedRows, setSelectedRows] = useState<IncomeData[]>([]);
-  const [totalCad, setTotalCad] = useState<number | null>(null);
-  const [totalUsd, setTotalUsd] = useState<number | null>(null);
 
-  useEffect(() => {
-    if (selectedRows.length > 0) {
-      const totalCad = selectedRows.reduce(
+  // Rows are locally mutable (inline edits and added rows), so query data is
+  // copied into state. Adjusted during render rather than in an effect -- which
+  // also fixes the sync effect previously sitting above these declarations and
+  // calling setRows before it was defined.
+  const [syncedIncome, setSyncedIncome] = useState(incomeData);
+  if (incomeData && incomeData !== syncedIncome) {
+    setSyncedIncome(incomeData);
+    setRows(incomeData);
+  }
+
+  // Selected-row totals are a pure function of the selection.
+  const [totalCad, totalUsd] = useMemo<[number | null, number | null]>(() => {
+    if (selectedRows.length === 0) return [null, null];
+    return [
+      selectedRows.reduce(
         (acc, row) => (row.currency === Currency.CAD ? acc + row.amount : acc),
         0,
-      );
-      const totalUsd = selectedRows.reduce(
+      ),
+      selectedRows.reduce(
         (acc, row) => (row.currency === Currency.USD ? acc + row.amount : acc),
         0,
-      );
-      setTotalCad(totalCad);
-      setTotalUsd(totalUsd);
-    } else {
-      setTotalCad(null);
-      setTotalUsd(null);
-    }
+      ),
+    ];
   }, [selectedRows]);
 
   const [createIncomeEntry] = useCreateIncomeEntryMutation();

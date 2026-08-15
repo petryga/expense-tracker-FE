@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { format } from "date-fns";
 import {
   Bar,
@@ -36,37 +36,43 @@ export const YearlyComparison = ({ data }: { data?: MonthlyData[] }) => {
     [data, mode, baseCurrency, ytdCutoffByYear],
   );
 
-  useEffect(() => {
-    setYtdCutoffByYear((previous) => {
-      const next: Record<number, number | null> = {};
-      let hasChanges = false;
+  // Reconciles each year's YTD cutoff against the months actually available,
+  // keeping an explicit user choice where it is still valid. Done during render
+  // rather than in an effect; the hasChanges guard makes it a fixed point, so it
+  // settles in one extra pass instead of committing an unreconciled state first.
+  const reconciledYtdCutoff = (() => {
+    const next: Record<number, number | null> = {};
+    let hasChanges = false;
 
-      Object.keys(defaultYtdCutoffByYear).forEach((yearKey) => {
-        const year = Number(yearKey);
-        const availableMonths = ytdCutoffOptionsByYear[year] ?? [];
-        const fallbackCutoff = defaultYtdCutoffByYear[year];
-        const previousCutoff = previous[year];
-        let resolvedCutoff: number | null = fallbackCutoff;
+    Object.keys(defaultYtdCutoffByYear).forEach((yearKey) => {
+      const year = Number(yearKey);
+      const availableMonths = ytdCutoffOptionsByYear[year] ?? [];
+      const fallbackCutoff = defaultYtdCutoffByYear[year];
+      const previousCutoff = ytdCutoffByYear[year];
+      let resolvedCutoff: number | null = fallbackCutoff;
 
-        if (previousCutoff === null) {
-          resolvedCutoff = null;
-        } else if (previousCutoff && availableMonths.includes(previousCutoff)) {
-          resolvedCutoff = previousCutoff;
-        }
-
-        next[year] = resolvedCutoff;
-        if (previous[year] !== resolvedCutoff) {
-          hasChanges = true;
-        }
-      });
-
-      if (Object.keys(previous).length !== Object.keys(next).length) {
-        hasChanges = true;
+      if (previousCutoff === null) {
+        resolvedCutoff = null;
+      } else if (previousCutoff && availableMonths.includes(previousCutoff)) {
+        resolvedCutoff = previousCutoff;
       }
 
-      return hasChanges ? next : previous;
+      next[year] = resolvedCutoff;
+      if (ytdCutoffByYear[year] !== resolvedCutoff) {
+        hasChanges = true;
+      }
     });
-  }, [defaultYtdCutoffByYear, ytdCutoffOptionsByYear]);
+
+    if (Object.keys(ytdCutoffByYear).length !== Object.keys(next).length) {
+      hasChanges = true;
+    }
+
+    return hasChanges ? next : null;
+  })();
+
+  if (reconciledYtdCutoff) {
+    setYtdCutoffByYear(reconciledYtdCutoff);
+  }
 
   return (
     <>
