@@ -23,6 +23,7 @@
 
 .monthLink:hover {
   background-color: #eeb12e;
+  border-color: #eeb12e;
   color: #f8f9fa;
   transition: 0.3s;
 }
