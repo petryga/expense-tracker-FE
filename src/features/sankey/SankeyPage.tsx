@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import { withSidebar } from "../../components/sidebar/withSideBar";
 import { useGetIncomeEntriesQuery } from "../../services/income/incomeApi";
 import { useGetExpensesQuery } from "../../services/expenses/expensesApi";
@@ -54,19 +54,19 @@ const SankeyPage: FC = () => {
     };
   }, [links, nodes]);
 
-  useEffect(() => {
-    if (!availableMonths.length) return;
-    const latest = availableMonths[availableMonths.length - 1];
-    if (!selectedMonth || !availableMonths.includes(selectedMonth)) {
-      setSelectedMonth(latest);
-    }
-  }, [availableMonths, selectedMonth]);
+  // Both adjustments below are self-limiting -- once selectedMonth is valid the
+  // condition stops matching -- so they run during render rather than in an
+  // effect, which avoids the extra commit and the flash of a stale month.
+  if (
+    availableMonths.length &&
+    (!selectedMonth || !availableMonths.includes(selectedMonth))
+  ) {
+    setSelectedMonth(availableMonths[availableMonths.length - 1]);
+  }
 
-  useEffect(() => {
-    if (activeMonth && selectedMonth && activeMonth !== selectedMonth) {
-      setSelectedMonth(activeMonth);
-    }
-  }, [activeMonth, selectedMonth]);
+  if (activeMonth && selectedMonth && activeMonth !== selectedMonth) {
+    setSelectedMonth(activeMonth);
+  }
 
   return (
     <div className={styles.container}>

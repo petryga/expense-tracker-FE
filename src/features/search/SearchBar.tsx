@@ -1,4 +1,4 @@
-import { ChangeEvent, Dispatch, useCallback, useState } from 'react';
+import { ChangeEvent, Dispatch, useCallback, useMemo, useState } from 'react';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -14,10 +14,13 @@ export function SearchBar({
 }) {
   const [searchValue, setSearchValue] = useState('');
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debouncedSearch = useCallback(
-    debounce((nextValue) => setDebouncedValue(nextValue), 500),
-    []
+  // useMemo, not useCallback: we are memoising the *result* of calling
+  // debounce(), not a function literal. useCallback expects an inline function
+  // expression and would otherwise re-create the debounced fn on every render,
+  // silently defeating the debounce.
+  const debouncedSearch = useMemo(
+    () => debounce((nextValue: string) => setDebouncedValue(nextValue), 500),
+    [setDebouncedValue]
   );
 
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {

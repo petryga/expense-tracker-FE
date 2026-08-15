@@ -1,4 +1,4 @@
-import { FC, createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { FC, createContext, useContext, useMemo, useState } from 'react';
 import { withSidebar } from '../../components/sidebar/withSideBar';
 import { SearchBar } from './SearchBar';
 import { useGetExpensesQuery } from '../../services/expenses/expensesApi';
@@ -45,8 +45,6 @@ const CustomFooter = () => {
 const SearchPage: FC = () => {
   const [debouncedValue, setDebouncedValue] = useState('');
   const [selectedRows, setSelectedRows] = useState<Data[]>([]);
-  const [totalCad, setTotalCad] = useState<number | null>(null);
-  const [totalUsd, setTotalUsd] = useState<number | null>(null);
   const [rows, setRows] = useState<Data[]>([]);
   const {
     data: { data, expensesTotal } = {},
@@ -58,33 +56,34 @@ const SearchPage: FC = () => {
     },
     { skip: !debouncedValue, refetchOnMountOrArgChange: true }
   );
-  useEffect(() => {
-    if (data) {
-      setRows(data);
-    }
+  // Results are copied into locally-mutable row state; clearing the search box
+  // empties both rows and selection. Adjusted during render instead of in an
+  // effect to avoid the extra commit a sync effect would cause.
+  const [syncedSearch, setSyncedSearch] = useState({ data, debouncedValue });
+  if (data !== syncedSearch.data || debouncedValue !== syncedSearch.debouncedValue) {
+    setSyncedSearch({ data, debouncedValue });
     if (!debouncedValue) {
       setSelectedRows([]);
       setRows([]);
+    } else if (data) {
+      setRows(data);
     }
-  }, [data, debouncedValue]);
+  }
 
-  useEffect(() => {
-    if (selectedRows.length > 0) {
-      const totalCad = selectedRows.reduce(
+  // Selected-row totals are a pure function of the selection.
+  const [totalCad, totalUsd] = useMemo<[number | null, number | null]>(() => {
+    if (selectedRows.length === 0) return [null, null];
+    return [
+      selectedRows.reduce(
         (acc, row) => (row.currency === Currency.CAD ? acc + row.amount : acc),
         0
-      );
-      const totalUsd = selectedRows.reduce(
+      ),
+      selectedRows.reduce(
         (acc, row) => (row.currency === Currency.USD ? acc + row.amount : acc),
         0
-      );
-      setTotalCad(totalCad);
-      setTotalUsd(totalUsd);
-    } else {
-      setTotalCad(null);
-      setTotalUsd(null);
-    }
-  }, [debouncedValue, selectedRows]);
+      ),
+    ];
+  }, [selectedRows]);
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>, id: string) => {
     const { checked } = event.target;

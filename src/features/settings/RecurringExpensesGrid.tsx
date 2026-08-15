@@ -1,5 +1,5 @@
 import { DataGrid, GridRowId, GridRowModes, GridRowModesModel } from '@mui/x-data-grid';
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import WarningModal from '../../components/warningModal/WarningModal';
 import { tableStyles } from '../expenses/styles';
@@ -26,11 +26,14 @@ export const RecurringExpensesGrid: FC = () => {
   const [openModal, setOpenModal] = useState(false);
   const [entryId, setEntryId] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (recurringExpenses) {
-      setRows(recurringExpenses);
-    }
-  }, [recurringExpenses]);
+  // Rows are locally mutable (inline edits and added rows), so query data is
+  // copied into state rather than read directly. Adjusting it during render
+  // instead of in an effect avoids the extra commit a sync effect would cause.
+  const [syncedExpenses, setSyncedExpenses] = useState(recurringExpenses);
+  if (recurringExpenses && recurringExpenses !== syncedExpenses) {
+    setSyncedExpenses(recurringExpenses);
+    setRows(recurringExpenses);
+  }
 
   const [createRecurringExpense] = useCreateRecurringExpenseMutation();
   const [updateRecurringExpense] = useUpdateRecurringExpenseMutation();
