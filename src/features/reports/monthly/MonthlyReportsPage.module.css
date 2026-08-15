@@ -33,6 +33,14 @@
   border-color: #eeb12e;
 }
 
+/* Firefox draws its own inner focus border on native <button> elements that
+   `outline: none` alone doesn't remove (MUI's Button component resets this
+   internally, but this is a plain <button>, unlike the Link-based month
+   buttons on the Expenses page). */
+.monthLink::-moz-focus-inner {
+  border: 0;
+}
+
 .year {
   box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.15) !important;
   padding: 10px 15px !important;
