@@ -9,6 +9,11 @@ export const tableStyles = {
     fontSize: "0.875rem",
     borderRight: "0.5px solid #e0e0e0",
     borderLeft: "0.5px solid #e0e0e0",
+    // MUI X DataGrid v7+ stopped making cells `display: flex` by default
+    // (only opt-in per column via `display: 'flex'`); restore the previous
+    // vertically-centered look app-wide here instead of on every column.
+    display: "flex",
+    alignItems: "center",
   },
   "& .MuiDataGrid-cellContent": {
     textAlign: "left",
