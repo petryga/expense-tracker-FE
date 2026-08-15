@@ -16,7 +16,10 @@ import classnames from "classnames";
 import styles from "./ExpensesPage.module.css";
 
 const ExpensesPage: FC = () => {
-  const { data: { data: allData } = {}, isLoading } = useGetExpensesQuery({});
+  const { data: { data: allData } = {}, isLoading } = useGetExpensesQuery(
+    {},
+    { refetchOnMountOrArgChange: true },
+  );
   const currentYear = new Date().getFullYear().toString();
   const [selectedYear, setSelectedYear] = useState<string | null>(currentYear);
   const location = useLocation();

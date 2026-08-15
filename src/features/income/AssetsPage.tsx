@@ -31,7 +31,7 @@ const AssetsPage: FC = () => {
     data: incomeData,
     isLoading,
     isFetching,
-  } = useGetIncomeEntriesQuery({});
+  } = useGetIncomeEntriesQuery({}, { refetchOnMountOrArgChange: true });
 
   const [rows, setRows] = useState<IncomeData[]>([]);
   const [openModal, setOpenModal] = useState(false);
