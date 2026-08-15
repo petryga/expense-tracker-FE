@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useContext } from 'react';
-import DownloadIcon from '@mui/icons-material/Download';
+import DownloadIcon from '@mui/icons-material/esm/Download';
 import styles from './ExpensesPage.module.css';
 import { GridFilterModel } from '@mui/x-data-grid';
 import { Context } from './FooterContext';
