@@ -51,20 +51,6 @@ export const CustomFooter = ({
           <DownloadIcon />
         </div>
       )}
-
-      {/* {isFilterOn && (
-        <div
-          className={styles.clearFilter}
-          onClick={(e) => {
-            e.preventDefault();
-
-            setFilterModel((prev) => ({ ...prev, items: [] }));
-            console.log('clear filter');
-          }}
-        >
-          Clear Filter
-        </div>
-      )} */}
     </div>
   );
 };

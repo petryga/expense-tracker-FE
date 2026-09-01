@@ -2,6 +2,9 @@
   "name": "expense-tracker",
   "private": true,
   "version": "0.0.0",
+  "description": "React + RTK Query frontend for a personal expense & income tracker — budgets, monthly/all-time reports, and a cash-flow Sankey.",
+  "author": "Alexandra Petryga",
+  "license": "UNLICENSED",
   "type": "module",
   "scripts": {
     "dev": "vite",
