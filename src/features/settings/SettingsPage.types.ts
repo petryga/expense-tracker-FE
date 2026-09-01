@@ -8,7 +8,7 @@ import type { AccountRecord } from '../../services/accounts/accountsApi.types';
 export type RecurringExpenseTableColumns = {
   rowModesModel: Record<GridRowId, { mode: GridRowModes }>;
   setRowModesModel: (
-    model: Record<GridRowId, { mode: GridRowModes; ignoreModifications?: boolean }>
+    model: Record<GridRowId, { mode: GridRowModes; ignoreModifications?: boolean }>,
   ) => void;
   rows?: RecurringExpenseData[];
   setRows: Dispatch<SetStateAction<RecurringExpenseData[]>>;
@@ -20,7 +20,7 @@ export type RecurringExpenseTableColumns = {
 export type RecurringIncomeTableColumns = {
   rowModesModel: Record<GridRowId, { mode: GridRowModes }>;
   setRowModesModel: (
-    model: Record<GridRowId, { mode: GridRowModes; ignoreModifications?: boolean }>
+    model: Record<GridRowId, { mode: GridRowModes; ignoreModifications?: boolean }>,
   ) => void;
   rows?: RecurringIncomeData[];
   setRows: Dispatch<SetStateAction<RecurringIncomeData[]>>;

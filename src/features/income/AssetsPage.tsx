@@ -1,31 +1,26 @@
-import {
-  DataGrid,
-  GridRowId,
-  GridRowModes,
-  GridRowModesModel,
-} from "@mui/x-data-grid";
-import { FC, useMemo, useState } from "react";
-import { useSyncedRows } from "../../hooks/useSyncedRows";
-import { EditToolbar } from "../../components/EditToolBar";
-import type { EditToolbarProps } from "../expenses/ExpensesPage.types";
-import WarningModal from "../../components/warningModal/WarningModal";
-import { tableStyles } from "../expenses/styles";
-import { createTableColumns } from "./columns";
-import { withSidebar } from "../../components/sidebar/withSideBar";
+import { DataGrid, GridRowId, GridRowModes, GridRowModesModel } from '@mui/x-data-grid';
+import { FC, useMemo, useState } from 'react';
+import { useSyncedRows } from '../../hooks/useSyncedRows';
+import { EditToolbar } from '../../components/EditToolBar';
+import type { EditToolbarProps } from '../expenses/ExpensesPage.types';
+import WarningModal from '../../components/warningModal/WarningModal';
+import { tableStyles } from '../expenses/styles';
+import { createTableColumns } from './columns';
+import { withSidebar } from '../../components/sidebar/withSideBar';
 import {
   useCreateIncomeEntryMutation,
   useGetIncomeEntriesQuery,
   useDeleteIncomeEntryMutation,
   useUpdateIncomeEntryMutation,
-} from "../../services/income/incomeApi";
-import { v4 as uuidv4 } from "uuid";
-import type { IncomeData } from "../../services/income/incomeApi.types";
-import { format } from "date-fns";
-import { getRowClassName } from "./helpers";
-import { CustomFooter } from "./CustomFooter";
-import { Context } from "./FooterContext";
-import { Currency } from "../expenses/helpers";
-import { useGetRecurringIncomeQuery } from "../../services/recurringIncome/recurringIncomeApi";
+} from '../../services/income/incomeApi';
+import { v4 as uuidv4 } from 'uuid';
+import type { IncomeData } from '../../services/income/incomeApi.types';
+import { format } from 'date-fns';
+import { getRowClassName } from './helpers';
+import { CustomFooter } from './CustomFooter';
+import { Context } from './FooterContext';
+import { Currency } from '../expenses/helpers';
+import { useGetRecurringIncomeQuery } from '../../services/recurringIncome/recurringIncomeApi';
 
 export const AssetsPage: FC = () => {
   const {
@@ -75,16 +70,11 @@ export const AssetsPage: FC = () => {
       await updateIncomeEntry({ id: newRow.id!, data: newRow }).unwrap();
     }
     const updatedRow = { ...newRow, isNew: false };
-    setRows((rows) =>
-      rows?.map((row) => (row.id === newRow.id ? updatedRow : row)),
-    );
+    setRows((rows) => rows?.map((row) => (row.id === newRow.id ? updatedRow : row)));
     return updatedRow;
   };
 
-  const handleCheckboxChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    id: string,
-  ) => {
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>, id: string) => {
     const { checked } = event.target;
     const selectedRow = rows.find((row) => row.id === id);
 
@@ -95,9 +85,7 @@ export const AssetsPage: FC = () => {
     }
   };
 
-  const handleHeaderCheckboxChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleHeaderCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { checked } = event.target;
 
     if (checked) {
@@ -124,12 +112,12 @@ export const AssetsPage: FC = () => {
     setRows((oldRows) => {
       const today = new Date();
 
-      const date = format(today, "yyyy-MM-dd");
+      const date = format(today, 'yyyy-MM-dd');
       const newRow = {
         id,
         date,
-        description: "",
-        category: "",
+        description: '',
+        category: '',
         amount: 0,
         isNew: true,
         currency: Currency.CAD,
@@ -141,7 +129,7 @@ export const AssetsPage: FC = () => {
     setRowModesModel((oldModel) => {
       return {
         ...oldModel,
-        [id]: { mode: GridRowModes.Edit, fieldToFocus: "date" },
+        [id]: { mode: GridRowModes.Edit, fieldToFocus: 'date' },
       };
     });
   };
@@ -153,7 +141,7 @@ export const AssetsPage: FC = () => {
     if (!recurringIncomeEntries?.length) return;
 
     const today = new Date();
-    const todayFormatted = format(today, "yyyy-MM-dd");
+    const todayFormatted = format(today, 'yyyy-MM-dd');
 
     const incomeEntriesArray: IncomeData[] = [];
 
@@ -170,9 +158,7 @@ export const AssetsPage: FC = () => {
 
   return (
     <>
-      <Context.Provider
-        value={{ totalSelectedCad: totalCad, totalSelectedUsd: totalUsd }}
-      >
+      <Context.Provider value={{ totalSelectedCad: totalCad, totalSelectedUsd: totalUsd }}>
         <h1>Assets</h1>
         <DataGrid
           rows={isExpensesLoading ? [] : rows}
@@ -194,7 +180,7 @@ export const AssetsPage: FC = () => {
               // runs when onAddButtonClick is absent — here it's always
               // provided (onCreateNewRow), so setRows is never actually
               // invoked by EditToolbar in this usage.
-              setRows: setRows as unknown as EditToolbarProps["setRows"],
+              setRows: setRows as unknown as EditToolbarProps['setRows'],
               setRowModesModel,
               onAddButtonClick: onCreateNewRow,
               onAddRecurringButtonClick,
@@ -203,18 +189,14 @@ export const AssetsPage: FC = () => {
             },
           }}
           autoHeight
-          getRowHeight={() => "auto"}
+          getRowHeight={() => 'auto'}
           sx={tableStyles}
           hideFooterPagination
           hideFooterSelectedRowCount
           getRowClassName={(params) => getRowClassName(params, rows)}
         />
       </Context.Provider>
-      <WarningModal
-        open={openModal}
-        setOpen={setOpenModal}
-        onDelete={handleDeleteRow}
-      />
+      <WarningModal open={openModal} setOpen={setOpenModal} onDelete={handleDeleteRow} />
     </>
   );
 };

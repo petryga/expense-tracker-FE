@@ -1,5 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { RootState } from "../../store";
+import { createSlice } from '@reduxjs/toolkit';
+import { RootState } from '../../store';
 
 interface ModalState {
   isVisible: boolean;
@@ -8,7 +8,7 @@ interface ModalState {
 export const initialState: ModalState = { isVisible: false };
 
 const sidebarSlice = createSlice({
-  name: "sidebar",
+  name: 'sidebar',
   initialState,
   reducers: {
     toggleSidebar: (state) => {
@@ -19,7 +19,6 @@ const sidebarSlice = createSlice({
 
 export const { toggleSidebar } = sidebarSlice.actions;
 
-export const selectSidebar = (state: RootState): ModalState =>
-  state.rightSidebar;
+export const selectSidebar = (state: RootState): ModalState => state.rightSidebar;
 
 export default sidebarSlice.reducer;

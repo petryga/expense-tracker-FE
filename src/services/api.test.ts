@@ -40,7 +40,9 @@ describe('getAuthHeader (local vs prod behavior)', () => {
   });
 
   it('attaches a Bearer token from the current session in prod (auth-enabled) mode', async () => {
-    const getSession = vi.fn().mockResolvedValue({ data: { session: { access_token: 'tok-123' } } });
+    const getSession = vi
+      .fn()
+      .mockResolvedValue({ data: { session: { access_token: 'tok-123' } } });
     vi.doMock('../lib/supabaseClient', () => ({
       isAuthEnabled: true,
       supabase: { auth: { getSession } },

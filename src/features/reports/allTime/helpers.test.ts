@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { buildYearlyComparisonData, groupMonthlyData, getYAxisMax } from './helpers';
-import { MonthlyDataTypes, type MonthlyData } from '../../../services/monthlyData/monthlyData.types';
+import {
+  MonthlyDataTypes,
+  type MonthlyData,
+} from '../../../services/monthlyData/monthlyData.types';
 import { Currency } from '../../expenses/helpers';
 import type { FxRateConfig } from '../../../utils/currency';
 

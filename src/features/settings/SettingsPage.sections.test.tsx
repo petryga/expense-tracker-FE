@@ -30,7 +30,7 @@ describe('SETTINGS_SECTIONS', () => {
       SETTINGS_SECTIONS.map((section) => {
         if (!isValidElement(section.content)) throw new Error(`${section.label} has no content`);
         return [section.label, section.content.type];
-      })
+      }),
     );
 
     expect(contentTypeByLabel.get('Recurring Expenses')).toBe(RecurringExpensesGrid);

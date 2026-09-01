@@ -12,9 +12,7 @@ import { type Dispatch, type SetStateAction, useState } from 'react';
  * value on that first render, so `queryData !== synced` is false from the
  * start and `rows` is left stuck at whatever it's separately initialized to.
  */
-export function useSyncedRows<T>(
-  queryData: T[] | undefined,
-): [T[], Dispatch<SetStateAction<T[]>>] {
+export function useSyncedRows<T>(queryData: T[] | undefined): [T[], Dispatch<SetStateAction<T[]>>] {
   const [rows, setRows] = useState<T[]>(queryData ?? []);
 
   // Adjusted during render rather than in an effect to avoid the extra

@@ -4,57 +4,57 @@ import {
   faChartPie,
   faGear,
   faMagnifyingGlass,
-} from "@fortawesome/free-solid-svg-icons";
+} from '@fortawesome/free-solid-svg-icons';
 
 export const URLS: Record<string, string> = {
-  expenses: "/expenses",
-  assets: "/assets",
-  monthlyReports: "/monthly-reports",
-  allTimeReports: "/all-time-reports",
-  sankey: "/sankey",
-  search: "/search",
-  settings: "/settings",
+  expenses: '/expenses',
+  assets: '/assets',
+  monthlyReports: '/monthly-reports',
+  allTimeReports: '/all-time-reports',
+  sankey: '/sankey',
+  search: '/search',
+  settings: '/settings',
 };
 
 export const OPTIONS = [
   {
-    text: "Expenses",
+    text: 'Expenses',
     path: URLS.expenses,
     icon: faReceipt,
   },
   {
-    text: "Assets",
+    text: 'Assets',
     path: URLS.assets,
     icon: faWallet,
   },
   {
-    text: "Reports",
+    text: 'Reports',
     icon: faChartPie,
     subOptions: [
       {
-        text: "Monthly",
+        text: 'Monthly',
         path: URLS.monthlyReports,
       },
       {
-        text: "All Time",
+        text: 'All Time',
         path: URLS.allTimeReports,
       },
       {
-        text: "Sankey",
+        text: 'Sankey',
         path: URLS.sankey,
       },
     ],
   },
   {
-    text: "Search",
+    text: 'Search',
     path: URLS.search,
     icon: faMagnifyingGlass,
-    className: "pushToBottom bottomFontItem",
+    className: 'pushToBottom bottomFontItem',
   },
   {
-    text: "Settings",
+    text: 'Settings',
     path: URLS.settings,
     icon: faGear,
-    className: "bottomFontItem",
+    className: 'bottomFontItem',
   },
 ];

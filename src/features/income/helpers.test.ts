@@ -5,9 +5,30 @@ import type { IncomeData } from '../../services/income/incomeApi.types';
 import { Currency } from '../expenses/helpers';
 
 const rows: IncomeData[] = [
-  { id: 'a', date: '2026-05-15', description: '', category: 'bankAccounts', amount: 100, currency: Currency.CAD },
-  { id: 'b', date: '2026-05-20', description: '', category: 'bankAccounts', amount: 200, currency: Currency.CAD },
-  { id: 'c', date: '2026-07-01', description: '', category: 'bankAccounts', amount: 300, currency: Currency.CAD },
+  {
+    id: 'a',
+    date: '2026-05-15',
+    description: '',
+    category: 'bankAccounts',
+    amount: 100,
+    currency: Currency.CAD,
+  },
+  {
+    id: 'b',
+    date: '2026-05-20',
+    description: '',
+    category: 'bankAccounts',
+    amount: 200,
+    currency: Currency.CAD,
+  },
+  {
+    id: 'c',
+    date: '2026-07-01',
+    description: '',
+    category: 'bankAccounts',
+    amount: 300,
+    currency: Currency.CAD,
+  },
 ];
 
 describe('getRowClassName', () => {

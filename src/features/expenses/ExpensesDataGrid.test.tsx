@@ -33,7 +33,7 @@ const renderGrid = () =>
       <Routes>
         <Route path="/expenses/:yearMonth" element={<ExpensesDataGrid />} />
       </Routes>
-    </MemoryRouter>
+    </MemoryRouter>,
   );
 
 describe('ExpensesDataGrid', () => {

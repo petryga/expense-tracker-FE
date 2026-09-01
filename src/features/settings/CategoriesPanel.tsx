@@ -40,7 +40,7 @@ export const CategoriesPanel: FC = () => {
       acc[category.parentCategoryId] = [...(acc[category.parentCategoryId] ?? []), category];
       return acc;
     },
-    {}
+    {},
   );
 
   const handleAddCategory = async () => {
@@ -127,9 +127,7 @@ export const CategoriesPanel: FC = () => {
                 type="number"
                 sx={budgetInputStyles}
                 value={getBudgetDraft(subcategory.id, subcategory.budget)}
-                onChange={(event) =>
-                  handleBudgetDraftChange(subcategory.id, event.target.value)
-                }
+                onChange={(event) => handleBudgetDraftChange(subcategory.id, event.target.value)}
                 onKeyDown={(event) => {
                   if (event.key === 'Enter') {
                     handleBudgetSave(subcategory.id);

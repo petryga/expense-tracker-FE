@@ -20,10 +20,7 @@ export default tseslint.config(
     rules: {
       ...reactHooks.configs.recommended.rules,
 
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
-      ],
+      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
       // Unlike portfolio-2026, this project keeps unused-vars enforced, with an
       // underscore prefix as the opt-out.
       '@typescript-eslint/no-unused-vars': [

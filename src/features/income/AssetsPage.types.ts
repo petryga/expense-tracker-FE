@@ -5,7 +5,7 @@ import type { IncomeData } from '../../services/income/incomeApi.types';
 export type TableColumns = {
   rowModesModel: Record<GridRowId, { mode: GridRowModes }>;
   setRowModesModel: (
-    model: Record<GridRowId, { mode: GridRowModes; ignoreModifications?: boolean }>
+    model: Record<GridRowId, { mode: GridRowModes; ignoreModifications?: boolean }>,
   ) => void;
   rows?: IncomeData[];
   setRows: Dispatch<SetStateAction<IncomeData[]>>;

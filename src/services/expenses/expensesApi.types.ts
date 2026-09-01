@@ -1,4 +1,4 @@
-import type { Currency } from "../../features/expenses/helpers";
+import type { Currency } from '../../features/expenses/helpers';
 
 export type Data = {
   id?: string;
@@ -11,7 +11,7 @@ export type Data = {
   isNew?: boolean;
   year?: number;
   month?: number;
-  currency: Currency | "";
+  currency: Currency | '';
 };
 
 export interface GetExpensesData {
@@ -45,7 +45,7 @@ export type DataResponse = {
   amount: string;
   year: number;
   month: number;
-  currency: Currency | "";
+  currency: Currency | '';
 };
 
 export type GetArgs = {

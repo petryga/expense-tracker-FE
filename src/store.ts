@@ -28,7 +28,7 @@ export const store = configureStore({
       recurringExpensesApi.middleware,
       recurringIncomeApi.middleware,
       categoriesApi.middleware,
-      accountsApi.middleware
+      accountsApi.middleware,
     ),
 });
 

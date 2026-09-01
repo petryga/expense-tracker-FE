@@ -22,7 +22,7 @@ const getColor = (index: number) => {
 
 export const getVisualizedData = (
   data?: Data[],
-  budgetsByCategory: Record<string, number | null> = {}
+  budgetsByCategory: Record<string, number | null> = {},
 ): { dataByCategory: DataByCategory[]; totalSpentCad: number; totalSpentUsd: number } => {
   if (!data) {
     return { dataByCategory: [], totalSpentCad: 0, totalSpentUsd: 0 };

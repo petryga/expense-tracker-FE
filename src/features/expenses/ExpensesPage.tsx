@@ -1,19 +1,13 @@
-import { type FC, useMemo, useState } from "react";
-import { withSidebar } from "../../components/sidebar/withSideBar";
-import { format, parseISO } from "date-fns";
-import { useGetExpensesQuery } from "../../services/expenses/expensesApi";
-import { ExpensesDataGrid } from "./ExpensesDataGrid";
-import { getCurrentMonthPath, processExpensesData } from "./helpers";
-import {
-  Link as ButtonLink,
-  Navigate,
-  Route,
-  Routes,
-  useLocation,
-} from "react-router-dom";
-import { Button } from "@mui/material";
-import classnames from "classnames";
-import styles from "./ExpensesPage.module.css";
+import { type FC, useMemo, useState } from 'react';
+import { withSidebar } from '../../components/sidebar/withSideBar';
+import { format, parseISO } from 'date-fns';
+import { useGetExpensesQuery } from '../../services/expenses/expensesApi';
+import { ExpensesDataGrid } from './ExpensesDataGrid';
+import { getCurrentMonthPath, processExpensesData } from './helpers';
+import { Link as ButtonLink, Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { Button } from '@mui/material';
+import classnames from 'classnames';
+import styles from './ExpensesPage.module.css';
 
 const ExpensesPage: FC = () => {
   const { data: { data: allData } = {}, isLoading } = useGetExpensesQuery(
@@ -45,11 +39,7 @@ const ExpensesPage: FC = () => {
                   className={classnames(styles.year, {
                     [styles.inactive]: !isNothingSelected && !isActive,
                   })}
-                  onClick={() =>
-                    setSelectedYear((prevYear) =>
-                      prevYear === year ? null : year,
-                    )
-                  }
+                  onClick={() => setSelectedYear((prevYear) => (prevYear === year ? null : year))}
                 >
                   {year}
                 </Button>
@@ -65,9 +55,9 @@ const ExpensesPage: FC = () => {
                         <ButtonLink
                           key={month}
                           to={path}
-                          className={`${styles.monthLink} ${isActive ? styles.active : ""}`}
+                          className={`${styles.monthLink} ${isActive ? styles.active : ''}`}
                         >
-                          {format(parseISO(`${year}-${month}-01`), "MMMM")}
+                          {format(parseISO(`${year}-${month}-01`), 'MMMM')}
                         </ButtonLink>
                       );
                     })}

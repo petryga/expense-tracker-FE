@@ -48,7 +48,7 @@ describe('normalizeGetAllExpensesData', () => {
           totalAmountThisMonthUsd: 0,
           totalAmountAllTime: undefined as unknown as number,
         },
-      })
+      }),
     );
     expect(result.expensesTotal.totalAmountAllTime).toBe(0);
   });
@@ -76,7 +76,7 @@ describe('normalizeGetAllSearchedData', () => {
           totalAmountSearchResultsCad: 42,
           totalAmountSearchResultsUsd: 84,
         },
-      })
+      }),
     );
 
     expect(result.data[0].amount).toBe(42.5);
@@ -85,9 +85,10 @@ describe('normalizeGetAllSearchedData', () => {
   });
 
   it('returns an empty result when there is no data array', () => {
-    const result = normalizeGetAllSearchedData(
-      { data: undefined, expensesTotal: {} } as unknown as NewDataResponse
-    );
+    const result = normalizeGetAllSearchedData({
+      data: undefined,
+      expensesTotal: {},
+    } as unknown as NewDataResponse);
     expect(result.data).toEqual([]);
     expect(result.expensesTotal.totalAmountSearchResultsCad).toBe(0);
   });

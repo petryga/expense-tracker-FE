@@ -1,22 +1,18 @@
-import { lazy } from "react";
-import "./App.css";
-import { Navigate, Route, Routes } from "react-router-dom";
-import { URLS } from "./components/sidebar/constants";
-import { RequireAuth } from "./features/auth/RequireAuth";
+import { lazy } from 'react';
+import './App.css';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import { URLS } from './components/sidebar/constants';
+import { RequireAuth } from './features/auth/RequireAuth';
 
-const MonthlyReportsPage = lazy(
-  () => import("./features/reports/monthly/MonthlyReportsPage"),
-);
-const SearchPage = lazy(() => import("./features/search/SearchPage"));
-const ExpensesPage = lazy(() => import("./features/expenses/ExpensesPage"));
-const AssetsPage = lazy(() => import("./features/income/AssetsPage"));
-const AllTimeReportsPage = lazy(
-  () => import("./features/reports/allTime/AllTimeReportsPage"),
-);
-const SankeyPage = lazy(() => import("./features/sankey/SankeyPage"));
-const LoginPage = lazy(() => import("./features/auth/LoginPage"));
-const SignupPage = lazy(() => import("./features/auth/SignupPage"));
-const SettingsPage = lazy(() => import("./features/settings/SettingsPage"));
+const MonthlyReportsPage = lazy(() => import('./features/reports/monthly/MonthlyReportsPage'));
+const SearchPage = lazy(() => import('./features/search/SearchPage'));
+const ExpensesPage = lazy(() => import('./features/expenses/ExpensesPage'));
+const AssetsPage = lazy(() => import('./features/income/AssetsPage'));
+const AllTimeReportsPage = lazy(() => import('./features/reports/allTime/AllTimeReportsPage'));
+const SankeyPage = lazy(() => import('./features/sankey/SankeyPage'));
+const LoginPage = lazy(() => import('./features/auth/LoginPage'));
+const SignupPage = lazy(() => import('./features/auth/SignupPage'));
+const SettingsPage = lazy(() => import('./features/settings/SettingsPage'));
 
 function App() {
   return (

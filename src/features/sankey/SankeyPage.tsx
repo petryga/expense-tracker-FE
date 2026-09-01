@@ -1,29 +1,20 @@
-import { FC, useMemo, useState } from "react";
-import { withSidebar } from "../../components/sidebar/withSideBar";
-import { useGetIncomeEntriesQuery } from "../../services/income/incomeApi";
-import { useGetExpensesQuery } from "../../services/expenses/expensesApi";
-import { format, parseISO } from "date-fns";
-import { ResponsiveSankey } from "@nivo/sankey";
-import styles from "./SankeyPage.module.css";
-import { buildSankeyData, COLORS } from "./helpers";
-import { SankeyChartLink, SankeyChartNode } from "./SankeyPage.types";
+import { FC, useMemo, useState } from 'react';
+import { withSidebar } from '../../components/sidebar/withSideBar';
+import { useGetIncomeEntriesQuery } from '../../services/income/incomeApi';
+import { useGetExpensesQuery } from '../../services/expenses/expensesApi';
+import { format, parseISO } from 'date-fns';
+import { ResponsiveSankey } from '@nivo/sankey';
+import styles from './SankeyPage.module.css';
+import { buildSankeyData, COLORS } from './helpers';
+import { SankeyChartLink, SankeyChartNode } from './SankeyPage.types';
 
 const SankeyPage: FC = () => {
-  const [selectedMonth, setSelectedMonth] = useState<string | undefined>(
-    undefined,
-  );
+  const [selectedMonth, setSelectedMonth] = useState<string | undefined>(undefined);
   const { data: incomeData } = useGetIncomeEntriesQuery({});
   const { data: expensesResponse } = useGetExpensesQuery({});
   const expenses = expensesResponse?.data;
 
-  const {
-    nodes,
-    links,
-    incomeAmount,
-    expenseTotal,
-    availableMonths,
-    activeMonth,
-  } = useMemo(
+  const { nodes, links, incomeAmount, expenseTotal, availableMonths, activeMonth } = useMemo(
     () => buildSankeyData(incomeData, expenses, selectedMonth),
     [incomeData, expenses, selectedMonth],
   );
@@ -31,9 +22,7 @@ const SankeyPage: FC = () => {
   const sankeyData = useMemo(() => {
     if (!nodes.length || !links.length) return undefined;
 
-    const nodeColors = nodes.map(
-      (node, idx) => node.color ?? COLORS[idx % COLORS.length],
-    );
+    const nodeColors = nodes.map((node, idx) => node.color ?? COLORS[idx % COLORS.length]);
 
     return {
       nodes: nodes.map((node, idx) => ({
@@ -45,11 +34,7 @@ const SankeyPage: FC = () => {
         source: String(link.source),
         target: String(link.target),
         value: link.value,
-        color:
-          link.color ??
-          nodeColors[link.target] ??
-          nodeColors[link.source] ??
-          "#cbd5e1",
+        color: link.color ?? nodeColors[link.target] ?? nodeColors[link.source] ?? '#cbd5e1',
       })),
     };
   }, [links, nodes]);
@@ -57,10 +42,7 @@ const SankeyPage: FC = () => {
   // Both adjustments below are self-limiting -- once selectedMonth is valid the
   // condition stops matching -- so they run during render rather than in an
   // effect, which avoids the extra commit and the flash of a stale month.
-  if (
-    availableMonths.length &&
-    (!selectedMonth || !availableMonths.includes(selectedMonth))
-  ) {
+  if (availableMonths.length && (!selectedMonth || !availableMonths.includes(selectedMonth))) {
     setSelectedMonth(availableMonths[availableMonths.length - 1]);
   }
 
@@ -78,12 +60,12 @@ const SankeyPage: FC = () => {
           <select
             id="month-select"
             className={styles.select}
-            value={selectedMonth ?? ""}
+            value={selectedMonth ?? ''}
             onChange={(e) => setSelectedMonth(e.target.value)}
           >
             {availableMonths.map((month) => (
               <option key={month} value={month}>
-                {format(parseISO(`${month}-01`), "MMM yyyy")}
+                {format(parseISO(`${month}-01`), 'MMM yyyy')}
               </option>
             ))}
           </select>
@@ -105,7 +87,7 @@ const SankeyPage: FC = () => {
             nodeBorderWidth={0}
             nodeOpacity={0.95}
             linkOpacity={0.35}
-            colors={{ datum: "color" }}
+            colors={{ datum: 'color' }}
             label={(node) => node.name}
             labelPosition="outside"
             labelPadding={10}

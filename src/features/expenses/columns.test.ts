@@ -14,12 +14,7 @@ type DatePostedValueGetter = (
   column: unknown,
   apiRef: unknown,
 ) => Date | string | null;
-type DatePostedValueSetter = (
-  value: Date,
-  row: Data,
-  column: unknown,
-  apiRef: unknown,
-) => Data;
+type DatePostedValueSetter = (value: Date, row: Data, column: unknown, apiRef: unknown) => Data;
 
 const getDatePostedColumn = () => {
   const columns = createTableColumns({

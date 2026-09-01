@@ -1,4 +1,4 @@
-import type { JSX } from "react";
+import type { JSX } from 'react';
 
 export interface ConfirmModalProps {
   onConfirm: () => void;
@@ -9,7 +9,7 @@ export interface ConfirmModalProps {
   title?: string;
   actionText?: string;
   secondaryActionText?: string;
-  size?: "large" | "small" | "fullscreen" | "mini" | "tiny" | undefined;
+  size?: 'large' | 'small' | 'fullscreen' | 'mini' | 'tiny' | undefined;
   closeIcon?: boolean;
   closeOnEscape?: boolean;
   closeOnDimmerClick?: boolean;

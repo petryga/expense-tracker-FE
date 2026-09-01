@@ -43,10 +43,9 @@ describe('useSyncedRows', () => {
 
   it('updates when the query data reference changes to a new value', () => {
     const first: Row[] = [{ id: '1' }];
-    const { result, rerender } = renderHook(
-      ({ data }: { data: Row[] }) => useSyncedRows(data),
-      { initialProps: { data: first } },
-    );
+    const { result, rerender } = renderHook(({ data }: { data: Row[] }) => useSyncedRows(data), {
+      initialProps: { data: first },
+    });
     expect(result.current[0]).toBe(first);
 
     const second: Row[] = [{ id: '2' }];

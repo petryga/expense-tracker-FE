@@ -39,8 +39,8 @@ export const CustomFooter = ({
       {selectedTotalParts.length
         ? `Total Amount of Selected Entries - ${selectedTotalParts.join(' / ')}`
         : isFilterOn || !monthlyTotalParts.length
-        ? null
-        : `Total Expenses This Month - ${monthlyTotalParts.join(' / ')}`}
+          ? null
+          : `Total Expenses This Month - ${monthlyTotalParts.join(' / ')}`}
 
       {!isFilterOn && hasEntries && (
         <div

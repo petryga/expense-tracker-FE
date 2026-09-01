@@ -1,6 +1,9 @@
 import { Currency } from '../../expenses/helpers';
 import { convertAmount, type FxRateConfig } from '../../../utils/currency';
-import { MonthlyDataTypes, type MonthlyData } from '../../../services/monthlyData/monthlyData.types';
+import {
+  MonthlyDataTypes,
+  type MonthlyData,
+} from '../../../services/monthlyData/monthlyData.types';
 
 interface ParsedYearMonth {
   year: number;
@@ -104,7 +107,7 @@ const aggregateByMonth = (type: MonthlyDataTypes, data?: MonthlyData[]): Monthly
 
 export const groupMonthlyData = (
   type: MonthlyDataTypes,
-  expenses?: MonthlyData[]
+  expenses?: MonthlyData[],
 ): MonthlyExpense[] => {
   const monthlyData = aggregateByMonth(type, expenses);
 
@@ -118,10 +121,7 @@ export const groupMonthlyData = (
 };
 
 export const getYAxisMax = (data: MonthlyExpense[]): number => {
-  const maxValue = data.reduce(
-    (max, item) => Math.max(max, item.amountCad, item.amountUsd),
-    0
-  );
+  const maxValue = data.reduce((max, item) => Math.max(max, item.amountCad, item.amountUsd), 0);
   if (maxValue <= 0) return 100;
   return Math.ceil((maxValue * 1.1) / 100) * 100;
 };
@@ -163,7 +163,9 @@ export const buildYearlyComparisonData = ({
 
   Object.entries(groupedByYear).forEach(([yearKey, entries]) => {
     const year = parseInt(yearKey, 10);
-    const uniqueMonths = Array.from(new Set(entries.map((entry) => entry.month))).sort((a, b) => a - b);
+    const uniqueMonths = Array.from(new Set(entries.map((entry) => entry.month))).sort(
+      (a, b) => a - b,
+    );
     const maxMonth = uniqueMonths[uniqueMonths.length - 1];
     const hasExplicitSelection = Object.prototype.hasOwnProperty.call(ytdCutoffByYear ?? {}, year);
     const requestedMonth = ytdCutoffByYear?.[year];
@@ -183,7 +185,7 @@ export const buildYearlyComparisonData = ({
   const rows = Object.entries(groupedByYear)
     .map(([yearKey, entries]) => {
       const year = parseInt(yearKey, 10);
-      const rowCutoffMonth = mode === 'ytd' ? resolvedYtdCutoffByYear[year] ?? null : null;
+      const rowCutoffMonth = mode === 'ytd' ? (resolvedYtdCutoffByYear[year] ?? null) : null;
       if (mode === 'ytd' && rowCutoffMonth === null) {
         return null;
       }
@@ -229,7 +231,8 @@ export const buildYearlyComparisonData = ({
         cutoffMonth: rowCutoffMonth,
         annualized: parseFloat(annualized.toFixed(2)),
         monthsCount,
-        isIncomplete: mode === 'ytd' && rowCutoffMonth ? monthsCount < rowCutoffMonth : monthsCount < 12,
+        isIncomplete:
+          mode === 'ytd' && rowCutoffMonth ? monthsCount < rowCutoffMonth : monthsCount < 12,
       };
     })
     .filter((row): row is YearlyComparisonRow => row !== null)

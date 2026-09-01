@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo } from 'react';
 import {
   BarChart,
   Bar,
@@ -10,12 +10,12 @@ import {
   Tooltip,
   ResponsiveContainer,
   type RenderableText,
-} from "recharts";
-import { getVisualizedData } from "./helpers";
-import styles from "./MonthlyReportsPage.module.css";
-import type { Data } from "../../../services/expenses/expensesApi.types";
-import { CustomBarShape, CustomTooltip } from "./components";
-import { useGetCategoriesQuery } from "../../../services/categories/categoriesApi";
+} from 'recharts';
+import { getVisualizedData } from './helpers';
+import styles from './MonthlyReportsPage.module.css';
+import type { Data } from '../../../services/expenses/expensesApi.types';
+import { CustomBarShape, CustomTooltip } from './components';
+import { useGetCategoriesQuery } from '../../../services/categories/categoriesApi';
 
 export const VisualizedData = ({ dataByMonth }: { dataByMonth: Data[] }) => {
   const { data: categoryRecords } = useGetCategoriesQuery({});
@@ -33,34 +33,18 @@ export const VisualizedData = ({ dataByMonth }: { dataByMonth: Data[] }) => {
   );
 
   const maxSpent = Math.max(...dataByCategory.map((item) => item.total));
-  const ticks = Array.from(
-    { length: Math.ceil(maxSpent / 100) + 1 },
-    (_, i) => i * 100,
-  );
+  const ticks = Array.from({ length: Math.ceil(maxSpent / 100) + 1 }, (_, i) => i * 100);
 
   return (
     <div className={styles.container}>
       <ResponsiveContainer width={1000} height={650}>
-        <BarChart
-          data={dataByCategory}
-          layout="vertical"
-          margin={{ left: 30, right: 50 }}
-        >
+        <BarChart data={dataByCategory} layout="vertical" margin={{ left: 30, right: 50 }}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis
-            type="number"
-            ticks={ticks}
-            tickFormatter={(tick) => tick.toString()}
-          />
+          <XAxis type="number" ticks={ticks} tickFormatter={(tick) => tick.toString()} />
           <YAxis dataKey="category" type="category" width={60} />
           <Tooltip content={<CustomTooltip />} />
 
-          <Bar
-            dataKey="total"
-            barSize={20}
-            fill="#8884d8"
-            shape={<CustomBarShape />}
-          >
+          <Bar dataKey="total" barSize={20} fill="#8884d8" shape={<CustomBarShape />}>
             {dataByCategory.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={entry.fill} />
             ))}
@@ -68,9 +52,9 @@ export const VisualizedData = ({ dataByMonth }: { dataByMonth: Data[] }) => {
             <LabelList
               dataKey="total"
               position="right"
-              style={{ fill: "#666", fontWeight: "bold" }}
+              style={{ fill: '#666', fontWeight: 'bold' }}
               formatter={(value: RenderableText) => `$${Number(value ?? 0).toFixed(2)}`}
-              overflow={"extendDomain"}
+              overflow={'extendDomain'}
             />
           </Bar>
         </BarChart>
@@ -78,8 +62,7 @@ export const VisualizedData = ({ dataByMonth }: { dataByMonth: Data[] }) => {
 
       <div className={styles.summary}>
         <h2>
-          Total Spent Across All Categories - ${totalSpentCad} (CAD) / $
-          {totalSpentUsd} (USD)
+          Total Spent Across All Categories - ${totalSpentCad} (CAD) / ${totalSpentUsd} (USD)
         </h2>
       </div>
     </div>

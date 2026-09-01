@@ -1,17 +1,17 @@
-import { FC, useState } from "react";
-import { withSidebar } from "../../../components/sidebar/withSideBar";
-import { useGetMonthlyDataQuery } from "../../../services/monthlyData/monthlyDataApi";
-import { UrlTabs } from "../../../components/urlTabs/UrlTabs";
-import { useActiveTabId } from "../../../components/urlTabs/useActiveTabId";
-import { buildAllTimeReportSections } from "./AllTimeReportsPage.sections";
-import styles from "./AllTimeReportsPage.module.css";
+import { FC, useState } from 'react';
+import { withSidebar } from '../../../components/sidebar/withSideBar';
+import { useGetMonthlyDataQuery } from '../../../services/monthlyData/monthlyDataApi';
+import { UrlTabs } from '../../../components/urlTabs/UrlTabs';
+import { useActiveTabId } from '../../../components/urlTabs/useActiveTabId';
+import { buildAllTimeReportSections } from './AllTimeReportsPage.sections';
+import styles from './AllTimeReportsPage.module.css';
 
 const MONTH_RANGE_OPTIONS = [
-  { label: "Last 3 months", value: "3" },
-  { label: "Last 6 months", value: "6" },
-  { label: "Last year", value: "12" },
-  { label: "Last 2 years", value: "24" },
-  { label: "All time", value: "all" },
+  { label: 'Last 3 months', value: '3' },
+  { label: 'Last 6 months', value: '6' },
+  { label: 'Last year', value: '12' },
+  { label: 'Last 2 years', value: '24' },
+  { label: 'All time', value: 'all' },
 ];
 
 const AllTimeReportsPage: FC = () => {
@@ -24,14 +24,14 @@ const AllTimeReportsPage: FC = () => {
     <UrlTabs
       sections={sections}
       belowNav={
-        activeTabId !== "yearly-comparison" && (
+        activeTabId !== 'yearly-comparison' && (
           <div className={styles.rangeControl}>
             <label htmlFor="month-range">Range</label>
             <select
               id="month-range"
-              value={monthRange === null ? "all" : String(monthRange)}
+              value={monthRange === null ? 'all' : String(monthRange)}
               onChange={(event) =>
-                setMonthRange(event.target.value === "all" ? null : Number(event.target.value))
+                setMonthRange(event.target.value === 'all' ? null : Number(event.target.value))
               }
             >
               {MONTH_RANGE_OPTIONS.map((option) => (

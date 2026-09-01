@@ -38,37 +38,37 @@ describe('getCadToUsdRate', () => {
 describe('convertAmount', () => {
   it('returns the amount unchanged when currencies match', () => {
     expect(
-      convertAmount({ amount: 100, fromCurrency: Currency.CAD, toCurrency: Currency.CAD })
+      convertAmount({ amount: 100, fromCurrency: Currency.CAD, toCurrency: Currency.CAD }),
     ).toBe(100);
   });
 
   it('converts CAD to USD using the resolved rate', () => {
     const rates: FxRateConfig = { defaultCadToUsd: 0.5 };
     expect(
-      convertAmount({ amount: 100, fromCurrency: Currency.CAD, toCurrency: Currency.USD, rates })
+      convertAmount({ amount: 100, fromCurrency: Currency.CAD, toCurrency: Currency.USD, rates }),
     ).toBe(50);
   });
 
   it('converts USD to CAD using the resolved rate', () => {
     const rates: FxRateConfig = { defaultCadToUsd: 0.5 };
     expect(
-      convertAmount({ amount: 50, fromCurrency: Currency.USD, toCurrency: Currency.CAD, rates })
+      convertAmount({ amount: 50, fromCurrency: Currency.USD, toCurrency: Currency.CAD, rates }),
     ).toBe(100);
   });
 
   it('returns 0 instead of dividing by zero when the rate is 0', () => {
     const rates: FxRateConfig = { defaultCadToUsd: 0 };
     expect(
-      convertAmount({ amount: 50, fromCurrency: Currency.USD, toCurrency: Currency.CAD, rates })
+      convertAmount({ amount: 50, fromCurrency: Currency.USD, toCurrency: Currency.CAD, rates }),
     ).toBe(0);
   });
 
   it('returns 0 for a non-finite amount', () => {
     expect(
-      convertAmount({ amount: NaN, fromCurrency: Currency.CAD, toCurrency: Currency.USD })
+      convertAmount({ amount: NaN, fromCurrency: Currency.CAD, toCurrency: Currency.USD }),
     ).toBe(0);
     expect(
-      convertAmount({ amount: Infinity, fromCurrency: Currency.CAD, toCurrency: Currency.USD })
+      convertAmount({ amount: Infinity, fromCurrency: Currency.CAD, toCurrency: Currency.USD }),
     ).toBe(0);
   });
 });

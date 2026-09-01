@@ -49,7 +49,7 @@ export type ContentComponentProps = {
 export type TableColumns = {
   rowModesModel: Record<GridRowId, { mode: GridRowModes }>;
   setRowModesModel: (
-    model: Record<GridRowId, { mode: GridRowModes; ignoreModifications?: boolean }>
+    model: Record<GridRowId, { mode: GridRowModes; ignoreModifications?: boolean }>,
   ) => void;
   rows?: Data[];
   setRows: Dispatch<SetStateAction<Data[]>>;

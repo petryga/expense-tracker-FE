@@ -20,7 +20,7 @@ export function SearchBar({
   // silently defeating the debounce.
   const debouncedSearch = useMemo(
     () => debounce((nextValue: string) => setDebouncedValue(nextValue), 500),
-    [setDebouncedValue]
+    [setDebouncedValue],
   );
 
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {

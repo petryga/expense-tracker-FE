@@ -63,7 +63,5 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     return () => subscription.unsubscribe();
   }, []);
 
-  return (
-    <AuthContext.Provider value={{ session, isLoading }}>{children}</AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{ session, isLoading }}>{children}</AuthContext.Provider>;
 };

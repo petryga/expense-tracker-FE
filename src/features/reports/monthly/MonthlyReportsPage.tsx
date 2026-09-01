@@ -16,7 +16,7 @@ const MonthlyReportsPage: FC = () => {
   const dataByYear = useMemo(() => processExpensesData(expenses), [expenses]);
   const sortedYears = useMemo(
     () => Object.keys(dataByYear).sort((a, b) => Number.parseInt(b) - Number.parseInt(a)),
-    [dataByYear]
+    [dataByYear],
   );
 
   const getDefaultYearMonth = useCallback(
@@ -26,7 +26,7 @@ const MonthlyReportsPage: FC = () => {
       }
 
       const monthsForYear = Object.keys(dataByYear[year]).sort(
-        (a, b) => Number.parseInt(b) - Number.parseInt(a)
+        (a, b) => Number.parseInt(b) - Number.parseInt(a),
       );
 
       if (!monthsForYear.length) {
@@ -42,7 +42,7 @@ const MonthlyReportsPage: FC = () => {
 
       return `${year}-${preferredMonth}`;
     },
-    [dataByYear]
+    [dataByYear],
   );
 
   // Both selections are reconciled against the data during render rather than

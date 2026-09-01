@@ -37,7 +37,7 @@ describe('buildAllTimeReportSections', () => {
   it('maps each label to its own distinct component, not a mismatched one', () => {
     const sections = buildAllTimeReportSections(DATA, 12);
     const byLabel = new Map(
-      sections.map((section) => [section.label, asChartElement(section.content)])
+      sections.map((section) => [section.label, asChartElement(section.content)]),
     );
 
     expect(byLabel.get('Monthly Expenses')!.type).toBe(MonthlyExpenses);
@@ -48,7 +48,7 @@ describe('buildAllTimeReportSections', () => {
   it('passes data and monthRange through to Monthly Expenses and Monthly Wealth', () => {
     const sections = buildAllTimeReportSections(DATA, 6);
     const byLabel = new Map(
-      sections.map((section) => [section.label, asChartElement(section.content)])
+      sections.map((section) => [section.label, asChartElement(section.content)]),
     );
 
     expect(byLabel.get('Monthly Expenses')!.props).toEqual({ data: DATA, monthRange: 6 });
@@ -58,7 +58,7 @@ describe('buildAllTimeReportSections', () => {
   it("does not pass monthRange to Yearly Comparison - it doesn't accept one", () => {
     const sections = buildAllTimeReportSections(DATA, 6);
     const yearlyComparison = asChartElement(
-      sections.find((section) => section.label === 'Yearly Comparison')!.content
+      sections.find((section) => section.label === 'Yearly Comparison')!.content,
     );
 
     expect(yearlyComparison.props).toEqual({ data: DATA });

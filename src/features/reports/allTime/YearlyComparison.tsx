@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { format } from "date-fns";
+import { useMemo, useState } from 'react';
+import { format } from 'date-fns';
 import {
   Bar,
   BarChart,
@@ -10,30 +10,24 @@ import {
   type TooltipValueType,
   XAxis,
   YAxis,
-} from "recharts";
-import { Currency } from "../../expenses/helpers";
-import type { MonthlyData } from "../../../services/monthlyData/monthlyData.types";
-import {
-  buildYearlyComparisonData,
-  type YearlyComparisonMode,
-} from "./helpers";
-import styles from "./YearlyComparison.module.css";
+} from 'recharts';
+import { Currency } from '../../expenses/helpers';
+import type { MonthlyData } from '../../../services/monthlyData/monthlyData.types';
+import { buildYearlyComparisonData, type YearlyComparisonMode } from './helpers';
+import styles from './YearlyComparison.module.css';
 
 const formatMoney = (amount: number, currency: Currency) => {
-  const symbol = currency === Currency.CAD ? "C$" : "$";
+  const symbol = currency === Currency.CAD ? 'C$' : '$';
   return `${symbol}${amount.toFixed(2)}`;
 };
 
 export const YearlyComparison = ({ data }: { data?: MonthlyData[] }) => {
-  const [mode, setMode] = useState<YearlyComparisonMode>("full-year");
+  const [mode, setMode] = useState<YearlyComparisonMode>('full-year');
   const [baseCurrency, setBaseCurrency] = useState<Currency>(Currency.USD);
-  const [ytdCutoffByYear, setYtdCutoffByYear] = useState<
-    Record<number, number | null>
-  >({});
+  const [ytdCutoffByYear, setYtdCutoffByYear] = useState<Record<number, number | null>>({});
 
   const { rows, ytdCutoffOptionsByYear, defaultYtdCutoffByYear } = useMemo(
-    () =>
-      buildYearlyComparisonData({ data, mode, baseCurrency, ytdCutoffByYear }),
+    () => buildYearlyComparisonData({ data, mode, baseCurrency, ytdCutoffByYear }),
     [data, mode, baseCurrency, ytdCutoffByYear],
   );
 
@@ -82,9 +76,7 @@ export const YearlyComparison = ({ data }: { data?: MonthlyData[] }) => {
           Comparison
           <select
             value={mode}
-            onChange={(event) =>
-              setMode(event.target.value as YearlyComparisonMode)
-            }
+            onChange={(event) => setMode(event.target.value as YearlyComparisonMode)}
           >
             <option value="ytd">YTD vs YTD</option>
             <option value="full-year">Full Year</option>
@@ -95,16 +87,14 @@ export const YearlyComparison = ({ data }: { data?: MonthlyData[] }) => {
           Base Currency
           <select
             value={baseCurrency}
-            onChange={(event) =>
-              setBaseCurrency(event.target.value as Currency)
-            }
+            onChange={(event) => setBaseCurrency(event.target.value as Currency)}
           >
             <option value={Currency.USD}>USD</option>
             <option value={Currency.CAD}>CAD</option>
           </select>
         </label>
       </div>
-      {mode === "ytd" && Object.keys(ytdCutoffOptionsByYear).length > 0 ? (
+      {mode === 'ytd' && Object.keys(ytdCutoffOptionsByYear).length > 0 ? (
         <div className={styles.cutoffSection}>
           <p className={styles.cutoffLabel}>YTD cutoff month by year</p>
           <div className={styles.cutoffGrid}>
@@ -113,10 +103,7 @@ export const YearlyComparison = ({ data }: { data?: MonthlyData[] }) => {
               .sort((a, b) => a - b)
               .map((year) => {
                 const options = ytdCutoffOptionsByYear[year];
-                const hasSelection = Object.prototype.hasOwnProperty.call(
-                  ytdCutoffByYear,
-                  year,
-                );
+                const hasSelection = Object.prototype.hasOwnProperty.call(ytdCutoffByYear, year);
                 const selectedCutoff = hasSelection
                   ? ytdCutoffByYear[year]
                   : defaultYtdCutoffByYear[year];
@@ -124,23 +111,18 @@ export const YearlyComparison = ({ data }: { data?: MonthlyData[] }) => {
                   <label key={year} className={styles.cutoffItem}>
                     {year}
                     <select
-                      value={
-                        selectedCutoff === null ? "" : String(selectedCutoff)
-                      }
+                      value={selectedCutoff === null ? '' : String(selectedCutoff)}
                       onChange={(event) =>
                         setYtdCutoffByYear((previous) => ({
                           ...previous,
-                          [year]:
-                            event.target.value === ""
-                              ? null
-                              : Number(event.target.value),
+                          [year]: event.target.value === '' ? null : Number(event.target.value),
                         }))
                       }
                     >
                       <option value="">Not selected</option>
                       {options.map((month) => (
                         <option key={month} value={month}>
-                          {format(new Date(2000, month - 1, 1), "MMMM")}
+                          {format(new Date(2000, month - 1, 1), 'MMMM')}
                         </option>
                       ))}
                     </select>
@@ -152,9 +134,7 @@ export const YearlyComparison = ({ data }: { data?: MonthlyData[] }) => {
       ) : null}
 
       {!rows.length ? (
-        <div className={styles.emptyState}>
-          No yearly expense data matches this comparison yet.
-        </div>
+        <div className={styles.emptyState}>No yearly expense data matches this comparison yet.</div>
       ) : (
         <>
           <ResponsiveContainer width={1000} height={390}>
@@ -168,14 +148,7 @@ export const YearlyComparison = ({ data }: { data?: MonthlyData[] }) => {
                   patternTransform="rotate(45)"
                 >
                   <rect width="8" height="8" fill="#eeb12e" />
-                  <line
-                    x1="0"
-                    y1="0"
-                    x2="0"
-                    y2="8"
-                    stroke="#727272"
-                    strokeWidth="3"
-                  />
+                  <line x1="0" y1="0" x2="0" y2="8" stroke="#727272" strokeWidth="3" />
                 </pattern>
               </defs>
               <CartesianGrid strokeDasharray="3 3" />
@@ -184,13 +157,11 @@ export const YearlyComparison = ({ data }: { data?: MonthlyData[] }) => {
               <Tooltip
                 formatter={(value: TooltipValueType | undefined, name) => {
                   const normalizedName = String(name);
-                  const numericValue = Array.isArray(value)
-                    ? Number(value[0])
-                    : Number(value ?? 0);
-                  if (normalizedName === "Converted Total") {
+                  const numericValue = Array.isArray(value) ? Number(value[0]) : Number(value ?? 0);
+                  if (normalizedName === 'Converted Total') {
                     return formatMoney(numericValue, baseCurrency);
                   }
-                  if (normalizedName === "CAD") {
+                  if (normalizedName === 'CAD') {
                     return formatMoney(numericValue, Currency.CAD);
                   }
                   return formatMoney(numericValue, Currency.USD);
@@ -228,12 +199,10 @@ export const YearlyComparison = ({ data }: { data?: MonthlyData[] }) => {
                   <td>{formatMoney(row.amountUsd, Currency.USD)}</td>
                   <td>{formatMoney(row.convertedTotal, baseCurrency)}</td>
                   <td>
-                    {mode === "ytd" && row.cutoffMonth
+                    {mode === 'ytd' && row.cutoffMonth
                       ? `${row.monthsCount}/${row.cutoffMonth}`
                       : row.monthsCount}
-                    {row.isIncomplete ? (
-                      <span className={styles.badge}>Partial</span>
-                    ) : null}
+                    {row.isIncomplete ? <span className={styles.badge}>Partial</span> : null}
                   </td>
                   <td>{formatMoney(row.annualized, baseCurrency)}</td>
                 </tr>

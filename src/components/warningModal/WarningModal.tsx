@@ -1,11 +1,11 @@
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import { Dispatch } from "react";
-import styles from "./WarningModal.module.css";
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import { Dispatch } from 'react';
+import styles from './WarningModal.module.css';
 
 function WarningModal({
   open,
@@ -30,8 +30,7 @@ function WarningModal({
       <DialogTitle className={styles.title}> Confirm Delete</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Are you sure you want to delete this entry? This action cannot be
-          undone.
+          Are you sure you want to delete this entry? This action cannot be undone.
         </DialogContentText>
       </DialogContent>
       <DialogActions className={styles.actions}>

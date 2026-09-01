@@ -36,7 +36,7 @@ export const renderEditCell = (params: GridRenderEditCellParams) => {
           field: params.field,
           value: formattedResult.toFixed(2),
         },
-        event
+        event,
       );
     }
   };
@@ -54,7 +54,7 @@ export const renderEditCell = (params: GridRenderEditCellParams) => {
             field: params.field,
             value: event.target.value,
           },
-          event
+          event,
         );
       }}
       onKeyDown={handleKeyDown}

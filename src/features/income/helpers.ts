@@ -1,17 +1,14 @@
-import { GridRowClassNameParams } from "@mui/x-data-grid";
-import { IncomeData } from "../../services/income/incomeApi.types";
+import { GridRowClassNameParams } from '@mui/x-data-grid';
+import { IncomeData } from '../../services/income/incomeApi.types';
 
 export enum IncomeCategories {
-  BANK_ACCOUNTS = "bankAccounts",
-  CRYPTO = "crypto",
-  INVESTMENTS = "investments",
-  CASH = "cash",
+  BANK_ACCOUNTS = 'bankAccounts',
+  CRYPTO = 'crypto',
+  INVESTMENTS = 'investments',
+  CASH = 'cash',
 }
 
-export const getRowClassName = (
-  params: GridRowClassNameParams<IncomeData>,
-  rows: IncomeData[],
-) => {
+export const getRowClassName = (params: GridRowClassNameParams<IncomeData>, rows: IncomeData[]) => {
   const currentRowIndex = rows.findIndex((row) => row.id === params.id);
 
   // getUTCMonth (not getMonth) since `date` is a plain "yyyy-MM-dd" string,
@@ -21,9 +18,7 @@ export const getRowClassName = (
   const currentMonth = new Date(params.row.date).getUTCMonth();
 
   const previousRow = currentRowIndex > 0 ? rows[currentRowIndex - 1] : null;
-  const previousMonth = previousRow
-    ? new Date(previousRow.date).getUTCMonth()
-    : currentMonth;
+  const previousMonth = previousRow ? new Date(previousRow.date).getUTCMonth() : currentMonth;
 
-  return currentMonth !== previousMonth ? "new-month-row" : "";
+  return currentMonth !== previousMonth ? 'new-month-row' : '';
 };

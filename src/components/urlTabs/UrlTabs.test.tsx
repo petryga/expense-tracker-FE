@@ -16,7 +16,7 @@ const renderWithRouter = (initialEntry: string) =>
   render(
     <MemoryRouter initialEntries={[initialEntry]}>
       <UrlTabs sections={sections} />
-    </MemoryRouter>
+    </MemoryRouter>,
   );
 
 describe('UrlTabs', () => {
@@ -48,15 +48,15 @@ describe('UrlTabs', () => {
 
     expect(screen.getByRole('link', { name: 'Section A' })).toHaveAttribute(
       'href',
-      '/settings?tab=a'
+      '/settings?tab=a',
     );
     expect(screen.getByRole('link', { name: 'Section B' })).toHaveAttribute(
       'href',
-      '/settings?tab=b'
+      '/settings?tab=b',
     );
     expect(screen.getByRole('link', { name: 'Section C' })).toHaveAttribute(
       'href',
-      '/settings?tab=c'
+      '/settings?tab=c',
     );
   });
 
@@ -64,10 +64,7 @@ describe('UrlTabs', () => {
     renderWithRouter('/settings?tab=b');
 
     expect(screen.getByRole('link', { name: 'Section A' })).not.toHaveAttribute('aria-current');
-    expect(screen.getByRole('link', { name: 'Section B' })).toHaveAttribute(
-      'aria-current',
-      'page'
-    );
+    expect(screen.getByRole('link', { name: 'Section B' })).toHaveAttribute('aria-current', 'page');
     expect(screen.getByRole('link', { name: 'Section C' })).not.toHaveAttribute('aria-current');
   });
 });

@@ -5,7 +5,7 @@ export const transformCategoriesForDropdown = (categories: Category[]) => {
     category.subcategories.map((subcategory) => ({
       value: subcategory.name,
       label: `${category.name} - ${subcategory.name}`,
-    }))
+    })),
   );
 };
 

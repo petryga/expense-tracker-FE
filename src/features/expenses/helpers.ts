@@ -1,11 +1,11 @@
-import { format } from "date-fns";
-import type { Data } from "../../services/expenses/expensesApi.types";
-import type { Category } from "./ExpensesPage.types";
-import type { CategoryRecord } from "../../services/categories/categoriesApi.types";
+import { format } from 'date-fns';
+import type { Data } from '../../services/expenses/expensesApi.types';
+import type { Category } from './ExpensesPage.types';
+import type { CategoryRecord } from '../../services/categories/categoriesApi.types';
 
 export enum Currency {
-  CAD = "CAD",
-  USD = "USD",
+  CAD = 'CAD',
+  USD = 'USD',
 }
 
 export const buildCategoryTree = (categories: CategoryRecord[]): Category[] => {
@@ -48,7 +48,7 @@ export const getDataByMonth = (
 };
 
 export const getCurrentMonthPath = () => {
-  const currentMonth = format(new Date(), "yyyy-MM");
+  const currentMonth = format(new Date(), 'yyyy-MM');
   return `/expenses/${currentMonth}`;
 };
 
@@ -56,17 +56,14 @@ export const processExpensesData = (
   expenses?: Data[],
 ): { [key: string]: { [key: string]: Data[] } } => {
   // Transform data into month-based grouping
-  const dataByMonth = (expenses ?? []).reduce<{ [key: string]: Data[] }>(
-    (acc, expense) => {
-      const month = new Date(expense.datePosted).toISOString().slice(0, 7);
-      if (!acc[month]) {
-        acc[month] = [];
-      }
-      acc[month].push(expense);
-      return acc;
-    },
-    {},
-  );
+  const dataByMonth = (expenses ?? []).reduce<{ [key: string]: Data[] }>((acc, expense) => {
+    const month = new Date(expense.datePosted).toISOString().slice(0, 7);
+    if (!acc[month]) {
+      acc[month] = [];
+    }
+    acc[month].push(expense);
+    return acc;
+  }, {});
 
   // Always keep the current month reachable in the year/month navigation,
   // even with no expenses posted yet — otherwise it disappears from the
@@ -78,18 +75,13 @@ export const processExpensesData = (
   }
 
   // Sort months in descending order
-  const sortedMonths = Object.keys(dataByMonth).sort((a, b) =>
-    a < b ? 1 : -1,
-  );
+  const sortedMonths = Object.keys(dataByMonth).sort((a, b) => (a < b ? 1 : -1));
 
   // Group data by year, maintaining the sorted order
-  return sortedMonths.reduce<{ [key: string]: { [key: string]: Data[] } }>(
-    (acc, yearMonth) => {
-      const [year, month] = yearMonth.split("-");
-      if (!acc[year]) acc[year] = {};
-      acc[year][month] = dataByMonth[yearMonth];
-      return acc;
-    },
-    {},
-  );
+  return sortedMonths.reduce<{ [key: string]: { [key: string]: Data[] } }>((acc, yearMonth) => {
+    const [year, month] = yearMonth.split('-');
+    if (!acc[year]) acc[year] = {};
+    acc[year][month] = dataByMonth[yearMonth];
+    return acc;
+  }, {});
 };
