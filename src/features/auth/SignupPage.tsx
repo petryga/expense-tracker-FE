@@ -23,7 +23,6 @@ const SignupPage: FC = () => {
   if (!isLoading && session) {
     return <Navigate to={URLS.expenses} replace />;
   }
-  // also, remove expense desciption capitalization, and in settings-> categories make the buttons match year/month buttons
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     setError(null);

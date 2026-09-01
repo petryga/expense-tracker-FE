@@ -7,6 +7,10 @@ import { URLS } from '../../components/sidebar/constants';
 import { AuthCard } from './AuthCard';
 import styles from './AuthCard.module.css';
 
+const demoEmail = import.meta.env.VITE_DEMO_EMAIL;
+const demoPassword = import.meta.env.VITE_DEMO_PASSWORD;
+const isDemoEnabled = Boolean(demoEmail && demoPassword);
+
 const LoginPage: FC = () => {
   const { session, isLoading } = useAuth();
   const location = useLocation();
@@ -14,6 +18,7 @@ const LoginPage: FC = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDemoSubmitting, setIsDemoSubmitting] = useState(false);
 
   if (!isAuthEnabled) {
     return <Navigate to={URLS.expenses} replace />;
@@ -35,6 +40,22 @@ const LoginPage: FC = () => {
     });
 
     setIsSubmitting(false);
+
+    if (signInError) {
+      setError(signInError.message);
+    }
+  };
+
+  const handleDemoLogin = async () => {
+    setError(null);
+    setIsDemoSubmitting(true);
+
+    const { error: signInError } = await supabase!.auth.signInWithPassword({
+      email: demoEmail!,
+      password: demoPassword!,
+    });
+
+    setIsDemoSubmitting(false);
 
     if (signInError) {
       setError(signInError.message);
@@ -70,11 +91,23 @@ const LoginPage: FC = () => {
       <Button
         type="submit"
         variant="contained"
-        disabled={isSubmitting}
+        disabled={isSubmitting || isDemoSubmitting}
         className={styles.submitButton}
       >
         {isSubmitting ? 'Logging in…' : 'Log in'}
       </Button>
+
+      {isDemoEnabled && (
+        <Button
+          type="button"
+          variant="outlined"
+          onClick={handleDemoLogin}
+          disabled={isSubmitting || isDemoSubmitting}
+          className={styles.submitButton}
+        >
+          {isDemoSubmitting ? 'Loading demo…' : 'Try the demo'}
+        </Button>
+      )}
 
       <Typography variant="body2" className={styles.footerText}>
         Don&apos;t have an account?{' '}

@@ -4,7 +4,7 @@ import { SearchBar } from './SearchBar';
 import { useGetExpensesQuery } from '../../services/expenses/expensesApi';
 import { tableStyles } from '../expenses/styles';
 import { DataGrid } from '@mui/x-data-grid';
-import { createSearchColumns } from '../expenses/columns';
+import { createSearchColumns } from '../expenses/searchColumns';
 import type { Data } from '../../services/expenses/expensesApi.types';
 import styles from './SearchPage.module.css';
 import { buildCategoryTree, Currency } from '../expenses/helpers';
@@ -35,8 +35,8 @@ const CustomFooter = () => {
     <div className={styles.footer}>
       {totalSelectedCad || totalSelectedUsd
         ? `Total Amount of Selected Entries - ${totalSelectedCad?.toFixed(
-          2
-        )}$ (CAD) / ${totalSelectedUsd?.toFixed(2)}$ (USD)`
+            2,
+          )}$ (CAD) / ${totalSelectedUsd?.toFixed(2)}$ (USD)`
         : `Total Amount for these Results - ${totalAmountSearchResultsCad}$ (CAD) / ${totalAmountSearchResultsUsd}$ (USD)`}
     </div>
   );
@@ -54,7 +54,7 @@ const SearchPage: FC = () => {
     {
       search: debouncedValue,
     },
-    { skip: !debouncedValue, refetchOnMountOrArgChange: true }
+    { skip: !debouncedValue, refetchOnMountOrArgChange: true },
   );
   // Results are copied into locally-mutable row state; clearing the search box
   // empties both rows and selection. Adjusted during render instead of in an
@@ -76,11 +76,11 @@ const SearchPage: FC = () => {
     return [
       selectedRows.reduce(
         (acc, row) => (row.currency === Currency.CAD ? acc + row.amount : acc),
-        0
+        0,
       ),
       selectedRows.reduce(
         (acc, row) => (row.currency === Currency.USD ? acc + row.amount : acc),
-        0
+        0,
       ),
     ];
   }, [selectedRows]);

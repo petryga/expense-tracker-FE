@@ -2,7 +2,7 @@
 
 React frontend for a personal expense & income tracker — built for myself after the budgeting app I used got discontinued.
 
-API: **[expense-tracker-api](https://github.com/petryga/expense-tracker-BE)** · Live demo: _(link — log in as the demo user, no signup)_
+API: **[expense-tracker-api](https://github.com/petryga/expense-tracker-BE)** · **Live demo:** [expense-tracker-fe-nu.vercel.app](https://expense-tracker-fe-nu.vercel.app) — hit **Try the demo** (no signup; the demo data resets on each login)
 
 ## Features
 
@@ -44,6 +44,17 @@ src/
 ```
 
 Routes are code-split with `React.lazy`. Auth state comes from a `Supabase` session listener in `AuthProvider`; `RequireAuth` gates the app when Supabase is configured and is a no-op when it isn't.
+
+```mermaid
+flowchart TD
+  UI["feature pages<br/>expenses · income · reports · sankey · settings"] --> RTK["RTK Query API slices"]
+  RTK --> NORM["normalizers<br/>API shape → view shape"]
+  NORM --> STORE[("Redux store")]
+  STORE --> UI
+  RTK -->|"fetch + Bearer token"| API["expense-tracker-api"]
+  SB["Supabase session listener"] --> STORE
+  SB -->|"access token"| RTK
+```
 
 ## Running locally
 
