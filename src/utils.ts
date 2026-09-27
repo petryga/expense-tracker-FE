@@ -9,6 +9,21 @@ export const transformCategoriesForDropdown = (categories: Category[]) => {
   );
 };
 
+// Parses a "yyyy-MM-dd" (or "yyyy-MM-ddTHH:mm:ss...") string into a Date
+// representing that local calendar day (avoids the UTC-midnight shift that
+// `new Date(string)` would apply).
+export const parseLocalDateString = (value: string): Date => {
+  const datePart = value.slice(0, 10);
+  const [year, month, day] = datePart.split('-').map(Number);
+  return new Date(year, month - 1, day);
+};
+
+// Date columns' valueSetter falls back to this when the segmented date editor
+// (DateEditCell) commits `null` for an incomplete entry, defaulting to the
+// last valid day of the month the row already had.
+export const lastDayOfMonth = (date: Date): Date =>
+  new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
 export const formatDate = (value: Date | string) => {
   // A Date instance here was built locally (see the datePosted valueGetter) and
   // already represents the intended local calendar day, so read it with local

@@ -14,7 +14,12 @@ type DatePostedValueGetter = (
   column: unknown,
   apiRef: unknown,
 ) => Date | string | null;
-type DatePostedValueSetter = (value: Date, row: Data, column: unknown, apiRef: unknown) => Data;
+type DatePostedValueSetter = (
+  value: Date | null,
+  row: Data,
+  column: unknown,
+  apiRef: unknown,
+) => Data;
 
 const getDatePostedColumn = () => {
   const columns = createTableColumns({
@@ -110,5 +115,74 @@ describe('datePosted column valueSetter', () => {
     const result = valueSetter(date, row, undefined, undefined);
 
     expect(result.datePosted).toBe('2026-01-05');
+  });
+
+  describe('when the edited value is null (e.g. an incomplete segmented date entry)', () => {
+    it('falls back to the last day of September (30) instead of crashing on day 31', () => {
+      const { valueSetter } = getDatePostedColumn();
+      const row = makeRow({ datePosted: '2026-09-15' });
+
+      const result = valueSetter(null, row, undefined, undefined);
+
+      expect(result.datePosted).toBe('2026-09-30');
+    });
+
+    it('falls back to the last day of November (30) instead of crashing on day 31', () => {
+      const { valueSetter } = getDatePostedColumn();
+      const row = makeRow({ datePosted: '2026-11-01' });
+
+      const result = valueSetter(null, row, undefined, undefined);
+
+      expect(result.datePosted).toBe('2026-11-30');
+    });
+
+    it('falls back to the last day of February in a non-leap year (28)', () => {
+      const { valueSetter } = getDatePostedColumn();
+      const row = makeRow({ datePosted: '2026-02-10' });
+
+      const result = valueSetter(null, row, undefined, undefined);
+
+      expect(result.datePosted).toBe('2026-02-28');
+    });
+
+    it('falls back to the last day of February in a leap year (29)', () => {
+      const { valueSetter } = getDatePostedColumn();
+      const row = makeRow({ datePosted: '2028-02-10' });
+
+      const result = valueSetter(null, row, undefined, undefined);
+
+      expect(result.datePosted).toBe('2028-02-29');
+    });
+
+    it('is unaffected by months that already have 31 days', () => {
+      const { valueSetter } = getDatePostedColumn();
+      const row = makeRow({ datePosted: '2026-07-13' });
+
+      const result = valueSetter(null, row, undefined, undefined);
+
+      expect(result.datePosted).toBe('2026-07-31');
+    });
+
+    it('handles a full ISO timestamp string as the existing row value', () => {
+      const { valueSetter } = getDatePostedColumn();
+      const row = makeRow({ datePosted: '2026-09-15T07:00:00.000Z' });
+
+      const result = valueSetter(null, row, undefined, undefined);
+
+      expect(result.datePosted).toBe('2026-09-30');
+    });
+
+    it('falls back to the current month when the row has no existing datePosted', () => {
+      const { valueSetter } = getDatePostedColumn();
+      const row = makeRow({ datePosted: '' });
+      const now = new Date();
+      const expectedLastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+
+      const result = valueSetter(null, row, undefined, undefined);
+
+      expect(result.datePosted).toBe(
+        `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(expectedLastDay).padStart(2, '0')}`,
+      );
+    });
   });
 });

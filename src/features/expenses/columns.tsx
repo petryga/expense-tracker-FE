@@ -1,13 +1,19 @@
 import { Currency } from './helpers';
 import type { GridColDef, GridRowParams } from '@mui/x-data-grid';
 import { faTrash, faSave, faEdit, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { formatDate, transformCategoriesForDropdown } from '../../utils';
+import {
+  formatDate,
+  lastDayOfMonth,
+  parseLocalDateString,
+  transformCategoriesForDropdown,
+} from '../../utils';
 import type { TableColumns } from './ExpensesPage.types';
 import { Checkbox } from '@mui/material';
 import styles from './ExpensesPage.module.css';
 import type { Data } from '../../services/expenses/expensesApi.types';
 import { v4 as uuidv4 } from 'uuid';
 import { renderEditCell } from '../../components/amountTableCell/AmountTableCell';
+import { renderEditCell as renderDateEditCell } from '../../components/dateTableCell/DateTableCell';
 import { iconAction, createRowModeHandlers } from './gridActions';
 
 export function createTableColumns({
@@ -90,17 +96,19 @@ export function createTableColumns({
       width: 100,
       editable: true,
       type: 'date',
+      renderEditCell: renderDateEditCell,
       valueGetter: (value: Date | string | null) => {
         if (!value) return value;
         if (value instanceof Date) return value;
-        const datePart = value.slice(0, 10);
-        const [year, month, day] = datePart.split('-').map(Number);
-        return new Date(year, month - 1, day);
+        return parseLocalDateString(value);
       },
-      valueSetter: (value: Date, row: Data) => {
-        const yyyy = value.getFullYear();
-        const mm = String(value.getMonth() + 1).padStart(2, '0');
-        const dd = String(value.getDate()).padStart(2, '0');
+      valueSetter: (value: Date | null, row: Data) => {
+        const date =
+          value ??
+          lastDayOfMonth(row.datePosted ? parseLocalDateString(row.datePosted) : new Date());
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
         return { ...row, datePosted: `${yyyy}-${mm}-${dd}` };
       },
       valueFormatter: (value) => formatDate(value),

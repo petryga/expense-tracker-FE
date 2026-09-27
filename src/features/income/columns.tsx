@@ -1,9 +1,10 @@
 import type { GridColDef } from '@mui/x-data-grid';
 import { faTrash, faSave, faEdit, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { formatDate } from '../../utils';
+import { formatDate, lastDayOfMonth, parseLocalDateString } from '../../utils';
 import { TableColumns } from './AssetsPage.types';
 import { IncomeCategories } from './helpers';
 import { renderEditCell } from '../../components/amountTableCell/AmountTableCell';
+import { renderEditCell as renderDateEditCell } from '../../components/dateTableCell/DateTableCell';
 import Checkbox from '@mui/material/Checkbox';
 import { Currency } from '../expenses/helpers';
 import { iconAction, createRowModeHandlers } from '../expenses/gridActions';
@@ -51,6 +52,20 @@ export function createTableColumns({
       width: 120,
       editable: true,
       type: 'date',
+      renderEditCell: renderDateEditCell,
+      valueGetter: (value: Date | string | null) => {
+        if (!value) return value;
+        if (value instanceof Date) return value;
+        return parseLocalDateString(value);
+      },
+      valueSetter: (value: Date | null, row: IncomeData) => {
+        const date =
+          value ?? lastDayOfMonth(row.date ? parseLocalDateString(row.date) : new Date());
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+        return { ...row, date: `${yyyy}-${mm}-${dd}` };
+      },
       valueFormatter: (value) => formatDate(value),
     },
     {
