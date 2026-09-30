@@ -4,9 +4,35 @@ import { useGetIncomeEntriesQuery } from '../../services/income/incomeApi';
 import { useGetExpensesQuery } from '../../services/expenses/expensesApi';
 import { format, parseISO } from 'date-fns';
 import { ResponsiveSankey } from '@nivo/sankey';
+import { Text, type TextProps } from '@nivo/text';
 import styles from './SankeyPage.module.css';
-import { buildSankeyData, COLORS } from './helpers';
+import { buildSankeyData, COLORS, sortSavingsLast, splitTrailingParenthetical } from './helpers';
 import { SankeyChartLink, SankeyChartNode } from './SankeyPage.types';
+import { formatAmount } from '../../utils';
+
+// Nivo's Sankey labels are plain SVG <text> elements, which don't wrap or
+// honor "\n" -- rendering the breakdown as its own line needs two stacked
+// <Text> instances (each already wired up to nivo's animated positioning)
+// instead of one.
+function SankeyNodeLabel(props: TextProps) {
+  const { children, ...rest } = props;
+  const [main, bracket] = splitTrailingParenthetical(String(children ?? ''));
+
+  if (!bracket) {
+    return <Text {...props} />;
+  }
+
+  return (
+    <>
+      <Text {...rest} dy="-0.6em">
+        {main}
+      </Text>
+      <Text {...rest} dy="0.7em">
+        {bracket}
+      </Text>
+    </>
+  );
+}
 
 const SankeyPage: FC = () => {
   const [selectedMonth, setSelectedMonth] = useState<string | undefined>(undefined);
@@ -72,8 +98,8 @@ const SankeyPage: FC = () => {
         </div>
 
         <div className={styles.totals}>
-          <span>Income change: ${incomeAmount.toFixed(2)}</span>
-          <span>Expenses: ${expenseTotal.toFixed(2)}</span>
+          <span>Income change: ${formatAmount(incomeAmount)}</span>
+          <span>Expenses: ${formatAmount(expenseTotal)}</span>
         </div>
       </div>
 
@@ -88,10 +114,12 @@ const SankeyPage: FC = () => {
             nodeOpacity={0.95}
             linkOpacity={0.35}
             colors={{ datum: 'color' }}
+            sort={sortSavingsLast}
             label={(node) => node.name}
             labelPosition="outside"
             labelPadding={10}
             labelTextColor="#0f172a"
+            labelComponent={SankeyNodeLabel}
             enableLinkGradient
           />
         ) : (

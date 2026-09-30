@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { buildSankeyData } from './helpers';
+import {
+  buildSankeyData,
+  formatSignedAmount,
+  sortSavingsLast,
+  splitTrailingParenthetical,
+} from './helpers';
 import type { IncomeData } from '../../services/income/incomeApi.types';
 import type { Data as ExpenseData } from '../../services/expenses/expensesApi.types';
 import { IncomeCategories } from '../income/helpers';
@@ -23,6 +28,52 @@ const expense = (overrides: Partial<ExpenseData> & { category: string }): Expens
   ...overrides,
 });
 
+describe('formatSignedAmount', () => {
+  it('formats a positive amount with a leading $', () => {
+    expect(formatSignedAmount(150)).toBe('$150');
+  });
+
+  it('formats a negative amount with the sign before the $', () => {
+    expect(formatSignedAmount(-75)).toBe('-$75');
+  });
+
+  it('adds thousands separators', () => {
+    expect(formatSignedAmount(1234)).toBe('$1,234');
+  });
+
+  it('formats zero without a sign', () => {
+    expect(formatSignedAmount(0)).toBe('$0');
+  });
+});
+
+describe('sortSavingsLast', () => {
+  it('sorts a Savings node after a non-Savings node', () => {
+    expect(sortSavingsLast({ name: 'Savings • $200' }, { name: 'Groceries • $300' })).toBe(1);
+    expect(sortSavingsLast({ name: 'Groceries • $300' }, { name: 'Savings • $200' })).toBe(-1);
+  });
+
+  it('treats two non-Savings nodes as equal (preserves their existing order)', () => {
+    expect(sortSavingsLast({ name: 'Rent • $500' }, { name: 'Groceries • $300' })).toBe(0);
+  });
+
+  it('treats two Savings nodes as equal', () => {
+    expect(sortSavingsLast({ name: 'Savings • $200' }, { name: 'Savings • $100' })).toBe(0);
+  });
+});
+
+describe('splitTrailingParenthetical', () => {
+  it('splits a label with a trailing breakdown', () => {
+    expect(splitTrailingParenthetical('Savings • $200 (Cash $150 / Investments $50)')).toEqual([
+      'Savings • $200',
+      '(Cash $150 / Investments $50)',
+    ]);
+  });
+
+  it('returns the label unchanged with a null second element when there is no breakdown', () => {
+    expect(splitTrailingParenthetical('Groceries • $300')).toEqual(['Groceries • $300', null]);
+  });
+});
+
 describe('buildSankeyData', () => {
   it('returns an empty result with no income entries', () => {
     const result = buildSankeyData(undefined, []);
@@ -33,6 +84,8 @@ describe('buildSankeyData', () => {
       incomeAmount: 0,
       expenseTotal: 0,
       availableMonths: [],
+      cashSavings: 0,
+      investmentGrowth: 0,
     });
 
     expect(buildSankeyData([], [])).toEqual(result);
@@ -119,12 +172,15 @@ describe('buildSankeyData', () => {
     expect(result.expenseTotal).toBe(800); // 500 (Rent) + 300 (Groceries) in March
     expect(result.incomeAmount).toBe(1000); // expenseTotal(800) + savings(200)
     expect(result.monthLabel).toBe('March 2026');
+    // All entries are BANK_ACCOUNTS, so the whole $200 swing is cash savings.
+    expect(result.cashSavings).toBe(200);
+    expect(result.investmentGrowth).toBe(0);
 
     expect(result.nodes.map((n) => n.name)).toEqual([
-      'Income • $1000',
+      'Income • $1,000',
       'Rent • $500',
       'Groceries • $300',
-      'Savings • $200',
+      'Savings • $200 (Cash $200 / Investments $0)',
     ]);
     expect(result.links).toEqual([
       { source: 0, target: 1, value: 500, color: result.nodes[1].color },
@@ -171,6 +227,31 @@ describe('buildSankeyData', () => {
     // first income month), so this behaves like the "no previous month" case.
     expect(result.nodes).toEqual([]);
     expect(result.availableMonths).toEqual(['2026-02', '2026-03']);
+  });
+
+  it('attributes the savings swing to cash vs. investments separately', () => {
+    const incomeEntries = [
+      income({ date: '2026-01-10', category: IncomeCategories.BANK_ACCOUNTS, amount: 1000 }),
+      income({ date: '2026-01-10', category: IncomeCategories.INVESTMENTS, amount: 500 }),
+      income({ date: '2026-02-10', category: IncomeCategories.BANK_ACCOUNTS, amount: 1000 }),
+      income({ date: '2026-02-10', category: IncomeCategories.INVESTMENTS, amount: 500 }),
+      // March: bank/cash grows by 50 (contribution/spending), investments grow by 150 (market gain).
+      income({ date: '2026-03-10', category: IncomeCategories.BANK_ACCOUNTS, amount: 1050 }),
+      income({ date: '2026-03-10', category: IncomeCategories.INVESTMENTS, amount: 650 }),
+    ];
+    const expenses = [
+      expense({ category: 'Groceries', datePosted: '2026-01-15', amount: 50 }),
+      expense({ category: 'Groceries', datePosted: '2026-02-15', amount: 50 }),
+      expense({ category: 'Groceries', datePosted: '2026-03-15', amount: 50 }),
+    ];
+
+    const result = buildSankeyData(incomeEntries, expenses);
+
+    expect(result.cashSavings).toBe(50);
+    expect(result.investmentGrowth).toBe(150);
+    expect(result.nodes.map((n) => n.name)).toContain(
+      'Savings • $200 (Cash $50 / Investments $150)',
+    );
   });
 
   it('falls back to the latest month when selectedMonth is not an eligible month', () => {
