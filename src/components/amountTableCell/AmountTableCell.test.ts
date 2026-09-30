@@ -14,6 +14,16 @@ describe('evaluateExpression', () => {
     expect(evaluateExpression('(2+3)*4')).toBe(20);
   });
 
+  it('strips thousands-separator commas from a plain number before evaluating', () => {
+    expect(evaluateExpression('1,234.56')).toBe(1234.56);
+  });
+
+  it('strips commas from an arithmetic expression before evaluating', () => {
+    // Without stripping, JS would treat the comma as the comma operator and
+    // return 500 (the last operand) instead of 1734.
+    expect(evaluateExpression('1,234+500')).toBe(1734);
+  });
+
   it('returns the original string and logs an error for an unevaluatable expression', () => {
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 

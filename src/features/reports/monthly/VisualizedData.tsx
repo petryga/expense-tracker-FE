@@ -16,6 +16,7 @@ import styles from './MonthlyReportsPage.module.css';
 import type { Data } from '../../../services/expenses/expensesApi.types';
 import { CustomBarShape, CustomTooltip } from './components';
 import { useGetCategoriesQuery } from '../../../services/categories/categoriesApi';
+import { formatAmount } from '../../../utils';
 
 export const VisualizedData = ({ dataByMonth }: { dataByMonth: Data[] }) => {
   const { data: categoryRecords } = useGetCategoriesQuery({});
@@ -53,7 +54,7 @@ export const VisualizedData = ({ dataByMonth }: { dataByMonth: Data[] }) => {
               dataKey="total"
               position="right"
               style={{ fill: '#666', fontWeight: 'bold' }}
-              formatter={(value: RenderableText) => `$${Number(value ?? 0).toFixed(2)}`}
+              formatter={(value: RenderableText) => `$${formatAmount(Number(value ?? 0))}`}
               overflow={'extendDomain'}
             />
           </Bar>
@@ -62,7 +63,8 @@ export const VisualizedData = ({ dataByMonth }: { dataByMonth: Data[] }) => {
 
       <div className={styles.summary}>
         <h2>
-          Total Spent Across All Categories - ${totalSpentCad} (CAD) / ${totalSpentUsd} (USD)
+          Total Spent Across All Categories - ${formatAmount(totalSpentCad)} (CAD) / $
+          {formatAmount(totalSpentUsd)} (USD)
         </h2>
       </div>
     </div>

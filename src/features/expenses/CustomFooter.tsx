@@ -3,6 +3,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 import styles from './ExpensesPage.module.css';
 import { GridFilterModel } from '@mui/x-data-grid';
 import { Context } from './FooterContext';
+import { formatAmount } from '../../utils';
 
 interface FooterProps {
   setOpenConfirmationModal: Dispatch<React.SetStateAction<boolean>>;
@@ -26,8 +27,8 @@ export const CustomFooter = ({
     const cadAmount = Number(cad) || 0;
     const usdAmount = Number(usd) || 0;
     return [
-      cadAmount > 0 ? `${cadAmount.toFixed(2)}$ (CAD)` : null,
-      usdAmount > 0 ? `${usdAmount.toFixed(2)}$ (USD)` : null,
+      cadAmount > 0 ? `${formatAmount(cadAmount)}$ (CAD)` : null,
+      usdAmount > 0 ? `${formatAmount(usdAmount)}$ (USD)` : null,
     ].filter(Boolean);
   };
 

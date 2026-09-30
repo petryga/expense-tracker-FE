@@ -1,6 +1,6 @@
 import type { GridColDef } from '@mui/x-data-grid';
 import { faTrash, faSave, faEdit, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { formatDate, lastDayOfMonth, parseLocalDateString } from '../../utils';
+import { formatAmount, formatDate, lastDayOfMonth, parseLocalDateString } from '../../utils';
 import { TableColumns } from './AssetsPage.types';
 import { IncomeCategories } from './helpers';
 import { renderEditCell } from '../../components/amountTableCell/AmountTableCell';
@@ -87,7 +87,7 @@ export function createTableColumns({
       width: 100,
       type: 'string',
       editable: true,
-      renderCell: (params) => `$${params.value}`,
+      renderCell: (params) => `$${formatAmount(params.value)}`,
       renderEditCell,
     },
     {

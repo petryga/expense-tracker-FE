@@ -15,10 +15,11 @@ import { Currency } from '../../expenses/helpers';
 import type { MonthlyData } from '../../../services/monthlyData/monthlyData.types';
 import { buildYearlyComparisonData, type YearlyComparisonMode } from './helpers';
 import styles from './YearlyComparison.module.css';
+import { formatAmount } from '../../../utils';
 
 const formatMoney = (amount: number, currency: Currency) => {
   const symbol = currency === Currency.CAD ? 'C$' : '$';
-  return `${symbol}${amount.toFixed(2)}`;
+  return `${symbol}${formatAmount(amount)}`;
 };
 
 export const YearlyComparison = ({ data }: { data?: MonthlyData[] }) => {

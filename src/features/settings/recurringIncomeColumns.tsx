@@ -8,6 +8,7 @@ import { Currency } from '../expenses/helpers';
 import { IncomeCategories } from '../income/helpers';
 import { renderEditCell } from '../../components/amountTableCell/AmountTableCell';
 import { RecurringIncomeTableColumns } from './SettingsPage.types';
+import { formatAmount } from '../../utils';
 
 export function createRecurringIncomeColumns({
   rowModesModel,
@@ -62,7 +63,7 @@ export function createRecurringIncomeColumns({
       width: 100,
       type: 'string',
       editable: true,
-      renderCell: (params) => `$${params.value}`,
+      renderCell: (params) => `$${formatAmount(params.value)}`,
       renderEditCell,
     },
     {

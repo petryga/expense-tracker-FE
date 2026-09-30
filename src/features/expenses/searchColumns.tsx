@@ -1,6 +1,6 @@
 import type { GridColDef } from '@mui/x-data-grid';
 import { Checkbox } from '@mui/material';
-import { formatDate, transformCategoriesForDropdown } from '../../utils';
+import { formatAmount, formatDate, transformCategoriesForDropdown } from '../../utils';
 import { Currency } from './helpers';
 import type { Category } from './ExpensesPage.types';
 import type { AccountRecord } from '../../services/accounts/accountsApi.types';
@@ -57,7 +57,7 @@ export function createSearchColumns({
       width: 100,
       type: 'number',
       editable: false,
-      renderCell: (params) => <div>${params.value}</div>,
+      renderCell: (params) => <div>${formatAmount(params.value)}</div>,
     },
     {
       field: 'currency',

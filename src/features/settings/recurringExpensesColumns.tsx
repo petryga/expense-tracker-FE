@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { GridActionsCellItem } from '@mui/x-data-grid';
 import styles from '../expenses/ExpensesPage.module.css';
 import { Currency } from '../expenses/helpers';
-import { transformCategoriesForDropdown } from '../../utils';
+import { formatAmount, transformCategoriesForDropdown } from '../../utils';
 import { renderEditCell } from '../../components/amountTableCell/AmountTableCell';
 import { RecurringExpenseTableColumns } from './SettingsPage.types';
 
@@ -67,7 +67,7 @@ export function createRecurringExpenseColumns({
       width: 100,
       type: 'string',
       editable: true,
-      renderCell: (params) => `$${params.value}`,
+      renderCell: (params) => `$${formatAmount(params.value)}`,
       renderEditCell,
     },
     {

@@ -1,12 +1,10 @@
+import { formatAmount } from '../../../utils';
+
 interface CustomDotProps {
   cx?: number;
   cy?: number;
   value?: number;
 }
-
-const formatAmount = (value: number): string => {
-  return value?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-};
 
 export const CustomDot = ({ cx, cy, value }: CustomDotProps) => {
   if (!cx || !cy || !value) return null;

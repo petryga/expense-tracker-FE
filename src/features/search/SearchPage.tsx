@@ -10,6 +10,7 @@ import styles from './SearchPage.module.css';
 import { buildCategoryTree, Currency } from '../expenses/helpers';
 import { useGetCategoriesQuery } from '../../services/categories/categoriesApi';
 import { useGetAccountsQuery } from '../../services/accounts/accountsApi';
+import { formatAmount } from '../../utils';
 
 const Context = createContext<{
   totalSelectedCad: number | null;
@@ -34,10 +35,12 @@ const CustomFooter = () => {
   return (
     <div className={styles.footer}>
       {totalSelectedCad || totalSelectedUsd
-        ? `Total Amount of Selected Entries - ${totalSelectedCad?.toFixed(
-            2,
-          )}$ (CAD) / ${totalSelectedUsd?.toFixed(2)}$ (USD)`
-        : `Total Amount for these Results - ${totalAmountSearchResultsCad}$ (CAD) / ${totalAmountSearchResultsUsd}$ (USD)`}
+        ? `Total Amount of Selected Entries - ${formatAmount(
+            totalSelectedCad,
+          )}$ (CAD) / ${formatAmount(totalSelectedUsd)}$ (USD)`
+        : `Total Amount for these Results - ${formatAmount(
+            totalAmountSearchResultsCad,
+          )}$ (CAD) / ${formatAmount(totalAmountSearchResultsUsd)}$ (USD)`}
     </div>
   );
 };

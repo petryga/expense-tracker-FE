@@ -3,6 +3,7 @@ import { DataByCategory } from '../../expenses/ExpensesPage.types';
 import { Currency } from '../../expenses/helpers';
 import styles from './MonthlyReportsPage.module.css';
 import { RectangleProps } from 'recharts';
+import { formatAmount } from '../../../utils';
 
 export const CustomTooltip = ({
   active,
@@ -20,7 +21,7 @@ export const CustomTooltip = ({
         <ul>
           {data.details.map(({ description, amount, currency }, index) => (
             <li key={index}>
-              {description} - ${amount.toFixed(2)}{' '}
+              {description} - ${formatAmount(amount)}{' '}
               {currency === Currency.USD && <span className={styles.currency}>{currency}</span>}
             </li>
           ))}
@@ -73,7 +74,7 @@ export const CustomBarShape: FC<CustomBarShapeProps> = ({
             fontWeight="bold"
             fontSize={12}
           >
-            ${budget}
+            ${formatAmount(budget)}
           </text>
         </>
       )}

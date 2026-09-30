@@ -2,6 +2,7 @@ import { Currency } from './helpers';
 import type { GridColDef, GridRowParams } from '@mui/x-data-grid';
 import { faTrash, faSave, faEdit, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
 import {
+  formatAmount,
   formatDate,
   lastDayOfMonth,
   parseLocalDateString,
@@ -153,7 +154,11 @@ export function createTableColumns({
       renderCell: (params) => {
         const budget = budgetByCategory[params.row.category as string];
         const isOverBudget = budget !== undefined && params.value > budget;
-        return <div className={isOverBudget ? styles.amountBold : ''}>${params.value}</div>;
+        return (
+          <div className={isOverBudget ? styles.amountBold : ''}>
+            ${formatAmount(params.value)}
+          </div>
+        );
       },
       renderEditCell,
     },
