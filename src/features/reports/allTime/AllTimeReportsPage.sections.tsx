@@ -22,6 +22,6 @@ export const buildAllTimeReportSections = (
   {
     id: 'yearly-comparison',
     label: 'Yearly Comparison',
-    content: <YearlyComparison data={data} />,
+    content: <YearlyComparison />,
   },
 ];

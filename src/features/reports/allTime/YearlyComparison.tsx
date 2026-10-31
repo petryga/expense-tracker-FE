@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { format } from 'date-fns';
 import {
   Bar,
@@ -12,8 +12,11 @@ import {
   YAxis,
 } from 'recharts';
 import { Currency } from '../../expenses/helpers';
-import type { MonthlyData } from '../../../services/monthlyData/monthlyData.types';
-import { buildYearlyComparisonData, type YearlyComparisonMode } from './helpers';
+import type {
+  YearlyComparisonMode,
+  YearlyComparisonResult,
+} from '../../../services/monthlyData/monthlyData.types';
+import { useGetYearlyComparisonQuery } from '../../../services/monthlyData/monthlyDataApi';
 import styles from './YearlyComparison.module.css';
 import { formatAmount } from '../../../utils';
 
@@ -22,15 +25,24 @@ const formatMoney = (amount: number, currency: Currency) => {
   return `${symbol}${formatAmount(amount)}`;
 };
 
-export const YearlyComparison = ({ data }: { data?: MonthlyData[] }) => {
+const EMPTY_RESULT: YearlyComparisonResult = {
+  rows: [],
+  ytdCutoffOptionsByYear: {},
+  defaultYtdCutoffByYear: {},
+};
+
+// The BE does the aggregation and currency conversion; this only renders it.
+export const YearlyComparison = () => {
   const [mode, setMode] = useState<YearlyComparisonMode>('full-year');
   const [baseCurrency, setBaseCurrency] = useState<Currency>(Currency.USD);
   const [ytdCutoffByYear, setYtdCutoffByYear] = useState<Record<number, number | null>>({});
 
-  const { rows, ytdCutoffOptionsByYear, defaultYtdCutoffByYear } = useMemo(
-    () => buildYearlyComparisonData({ data, mode, baseCurrency, ytdCutoffByYear }),
-    [data, mode, baseCurrency, ytdCutoffByYear],
-  );
+  const { data } = useGetYearlyComparisonQuery({
+    mode,
+    baseCurrency,
+    cutoffs: ytdCutoffByYear,
+  });
+  const { rows, ytdCutoffOptionsByYear, defaultYtdCutoffByYear } = data ?? EMPTY_RESULT;
 
   // Reconciles each year's YTD cutoff against the months actually available,
   // keeping an explicit user choice where it is still valid. Done during render

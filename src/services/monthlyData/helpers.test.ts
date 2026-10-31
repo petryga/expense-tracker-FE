@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getMonthlyDataUrl } from './helpers';
+import { getMonthlyDataUrl, getYearlyComparisonUrl } from './helpers';
 import { MonthlyDataTypes } from './monthlyData.types';
 
 describe('getMonthlyDataUrl', () => {
@@ -24,5 +24,24 @@ describe('getMonthlyDataUrl', () => {
 
   it('encodes values', () => {
     expect(getMonthlyDataUrl({ category: 'a b&c' })).toBe('monthlyData?category=a+b%26c');
+  });
+});
+
+describe('getYearlyComparisonUrl', () => {
+  it('builds the query with mode and base currency', () => {
+    expect(getYearlyComparisonUrl({ mode: 'full-year', baseCurrency: 'USD' })).toBe(
+      'reports/yearly-comparison?mode=full-year&baseCurrency=USD',
+    );
+  });
+
+  it('encodes cutoffs, using "none" for a year that is left out', () => {
+    const url = getYearlyComparisonUrl({
+      mode: 'ytd',
+      baseCurrency: 'CAD',
+      cutoffs: { 2026: 3, 2025: null },
+    });
+    expect(decodeURIComponent(url)).toBe(
+      'reports/yearly-comparison?mode=ytd&baseCurrency=CAD&cutoffs=2025:none,2026:3',
+    );
   });
 });

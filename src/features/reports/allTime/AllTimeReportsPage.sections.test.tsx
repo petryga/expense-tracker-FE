@@ -55,13 +55,13 @@ describe('buildAllTimeReportSections', () => {
     expect(byLabel.get('Monthly Wealth')!.props).toEqual({ data: DATA, monthRange: 6 });
   });
 
-  it("does not pass monthRange to Yearly Comparison - it doesn't accept one", () => {
+  it('passes nothing to Yearly Comparison - it fetches its own data from the BE', () => {
     const sections = buildAllTimeReportSections(DATA, 6);
     const yearlyComparison = asChartElement(
       sections.find((section) => section.label === 'Yearly Comparison')!.content,
     );
 
-    expect(yearlyComparison.props).toEqual({ data: DATA });
+    expect(yearlyComparison.props).toEqual({});
   });
 });
 

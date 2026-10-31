@@ -1,13 +1,11 @@
 import type { RecurringIncomeData } from '../../../services/recurringIncome/recurringIncomeApi.types';
 import { getRecurringWealthOptions } from './helpers';
 import { describe, expect, it } from 'vitest';
-import { buildYearlyComparisonData, groupMonthlyData, getYAxisMax } from './helpers';
+import { groupMonthlyData, getYAxisMax } from './helpers';
 import {
   MonthlyDataTypes,
   type MonthlyData,
 } from '../../../services/monthlyData/monthlyData.types';
-import { Currency } from '../../expenses/helpers';
-import type { FxRateConfig } from '../../../utils/currency';
 
 const entry = (overrides: Partial<MonthlyData>): MonthlyData => ({
   id: 'x',
@@ -97,110 +95,6 @@ describe('groupMonthlyData', () => {
 
   it('returns an empty array with no data', () => {
     expect(groupMonthlyData(MonthlyDataTypes.Expense, undefined)).toEqual([]);
-  });
-});
-
-describe('buildYearlyComparisonData', () => {
-  const rates: FxRateConfig = { defaultCadToUsd: 0.5 };
-
-  it('full-year mode sums all months and flags years with fewer than 12 months as incomplete', () => {
-    const data = [
-      entry({ yearMonth: '2026-01', amountCad: '100' }),
-      entry({ yearMonth: '2026-02', amountCad: '200' }),
-    ];
-
-    const result = buildYearlyComparisonData({
-      data,
-      mode: 'full-year',
-      baseCurrency: Currency.CAD,
-      rates,
-    });
-
-    expect(result.rows).toHaveLength(1);
-    expect(result.rows[0]).toMatchObject({
-      year: 2026,
-      amountCad: 300,
-      monthsCount: 2,
-      isIncomplete: true,
-      cutoffMonth: null,
-    });
-  });
-
-  it('ytd mode defaults the cutoff to the latest month present that year', () => {
-    const data = [
-      entry({ yearMonth: '2026-01', amountCad: '100' }),
-      entry({ yearMonth: '2026-03', amountCad: '100' }),
-    ];
-
-    const result = buildYearlyComparisonData({
-      data,
-      mode: 'ytd',
-      baseCurrency: Currency.CAD,
-      rates,
-    });
-
-    expect(result.defaultYtdCutoffByYear[2026]).toBe(3);
-    expect(result.rows[0].cutoffMonth).toBe(3);
-    expect(result.rows[0].monthsCount).toBe(2);
-  });
-
-  it('ytd mode respects an explicit cutoff, excluding later months', () => {
-    const data = [
-      entry({ yearMonth: '2026-01', amountCad: '100' }),
-      entry({ yearMonth: '2026-02', amountCad: '100' }),
-      entry({ yearMonth: '2026-03', amountCad: '100' }),
-    ];
-
-    const result = buildYearlyComparisonData({
-      data,
-      mode: 'ytd',
-      baseCurrency: Currency.CAD,
-      rates,
-      ytdCutoffByYear: { 2026: 2 },
-    });
-
-    expect(result.rows[0].cutoffMonth).toBe(2);
-    expect(result.rows[0].amountCad).toBe(200);
-    expect(result.rows[0].monthsCount).toBe(2);
-  });
-
-  it('ytd mode excludes a year explicitly set to a null cutoff', () => {
-    const data = [entry({ yearMonth: '2026-01', amountCad: '100' })];
-
-    const result = buildYearlyComparisonData({
-      data,
-      mode: 'ytd',
-      baseCurrency: Currency.CAD,
-      rates,
-      ytdCutoffByYear: { 2026: null },
-    });
-
-    expect(result.rows).toEqual([]);
-  });
-
-  it('converts totals into the requested base currency', () => {
-    const data = [entry({ yearMonth: '2026-01', amountCad: '0', amountUsd: '100' })];
-
-    const result = buildYearlyComparisonData({
-      data,
-      mode: 'full-year',
-      baseCurrency: Currency.CAD,
-      rates,
-    });
-
-    // 100 USD -> CAD at a 0.5 CAD-to-USD rate is 100 / 0.5 = 200 CAD
-    expect(result.rows[0].convertedTotal).toBe(200);
-  });
-
-  it('returns an empty result with no expense data', () => {
-    const result = buildYearlyComparisonData({
-      data: [],
-      mode: 'full-year',
-      baseCurrency: Currency.CAD,
-      rates,
-    });
-
-    expect(result).toEqual({ rows: [], ytdCutoffOptionsByYear: {}, defaultYtdCutoffByYear: {} });
   });
 });
 

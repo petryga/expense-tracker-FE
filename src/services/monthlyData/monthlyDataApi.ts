@@ -1,6 +1,11 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { getMonthlyDataUrl } from './helpers';
-import { GetArgs, MonthlyData } from './monthlyData.types';
+import { getMonthlyDataUrl, getYearlyComparisonUrl } from './helpers';
+import {
+  GetArgs,
+  MonthlyData,
+  YearlyComparisonArgs,
+  YearlyComparisonResult,
+} from './monthlyData.types';
 import { normalizeGetMonthlyData } from './normalizers';
 import { baseQueryWithAuth } from '../api';
 
@@ -19,7 +24,11 @@ export const monthlyDataApi = createApi({
         normalizeGetMonthlyData(response, type),
       providesTags: [{ type: 'MonthlyData', id: 'LIST' }],
     }),
+    getYearlyComparison: builder.query<YearlyComparisonResult, YearlyComparisonArgs>({
+      query: (args) => ({ url: getYearlyComparisonUrl(args), method: 'GET' }),
+      providesTags: [{ type: 'MonthlyData', id: 'LIST' }],
+    }),
   }),
 });
 
-export const { useGetMonthlyDataQuery } = monthlyDataApi;
+export const { useGetMonthlyDataQuery, useGetYearlyComparisonQuery } = monthlyDataApi;
