@@ -1,6 +1,5 @@
 import { FC, useCallback, useMemo, useState } from 'react';
-import { useGetExpensesQuery } from '../../../services/expenses/expensesApi';
-import { getDataByMonth, processExpensesData } from '../../expenses/helpers';
+import { useGetReportMonthsQuery } from '../../../services/monthlyData/monthlyDataApi';
 import { format, parseISO } from 'date-fns';
 import { Button } from '@mui/material';
 import { withSidebar } from '../../../components/sidebar/withSideBar';
@@ -9,11 +8,26 @@ import classnames from 'classnames';
 import styles from './MonthlyReportsPage.module.css';
 
 const MonthlyReportsPage: FC = () => {
-  const { data: { data: expenses } = {} } = useGetExpensesQuery({});
+  const { data: reportMonths } = useGetReportMonthsQuery();
   const [selectedYear, setSelectedYear] = useState<string | null>(null);
   const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
-  const dataByMonth = getDataByMonth(expenses);
-  const dataByYear = useMemo(() => processExpensesData(expenses), [expenses]);
+  // The BE lists the months that have expenses. The current month is always
+  // kept reachable, even when empty, so there is a way back to it.
+  const dataByYear = useMemo(() => {
+    const months = new Set(reportMonths ?? []);
+    months.add(format(new Date(), 'yyyy-MM'));
+
+    const byYear: Record<string, Record<string, true>> = {};
+    for (const yearMonth of months) {
+      const [year, month] = yearMonth.split('-');
+      byYear[year] = { ...byYear[year], [month]: true };
+    }
+    return byYear;
+  }, [reportMonths]);
+  const hasMonth = (yearMonth: string) => {
+    const [year, month] = yearMonth.split('-');
+    return Boolean(dataByYear[year]?.[month]);
+  };
   const sortedYears = useMemo(
     () => Object.keys(dataByYear).sort((a, b) => Number.parseInt(b) - Number.parseInt(a)),
     [dataByYear],
@@ -65,7 +79,7 @@ const MonthlyReportsPage: FC = () => {
       if (!defaultSelection) return null;
       if (!selectedMonth) return defaultSelection;
       const [prevYear] = selectedMonth.split('-');
-      if (prevYear === selectedYear && dataByMonth[selectedMonth]) {
+      if (prevYear === selectedYear && hasMonth(selectedMonth)) {
         return selectedMonth;
       }
       return defaultSelection;
@@ -83,7 +97,7 @@ const MonthlyReportsPage: FC = () => {
 
     setSelectedYear(year);
     setSelectedMonth((previousMonth) => {
-      if (previousMonth && previousMonth.startsWith(`${year}-`) && dataByMonth[previousMonth]) {
+      if (previousMonth && previousMonth.startsWith(`${year}-`) && hasMonth(previousMonth)) {
         return previousMonth;
       }
 
@@ -133,8 +147,8 @@ const MonthlyReportsPage: FC = () => {
         })}
       </div>
 
-      {selectedMonth && dataByMonth[selectedMonth] ? (
-        <VisualizedData dataByMonth={dataByMonth[selectedMonth]} />
+      {selectedMonth && hasMonth(selectedMonth) ? (
+        <VisualizedData yearMonth={selectedMonth} />
       ) : (
         <div className={styles.emptySelection}>Select a year and month to view report.</div>
       )}

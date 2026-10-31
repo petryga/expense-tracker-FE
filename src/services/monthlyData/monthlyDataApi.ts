@@ -3,6 +3,7 @@ import { getMonthlyDataUrl, getYearlyComparisonUrl } from './helpers';
 import {
   GetArgs,
   MonthlyData,
+  MonthlyReport,
   YearlyComparisonArgs,
   YearlyComparisonResult,
 } from './monthlyData.types';
@@ -28,7 +29,23 @@ export const monthlyDataApi = createApi({
       query: (args) => ({ url: getYearlyComparisonUrl(args), method: 'GET' }),
       providesTags: [{ type: 'MonthlyData', id: 'LIST' }],
     }),
+    getReportMonths: builder.query<string[], void>({
+      query: () => ({ url: 'reports/months', method: 'GET' }),
+      providesTags: [{ type: 'MonthlyData', id: 'LIST' }],
+    }),
+    getMonthlyReport: builder.query<MonthlyReport, string>({
+      query: (yearMonth) => ({
+        url: `reports/monthly?yearMonth=${encodeURIComponent(yearMonth)}`,
+        method: 'GET',
+      }),
+      providesTags: [{ type: 'MonthlyData', id: 'LIST' }],
+    }),
   }),
 });
 
-export const { useGetMonthlyDataQuery, useGetYearlyComparisonQuery } = monthlyDataApi;
+export const {
+  useGetMonthlyDataQuery,
+  useGetYearlyComparisonQuery,
+  useGetReportMonthsQuery,
+  useGetMonthlyReportQuery,
+} = monthlyDataApi;

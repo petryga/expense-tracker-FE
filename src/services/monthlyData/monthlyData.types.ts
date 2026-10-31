@@ -56,3 +56,16 @@ export interface YearlyComparisonArgs {
   // year -> cutoff month; null leaves that year out of a YTD comparison.
   cutoffs?: Partial<Record<number, number | null>>;
 }
+
+export interface CategoryBreakdown {
+  category: string;
+  total: number;
+  details: { description: string; amount: number; currency: string }[];
+}
+
+export interface MonthlyReport {
+  yearMonth: string;
+  dataByCategory: CategoryBreakdown[];
+  totalSpentCad: number;
+  totalSpentUsd: number;
+}

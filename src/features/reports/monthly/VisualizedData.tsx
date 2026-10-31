@@ -11,14 +11,15 @@ import {
   ResponsiveContainer,
   type RenderableText,
 } from 'recharts';
-import { getVisualizedData } from './helpers';
+import { decorateReport } from './helpers';
 import styles from './MonthlyReportsPage.module.css';
-import type { Data } from '../../../services/expenses/expensesApi.types';
+import { useGetMonthlyReportQuery } from '../../../services/monthlyData/monthlyDataApi';
 import { CustomBarShape, CustomTooltip } from './components';
 import { useGetCategoriesQuery } from '../../../services/categories/categoriesApi';
 import { formatAmount } from '../../../utils';
 
-export const VisualizedData = ({ dataByMonth }: { dataByMonth: Data[] }) => {
+export const VisualizedData = ({ yearMonth }: { yearMonth: string }) => {
+  const { data: report } = useGetMonthlyReportQuery(yearMonth);
   const { data: categoryRecords } = useGetCategoriesQuery({});
   const budgetsByCategory = useMemo(
     () =>
@@ -29,8 +30,8 @@ export const VisualizedData = ({ dataByMonth }: { dataByMonth: Data[] }) => {
   );
 
   const { dataByCategory, totalSpentCad, totalSpentUsd } = useMemo(
-    () => getVisualizedData(dataByMonth, budgetsByCategory),
-    [dataByMonth, budgetsByCategory],
+    () => decorateReport(report, budgetsByCategory),
+    [report, budgetsByCategory],
   );
 
   const maxSpent = Math.max(...dataByCategory.map((item) => item.total));

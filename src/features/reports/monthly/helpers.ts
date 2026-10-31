@@ -1,6 +1,5 @@
-import { Data } from '../../../services/expenses/expensesApi.types';
+import type { MonthlyReport } from '../../../services/monthlyData/monthlyData.types';
 import { DataByCategory } from '../../expenses/ExpensesPage.types';
-import { Currency } from '../../expenses/helpers';
 
 const colors = [
   '#8884d8',
@@ -20,52 +19,23 @@ const getColor = (index: number) => {
   return colors[index % colors.length];
 };
 
-export const getVisualizedData = (
-  data?: Data[],
+// The BE does the grouping and totals; this only adds what is purely visual
+// (a colour per bar) and joins in each category's budget.
+export const decorateReport = (
+  report?: MonthlyReport,
   budgetsByCategory: Record<string, number | null> = {},
 ): { dataByCategory: DataByCategory[]; totalSpentCad: number; totalSpentUsd: number } => {
-  if (!data) {
+  if (!report) {
     return { dataByCategory: [], totalSpentCad: 0, totalSpentUsd: 0 };
   }
 
-  const sumByCategory: Record<string, DataByCategory> = {};
-  let totalCad = 0;
-  let totalUsd = 0;
-
-  const filteredData = data.filter((entry) => entry.amount > 0);
-
-  filteredData.forEach((entry) => {
-    const { category, description, amount, currency } = entry;
-    if (!sumByCategory[category]) {
-      sumByCategory[category] = {
-        category,
-        total: 0,
-        details: [],
-        fill: getColor(Object.keys(sumByCategory).length),
-        budget: budgetsByCategory[category] ?? null,
-      };
-    }
-
-    if (currency === Currency.CAD) {
-      totalCad += amount;
-      sumByCategory[category].total += amount;
-    } else if (currency === Currency.USD) {
-      totalUsd += amount;
-      sumByCategory[category].total += amount;
-    }
-
-    sumByCategory[category].details.push({ description, amount, currency });
-  });
-
-  for (const cat in sumByCategory) {
-    sumByCategory[cat].details.sort((a, b) => b.amount - a.amount);
-  }
-
-  const sortedByAmount = Object.values(sumByCategory).sort((a, b) => b.total - a.total);
-
   return {
-    dataByCategory: sortedByAmount,
-    totalSpentCad: parseFloat(totalCad.toFixed(2)),
-    totalSpentUsd: parseFloat(totalUsd.toFixed(2)),
+    dataByCategory: report.dataByCategory.map((entry, index) => ({
+      ...entry,
+      fill: getColor(index),
+      budget: budgetsByCategory[entry.category] ?? null,
+    })),
+    totalSpentCad: report.totalSpentCad,
+    totalSpentUsd: report.totalSpentUsd,
   };
 };
