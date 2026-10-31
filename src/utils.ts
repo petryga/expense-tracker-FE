@@ -69,6 +69,10 @@ export const formatAmount = (value: number | null | undefined): string => {
   return formatNumberWithCommas(trimmed);
 };
 
+// A slash with a thin space (U+2009) either side: a little air between the numbers
+// without the width of full spaces, which wouldn't fit the narrow date columns.
+const DATE_SEPARATOR = '\u2009/\u2009';
+
 export const formatDate = (value: Date | string) => {
   // A Date instance here was built locally (see the datePosted valueGetter) and
   // already represents the intended local calendar day, so read it with local
@@ -79,7 +83,7 @@ export const formatDate = (value: Date | string) => {
     const mm = String(value.getMonth() + 1).padStart(2, '0');
     const yy = String(value.getFullYear() % 100).padStart(2, '0');
 
-    return `${mm}/${dd}/${yy}`;
+    return `${mm}${DATE_SEPARATOR}${dd}${DATE_SEPARATOR}${yy}`;
   }
 
   const valueFormatted = new Date(value);
@@ -88,5 +92,5 @@ export const formatDate = (value: Date | string) => {
   const mm = String(valueFormatted.getUTCMonth() + 1).padStart(2, '0');
   const yy = String(valueFormatted.getUTCFullYear() % 100).padStart(2, '0');
 
-  return `${mm}/${dd}/${yy}`;
+  return `${mm}${DATE_SEPARATOR}${dd}${DATE_SEPARATOR}${yy}`;
 };
