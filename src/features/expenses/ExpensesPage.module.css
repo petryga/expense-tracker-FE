@@ -3,21 +3,24 @@
 }
 
 .yearsContainer {
+  /* The buttons carry no bottom margin so wrapped rows sit close together. */
+  padding: 6px 0 15px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .monthLink {
-  background-color: #f8f9fa;
+  background-color: var(--surface-subtle);
   border: 1px solid #eeb12e;
   color: #eeb12e;
-  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 6px 0 var(--shadow-color);
   padding: 10px 14px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  margin: 10px 5px 15px 5px;
+  vertical-align: top;
+  margin: 4px 5px 0;
   cursor: pointer;
   font-weight: 600;
   font-size: 17px;
@@ -30,17 +33,18 @@
 }
 
 .year {
-  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.15) !important;
+  box-shadow: 0 2px 6px 0 var(--shadow-color) !important;
   padding: 10px 15px !important;
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  margin: 10px 10px 15px 10px !important;
+  vertical-align: top !important;
+  margin: 4px 10px 0 !important;
   font-weight: 600 !important;
   font-size: 17px !important;
-  background-color: #fafafa !important;
-  color: #757575 !important;
-  border: 1px solid #757575 !important;
+  background-color: var(--surface-subtle) !important;
+  color: var(--text-muted) !important;
+  border: 1px solid var(--border-strong) !important;
   border-radius: 0 !important;
   height: 47.5px !important;
 }
@@ -97,12 +101,12 @@
   align-items: center;
   padding: 0 20px;
   height: 56px;
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid var(--border);
   font-size: 16px;
   color: #eeb12e;
   position: sticky;
   bottom: 0;
-  background-color: #ffffff;
+  background-color: var(--surface);
 }
 
 .clearFilter {
@@ -120,5 +124,5 @@
 
 .noRowsMonth {
   font-weight: 600;
-  color: #4a4a4a;
+  color: var(--text);
 }

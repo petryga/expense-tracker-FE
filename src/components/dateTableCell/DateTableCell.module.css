@@ -30,5 +30,5 @@
 
 .separator {
   flex: 0 0 auto;
-  color: rgba(0, 0, 0, 0.4);
+  color: var(--text-muted);
 }

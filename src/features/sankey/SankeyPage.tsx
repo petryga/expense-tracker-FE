@@ -8,6 +8,7 @@ import styles from './SankeyPage.module.css';
 import { buildSankeyData, COLORS, sortSavingsLast, splitTrailingParenthetical } from './helpers';
 import { SankeyChartLink, SankeyChartNode } from './SankeyPage.types';
 import { formatAmount } from '../../utils';
+import { useThemeMode } from '../../lib/themeMode';
 
 // Nivo's Sankey labels are plain SVG <text> elements, which don't wrap or
 // honor "\n" -- rendering the breakdown as its own line needs two stacked
@@ -34,6 +35,7 @@ function SankeyNodeLabel(props: TextProps) {
 }
 
 export const SankeyPage: FC = () => {
+  const { mode } = useThemeMode();
   const [selectedMonth, setSelectedMonth] = useState<string | undefined>(undefined);
   // selectedMonth is only ever the user's own pick; until they pick one (or if
   // their pick isn't comparable) the BE answers with the latest eligible month.
@@ -108,7 +110,7 @@ export const SankeyPage: FC = () => {
             label={(node) => node.name}
             labelPosition="outside"
             labelPadding={10}
-            labelTextColor="#0f172a"
+            labelTextColor={mode === 'dark' ? '#e2e8f0' : '#0f172a'}
             labelComponent={SankeyNodeLabel}
             enableLinkGradient
           />

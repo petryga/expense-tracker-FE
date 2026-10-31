@@ -4,8 +4,12 @@
 }
 
 .pageRoot {
-  width: 100%;
-  margin-left: 0;
+  /* Width excludes the sidebar margin so the page never overflows sideways. */
+  width: calc(100% - 25px);
+  min-width: 0;
+  /* The collapsed sidebar leaves a 10% (25px) sliver of itself on screen; start
+     after it so the left and right gaps match. */
+  margin-left: 25px;
   display: flex;
   transition: margin 0.3s ease;
 }
@@ -15,6 +19,7 @@
 }
 
 .compact {
+  width: calc(100% - 250px);
   margin-left: 250px;
   transition: margin 0.3s ease 0.08s;
 }

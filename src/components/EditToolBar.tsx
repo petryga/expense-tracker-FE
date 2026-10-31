@@ -13,8 +13,8 @@ import toolbarStyles from './EditToolBar.module.css';
 
 const styles = {
   ':hover': {
-    backgroundColor: '#fff',
-    color: '#727272',
+    backgroundColor: 'var(--surface-subtle)',
+    color: 'var(--text-muted)',
   },
 };
 

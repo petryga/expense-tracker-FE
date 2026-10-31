@@ -43,11 +43,10 @@ const NoRowsOverlay = ({ yearMonth }: { yearMonth?: string }) => (
 
 export const ExpensesDataGrid = () => {
   const { yearMonth } = useParams();
-  const {
-    data: { data: expenses, expensesTotal } = {},
-    isLoading,
-    isFetching,
-  } = useGetExpensesQuery({ yearMonth }, { refetchOnMountOrArgChange: true });
+  const { data: { data: expenses, expensesTotal } = {}, isLoading } = useGetExpensesQuery(
+    { yearMonth },
+    { refetchOnMountOrArgChange: true },
+  );
   const [filterModel, setFilterModel] = useState<GridFilterModel>({
     items: [],
   });
@@ -170,8 +169,6 @@ export const ExpensesDataGrid = () => {
     accounts: accounts ?? [],
   });
 
-  const isExpensesLoading = isLoading || isFetching;
-
   const onAddRecurringButtonClick = async () => {
     if (!recurringExpenses?.length) return;
 
@@ -203,8 +200,10 @@ export const ExpensesDataGrid = () => {
         }}
       >
         <DataGrid
-          rows={isExpensesLoading ? [] : rows}
-          loading={isExpensesLoading}
+          rows={rows}
+          // Only for the very first load; on month switches the old rows stay put and a
+          // progress bar appearing/disappearing made the table twitch.
+          loading={isLoading}
           columns={columns}
           editMode="row"
           processRowUpdate={handleRowUpdate}

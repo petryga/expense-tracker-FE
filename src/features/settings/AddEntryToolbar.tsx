@@ -6,8 +6,8 @@ import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 const styles = {
   ':hover': {
-    backgroundColor: '#fff',
-    color: '#727272',
+    backgroundColor: 'var(--surface-subtle)',
+    color: 'var(--text-muted)',
   },
 };
 

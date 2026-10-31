@@ -11,3 +11,9 @@
 .svg-inline--fa {
   vertical-align: baseline;
 }
+
+/* #root shrinks to its content (body is a flex row), so a 100%-wide chart would
+   measure itself against its own tiny parent. Let it take the page width. */
+#root:has(.chart-card-wide, .full-width-page) {
+  width: 100%;
+}

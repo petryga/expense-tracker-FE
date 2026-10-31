@@ -1,56 +1,19 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App.tsx';
 import './index.css';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { store } from './store';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import { AuthProvider } from './features/auth/AuthContext';
-
-const theme = createTheme({
-  components: {
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          color: '#eeb12e',
-          lineHeight: 'normal',
-        },
-        startIcon: {
-          display: 'inline',
-        },
-        endIcon: {
-          display: 'inline',
-        },
-      },
-    },
-
-    MuiButtonBase: {
-      styleOverrides: {
-        root: {
-          '&.Mui-selected': {
-            color: '#eeb12e',
-          },
-          '&:focus': {
-            outline: 'none',
-          },
-        },
-      },
-    },
-  },
-});
+import { ThemeModeProvider } from './lib/themeMode';
+import { ThemedApp } from './ThemedApp';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <Provider store={store}>
       <BrowserRouter>
-        <ThemeProvider theme={theme}>
-          <AuthProvider>
-            <Suspense fallback={<></>}>
-              <App />
-            </Suspense>
-          </AuthProvider>
-        </ThemeProvider>
+        <ThemeModeProvider>
+          <ThemedApp />
+        </ThemeModeProvider>
       </BrowserRouter>
     </Provider>
   </React.StrictMode>,

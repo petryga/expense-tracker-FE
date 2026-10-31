@@ -3,9 +3,23 @@
   line-height: 1.5;
   font-weight: 400;
 
+  --page-bg: #f2f2f2;
+  --surface: #ffffff;
+  --surface-subtle: #fafafa;
+  --border: #e0e0e0;
+  --border-strong: #9b9b9b;
+  --text: #4a4a4a;
+  --text-muted: #757575;
+  --link-hover: #747bff;
+  --button-bg: #f9f9f9;
+  --shadow-color: rgba(0, 0, 0, 0.15);
+  --warn-bg: #fed7aa;
+  --warn-text: #7c2d12;
+  --chart-label: #666;
+
   color-scheme: light;
-  color: #4a4a4a;
-  background-color: #f2f2f2;
+  color: var(--text);
+  background-color: var(--page-bg);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -13,14 +27,32 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Dark: follows the OS unless the user picked a side (data-theme on <html>). */
+:root[data-theme='dark'] {
+  --page-bg: #121212;
+  --surface: #1e1e1e;
+  --surface-subtle: #262626;
+  --border: #3a3a3a;
+  --border-strong: #5a5a5a;
+  --text: #e0e0e0;
+  --text-muted: #9e9e9e;
+  --link-hover: #8c92ff;
+  --button-bg: #2a2a2a;
+  --shadow-color: rgba(0, 0, 0, 0.6);
+  --warn-bg: #5c2c0c;
+  --warn-text: #fed7aa;
+  --chart-label: #bdbdbd;
+  color-scheme: dark;
+}
+
 a {
   font-weight: 500;
-  color: #4a4a4a;
+  color: var(--text);
   text-decoration: inherit;
 }
 
 a:hover {
-  color: #535bf2;
+  color: var(--link-hover);
 }
 
 body {
@@ -43,7 +75,8 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  color: var(--text);
+  background-color: var(--button-bg);
   cursor: pointer;
   transition: border-color 0.25s;
 }
@@ -57,21 +90,38 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-
-  a:hover {
-    color: #747bff;
-  }
-
-  button {
-    background-color: #f9f9f9;
-  }
-}
-
 .new-month-row {
   border-top: 3px solid #eeb12e73 !important;
+}
+
+/* Charts sit on a card so they read in both themes. */
+.chart-card {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 24px;
+  background: var(--surface-subtle);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+/* Fills the page instead of the fixed chart width. */
+.chart-card-wide {
+  width: 100%;
+}
+
+.recharts-cartesian-axis-tick-value,
+.recharts-legend-item-text {
+  fill: var(--text-muted);
+  color: var(--text) !important;
+}
+
+.recharts-cartesian-grid line {
+  stroke: var(--border);
+}
+
+.recharts-default-tooltip {
+  background-color: var(--surface) !important;
+  border-color: var(--border) !important;
 }

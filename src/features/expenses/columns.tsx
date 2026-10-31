@@ -142,7 +142,9 @@ export function createTableColumns({
     {
       field: 'description',
       headerName: 'Description',
-      width: 300,
+      // Takes whatever room is left, so the grid fits beside the open sidebar.
+      flex: 1,
+      minWidth: 140,
       editable: true,
     },
     {

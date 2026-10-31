@@ -6,13 +6,13 @@
 .title {
   margin: 0 0 4px;
   font-size: 18px;
-  color: #111827;
+  color: var(--text);
 }
 
 .subtitle {
   margin: 0;
   font-size: 14px;
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 .controls {
@@ -20,6 +20,7 @@
   flex-wrap: wrap;
   gap: 12px;
   justify-content: center;
+  margin-bottom: 16px;
 }
 
 .controls label {
@@ -27,17 +28,16 @@
   flex-direction: column;
   gap: 4px;
   font-size: 14px;
-  color: #374151;
+  color: var(--text);
 }
 
 .controls select {
   min-width: 150px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border-strong);
   border-radius: 6px;
   padding: 6px 8px;
-  background: #fff;
-  color: #111827;
-  color-scheme: light;
+  background: var(--surface);
+  color: var(--text);
 }
 
 .cutoffSection {
@@ -47,7 +47,7 @@
 .cutoffLabel {
   margin: 0 0 8px 0;
   font-size: 14px;
-  color: #374151;
+  color: var(--text);
 }
 
 .cutoffGrid {
@@ -62,33 +62,34 @@
   gap: 4px;
   min-width: 120px;
   font-size: 13px;
-  color: #374151;
+  color: var(--text);
 }
 
 .cutoffItem select {
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border-strong);
   border-radius: 6px;
   padding: 6px 8px;
-  background: #fff;
-  color: #111827;
-  color-scheme: light;
+  background: var(--surface);
+  color: var(--text);
 }
 
 .table {
   width: 100%;
+  background: var(--surface);
+  margin-bottom: 24px;
   border-collapse: collapse;
   font-size: 14px;
 }
 
 .table th,
 .table td {
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border);
   padding: 8px 10px;
   text-align: left;
 }
 
 .table th {
-  background: #f9fafb;
+  background: var(--surface-subtle);
 }
 
 .badge {
@@ -98,14 +99,14 @@
   border-radius: 999px;
   font-size: 11px;
   font-weight: 600;
-  color: #7c2d12;
-  background: #fed7aa;
+  color: var(--warn-text);
+  background: var(--warn-bg);
 }
 
 .emptyState {
   /* margin-top: 24px; */
   padding: 16px;
-  border: 1px dashed #d1d5db;
+  border: 1px dashed var(--border-strong);
   border-radius: 8px;
-  color: #374151;
+  color: var(--text);
 }

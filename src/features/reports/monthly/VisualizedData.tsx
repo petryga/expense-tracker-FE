@@ -41,28 +41,30 @@ export const VisualizedData = ({ yearMonth }: { yearMonth: string }) => {
 
   return (
     <div className={styles.container}>
-      <ResponsiveContainer width={1000} height={650}>
-        <BarChart data={dataByCategory} layout="vertical" margin={{ left: 30, right: 50 }}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis type="number" ticks={ticks} tickFormatter={(tick) => tick.toString()} />
-          <YAxis dataKey="category" type="category" width={60} />
-          <Tooltip content={<CustomTooltip />} />
+      <div className="chart-card chart-card-wide">
+        <ResponsiveContainer width="100%" height={650}>
+          <BarChart data={dataByCategory} layout="vertical" margin={{ left: 30, right: 50 }}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis type="number" ticks={ticks} tickFormatter={(tick) => tick.toString()} />
+            <YAxis dataKey="category" type="category" width={60} />
+            <Tooltip content={<CustomTooltip />} />
 
-          <Bar dataKey="total" barSize={20} fill="#8884d8" shape={<CustomBarShape />}>
-            {dataByCategory.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.fill} />
-            ))}
+            <Bar dataKey="total" barSize={20} fill="#8884d8" shape={<CustomBarShape />}>
+              {dataByCategory.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.fill} />
+              ))}
 
-            <LabelList
-              dataKey="total"
-              position="right"
-              style={{ fill: '#666', fontWeight: 'bold' }}
-              formatter={(value: RenderableText) => `$${formatAmount(Number(value ?? 0))}`}
-              overflow={'extendDomain'}
-            />
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
+              <LabelList
+                dataKey="total"
+                position="right"
+                style={{ fill: 'var(--chart-label)', fontWeight: 'bold' }}
+                formatter={(value: RenderableText) => `$${formatAmount(Number(value ?? 0))}`}
+                overflow={'extendDomain'}
+              />
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
 
       <div className={styles.summary}>
         <h2>

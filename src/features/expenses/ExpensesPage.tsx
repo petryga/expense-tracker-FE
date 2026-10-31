@@ -26,7 +26,7 @@ const ExpensesPage: FC = () => {
 
   return (
     <>
-      <div className={styles.yearsContainer}>
+      <div className={`full-width-page ${styles.yearsContainer}`}>
         {Object.keys(dataByYear)
           .sort((a, b) => Number.parseInt(b) - Number.parseInt(a))
           .map((year) => {

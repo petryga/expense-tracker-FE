@@ -10,7 +10,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f2f2f2;
+  background-color: var(--page-bg);
 }
 
 .card {
@@ -18,9 +18,9 @@
   max-width: 400px;
   display: flex;
   flex-direction: column;
-  background-color: #ffffff;
-  border: solid 1px #9b9b9b;
-  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.15);
+  background-color: var(--surface);
+  border: solid 1px var(--border-strong);
+  box-shadow: 0 2px 6px 0 var(--shadow-color);
   padding: 36px 36px;
 }
 
@@ -38,7 +38,7 @@
 
 .brandText {
   font-weight: 700;
-  color: #4a4a4a;
+  color: var(--text);
   font-size: 17px;
 }
 
@@ -80,7 +80,7 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif !important;
   border: 1px solid #eeb12e !important;
   border-radius: 0 !important;
-  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.15) !important;
+  box-shadow: 0 2px 6px 0 var(--shadow-color) !important;
   height: 47.5px;
 }
 
@@ -89,7 +89,7 @@
 .submitButton:focus {
   background-color: #d99f28 !important;
   border: 1px solid #d99f28 !important;
-  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.15) !important;
+  box-shadow: 0 2px 6px 0 var(--shadow-color) !important;
 }
 
 .footerText {

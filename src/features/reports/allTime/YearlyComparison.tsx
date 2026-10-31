@@ -157,48 +157,52 @@ export const YearlyComparison = () => {
         <div className={styles.emptyState}>No yearly expense data matches this comparison yet.</div>
       ) : (
         <>
-          <ResponsiveContainer width={1000} height={390}>
-            <BarChart data={rows} margin={{ top: 20, bottom: 20 }}>
-              <defs>
-                <pattern
-                  id="convertedTotalPattern"
-                  patternUnits="userSpaceOnUse"
-                  width={8}
-                  height={8}
-                  patternTransform="rotate(45)"
-                >
-                  <rect width="8" height="8" fill="#eeb12e" />
-                  <line x1="0" y1="0" x2="0" y2="8" stroke="#727272" strokeWidth="3" />
-                </pattern>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="year" />
-              <YAxis />
-              <Tooltip
-                formatter={(value: TooltipValueType | undefined, name) => {
-                  const normalizedName = String(name);
-                  const numericValue = Array.isArray(value) ? Number(value[0]) : Number(value ?? 0);
-                  if (normalizedName === 'Converted Total') {
-                    return formatMoney(numericValue, baseCurrency);
-                  }
-                  if (normalizedName === 'CAD') {
-                    return formatMoney(numericValue, Currency.CAD);
-                  }
-                  return formatMoney(numericValue, Currency.USD);
-                }}
-              />
-              <Legend />
-              <Bar dataKey="amountCad" name="CAD" fill="#8dd1e1" />
-              <Bar dataKey="amountUsd" name="USD" fill="#ff8042" />
-              <Bar
-                dataKey="convertedTotal"
-                name="Converted Total"
-                fill="url(#convertedTotalPattern)"
-                stroke="#727272"
-                strokeWidth={1.5}
-              />
-            </BarChart>
-          </ResponsiveContainer>
+          <div className="chart-card">
+            <ResponsiveContainer width={1000} height={390}>
+              <BarChart data={rows} margin={{ top: 20, bottom: 20 }}>
+                <defs>
+                  <pattern
+                    id="convertedTotalPattern"
+                    patternUnits="userSpaceOnUse"
+                    width={8}
+                    height={8}
+                    patternTransform="rotate(45)"
+                  >
+                    <rect width="8" height="8" fill="#eeb12e" />
+                    <line x1="0" y1="0" x2="0" y2="8" stroke="var(--text-muted)" strokeWidth="3" />
+                  </pattern>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="year" />
+                <YAxis />
+                <Tooltip
+                  formatter={(value: TooltipValueType | undefined, name) => {
+                    const normalizedName = String(name);
+                    const numericValue = Array.isArray(value)
+                      ? Number(value[0])
+                      : Number(value ?? 0);
+                    if (normalizedName === 'Converted Total') {
+                      return formatMoney(numericValue, baseCurrency);
+                    }
+                    if (normalizedName === 'CAD') {
+                      return formatMoney(numericValue, Currency.CAD);
+                    }
+                    return formatMoney(numericValue, Currency.USD);
+                  }}
+                />
+                <Legend />
+                <Bar dataKey="amountCad" name="CAD" fill="#8dd1e1" />
+                <Bar dataKey="amountUsd" name="USD" fill="#ff8042" />
+                <Bar
+                  dataKey="convertedTotal"
+                  name="Converted Total"
+                  fill="url(#convertedTotalPattern)"
+                  stroke="var(--text-muted)"
+                  strokeWidth={1.5}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
 
           <table className={styles.table}>
             <thead>

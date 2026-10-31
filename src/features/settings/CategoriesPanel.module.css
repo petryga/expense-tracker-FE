@@ -1,7 +1,7 @@
 .panel {
-  background-color: #ffffff;
-  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.15);
-  border: solid 1px #9b9b9b;
+  background-color: var(--surface);
+  box-shadow: 0 2px 6px 0 var(--shadow-color);
+  border: solid 1px var(--border-strong);
   padding: 16px 20px;
   text-align: left;
 }
@@ -16,7 +16,7 @@
 }
 
 .categoryBlock {
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--border);
   padding: 14px 0;
 }
 
@@ -33,7 +33,7 @@
 
 .categoryName {
   font-weight: 700;
-  color: #4a4a4a;
+  color: var(--text);
   font-size: 1.05rem;
 }
 
@@ -53,7 +53,7 @@
   align-items: center;
   gap: 10px;
   padding: 6px 0 6px 16px;
-  color: #4a4a4a;
+  color: var(--text);
   font-size: 0.875rem;
 }
 
@@ -75,7 +75,7 @@
 }
 
 .icon {
-  color: #9b9b9b;
+  color: var(--text-muted);
 }
 
 .icon:hover {

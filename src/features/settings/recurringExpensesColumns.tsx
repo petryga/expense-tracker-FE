@@ -50,7 +50,9 @@ export function createRecurringExpenseColumns({
     {
       field: 'description',
       headerName: 'Description',
-      width: 280,
+      // Takes the leftover room so the grid fits beside the open sidebar.
+      flex: 1,
+      minWidth: 150,
       editable: true,
     },
     {

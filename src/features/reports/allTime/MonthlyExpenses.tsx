@@ -1,3 +1,4 @@
+import { useThemeMode } from '../../../lib/themeMode';
 import {
   LineChart,
   Line,
@@ -21,23 +22,29 @@ export const MonthlyExpenses = ({
   data?: MonthlyData[];
   monthRange?: number | null;
 }) => {
+  const { mode } = useThemeMode();
   const allMonthlyExpenses = groupMonthlyData(MonthlyDataTypes.Expense, data);
   const monthlyExpenses = monthRange ? allMonthlyExpenses.slice(-monthRange) : allMonthlyExpenses;
 
   if (!monthlyExpenses.length) return <div>No data</div>;
 
   return (
-    <>
-      <ResponsiveContainer width={1000} height={600}>
+    <div className="chart-card chart-card-wide">
+      <ResponsiveContainer width="100%" height={600}>
         <LineChart data={monthlyExpenses} margin={{ right: 50, left: -15, top: 15 }}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="yearMonth" />
           <YAxis domain={[0, getYAxisMax(monthlyExpenses)]} />
           <Tooltip />
           <Line type="monotone" dataKey="amountCad" stroke="#8884d8" dot={<CustomDot />} />
-          <Line type="monotone" dataKey="amountUsd" stroke="red" dot={<CustomDot />} />
+          <Line
+            type="monotone"
+            dataKey="amountUsd"
+            stroke={mode === 'dark' ? '#b85c5c' : 'red'}
+            dot={<CustomDot />}
+          />
         </LineChart>
       </ResponsiveContainer>
-    </>
+    </div>
   );
 };

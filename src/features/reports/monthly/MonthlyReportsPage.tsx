@@ -109,7 +109,7 @@ export const MonthlyReportsPage: FC = () => {
 
   return (
     <>
-      <div className={styles.yearContainer}>
+      <div className={`full-width-page ${styles.yearContainer}`}>
         {sortedYears.map((year) => {
           const isActive = selectedYear === year;
           const isNothingSelected = selectedYear === null;

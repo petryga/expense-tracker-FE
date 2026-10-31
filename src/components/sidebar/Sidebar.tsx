@@ -11,14 +11,18 @@ import {
   faChevronRight,
   faSackDollar,
   faRightFromBracket,
+  faMoon,
+  faSun,
 } from '@fortawesome/free-solid-svg-icons';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { isAuthEnabled, supabase } from '../../lib/supabaseClient';
 import { useAuth } from '../../features/auth/useAuth';
+import { useThemeMode } from '../../lib/themeMode';
 
 const Sidebar = (): JSX.Element => {
   const { isVisible } = useSelector(selectSidebar);
   const { session } = useAuth();
+  const { mode, toggleMode } = useThemeMode();
 
   const dispatch = useDispatch();
   const location = useLocation();
@@ -83,6 +87,13 @@ const Sidebar = (): JSX.Element => {
           );
         })}
       </ul>
+      <button type="button" className={styles.logoutButton} onClick={toggleMode}>
+        <FontAwesomeIcon
+          className={styles.sidebarIcon}
+          icon={(mode === 'dark' ? faSun : faMoon) as IconProp}
+        />
+        {mode === 'dark' ? 'Light mode' : 'Dark mode'}
+      </button>
       {isAuthEnabled && session?.user?.email && (
         <div className={styles.userEmail} title={session.user.email}>
           {session.user.email}

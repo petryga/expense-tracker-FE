@@ -20,7 +20,7 @@ export const CustomDot = ({ cx, cy, value }: CustomDotProps) => {
         y={cy - textHeight - 10}
         width={textWidth}
         height={textHeight}
-        fill="white"
+        style={{ fill: 'var(--surface-subtle)' }}
         rx={5}
       />
 
