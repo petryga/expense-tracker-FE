@@ -35,7 +35,11 @@ function SankeyNodeLabel(props: TextProps) {
 
 const SankeyPage: FC = () => {
   const [selectedMonth, setSelectedMonth] = useState<string | undefined>(undefined);
-  const { data: report } = useGetFlowReportQuery(selectedMonth);
+  // selectedMonth is only ever the user's own pick; until they pick one (or if
+  // their pick isn't comparable) the BE answers with the latest eligible month.
+  const { data: report } = useGetFlowReportQuery(selectedMonth, {
+    refetchOnMountOrArgChange: true,
+  });
 
   const { nodes, links, incomeAmount, expenseTotal, availableMonths, activeMonth } = useMemo(
     () => buildSankeyData(report),
@@ -62,17 +66,6 @@ const SankeyPage: FC = () => {
     };
   }, [links, nodes]);
 
-  // Both adjustments below are self-limiting -- once selectedMonth is valid the
-  // condition stops matching -- so they run during render rather than in an
-  // effect, which avoids the extra commit and the flash of a stale month.
-  if (availableMonths.length && (!selectedMonth || !availableMonths.includes(selectedMonth))) {
-    setSelectedMonth(availableMonths[availableMonths.length - 1]);
-  }
-
-  if (activeMonth && selectedMonth && activeMonth !== selectedMonth) {
-    setSelectedMonth(activeMonth);
-  }
-
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -83,7 +76,7 @@ const SankeyPage: FC = () => {
           <select
             id="month-select"
             className={styles.select}
-            value={selectedMonth ?? ''}
+            value={activeMonth ?? ''}
             onChange={(e) => setSelectedMonth(e.target.value)}
           >
             {availableMonths.map((month) => (

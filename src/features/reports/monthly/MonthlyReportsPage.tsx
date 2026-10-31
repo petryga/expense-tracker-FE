@@ -8,7 +8,9 @@ import classnames from 'classnames';
 import styles from './MonthlyReportsPage.module.css';
 
 const MonthlyReportsPage: FC = () => {
-  const { data: reportMonths } = useGetReportMonthsQuery();
+  const { data: reportMonths } = useGetReportMonthsQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
   const [selectedYear, setSelectedYear] = useState<string | null>(null);
   const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
   // The BE lists the months that have expenses. The current month is always

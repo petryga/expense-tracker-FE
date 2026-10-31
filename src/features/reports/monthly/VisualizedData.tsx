@@ -19,7 +19,9 @@ import { useGetCategoriesQuery } from '../../../services/categories/categoriesAp
 import { formatAmount } from '../../../utils';
 
 export const VisualizedData = ({ yearMonth }: { yearMonth: string }) => {
-  const { data: report } = useGetMonthlyReportQuery(yearMonth);
+  const { data: report } = useGetMonthlyReportQuery(yearMonth, {
+    refetchOnMountOrArgChange: true,
+  });
   const { data: categoryRecords } = useGetCategoriesQuery({});
   const budgetsByCategory = useMemo(
     () =>

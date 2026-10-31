@@ -20,7 +20,7 @@ const MONTH_RANGE_OPTIONS = [
 const AllTimeReportsPage: FC = () => {
   const [monthRange, setMonthRange] = useState<number | null>(12);
   const [wealthKey, setWealthKey] = useState(ALL_WEALTH);
-  const { data } = useGetMonthlyDataQuery({});
+  const { data } = useGetMonthlyDataQuery({}, { refetchOnMountOrArgChange: true });
   const { data: recurringIncome } = useGetRecurringIncomeQuery({});
   const wealthOptions = getRecurringWealthOptions(recurringIncome);
   const selectedWealth = wealthOptions.find((option) => option.key === wealthKey);
@@ -33,7 +33,7 @@ const AllTimeReportsPage: FC = () => {
       category: selectedWealth?.category,
       currency: selectedWealth?.currency,
     },
-    { skip: !selectedWealth },
+    { skip: !selectedWealth, refetchOnMountOrArgChange: true },
   );
   const sections = buildAllTimeReportSections(
     data,

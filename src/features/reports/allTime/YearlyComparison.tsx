@@ -37,11 +37,12 @@ export const YearlyComparison = () => {
   const [baseCurrency, setBaseCurrency] = useState<Currency>(Currency.USD);
   const [ytdCutoffByYear, setYtdCutoffByYear] = useState<Record<number, number | null>>({});
 
-  const { data } = useGetYearlyComparisonQuery({
-    mode,
-    baseCurrency,
-    cutoffs: ytdCutoffByYear,
-  });
+  // Cutoffs only matter in YTD mode; leaving them out of full-year requests
+  // avoids refetching an identical result whenever they are reconciled.
+  const { data } = useGetYearlyComparisonQuery(
+    { mode, baseCurrency, cutoffs: mode === 'ytd' ? ytdCutoffByYear : undefined },
+    { refetchOnMountOrArgChange: true },
+  );
   const { rows, ytdCutoffOptionsByYear, defaultYtdCutoffByYear } = data ?? EMPTY_RESULT;
 
   // Reconciles each year's YTD cutoff against the months actually available,
@@ -87,8 +88,7 @@ export const YearlyComparison = () => {
       <div className={styles.header}>
         <h2 className={styles.title}>Total expenses by year</h2>
         <p className={styles.subtitle}>
-          Compares your expenses across years, in CAD, USD and a converted
-          total.
+          Compares your expenses across years, in CAD, USD and a converted total.
         </p>
       </div>
       <div className={styles.controls}>
