@@ -165,10 +165,10 @@ export function createTableColumns({
     {
       field: 'currency',
       headerName: 'Cur',
-      width: 60,
+      width: 80,
       type: 'singleSelect',
       valueOptions: [Currency.CAD, Currency.USD],
-      editable: false,
+      editable: true,
     },
     {
       field: 'category',
