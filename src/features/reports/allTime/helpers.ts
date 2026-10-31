@@ -4,7 +4,7 @@ import {
   MonthlyDataTypes,
   type MonthlyData,
 } from '../../../services/monthlyData/monthlyData.types';
-import type { IncomeData } from '../../../services/income/incomeApi.types';
+import { INCOME_CATEGORY_LABELS, IncomeCategories } from '../../income/helpers';
 import type { RecurringIncomeData } from '../../../services/recurringIncome/recurringIncomeApi.types';
 
 interface ParsedYearMonth {
@@ -247,61 +247,33 @@ export const buildYearlyComparisonData = ({
   };
 };
 
+export const ALL_WEALTH = '__all__';
+
 export interface RecurringWealthOption {
   key: string;
   label: string;
+  category: string;
+  currency: string;
 }
 
-// A recurring entry's "history" is the dated income entries that share its
-// category + currency (the Assets page's "Add recurring" button copies those
-// fields verbatim into each new income entry, and the grid identifies rows by
-// them).
-const getRecurringKey = (entry: { category?: string; currency?: string }) =>
-  JSON.stringify([entry.category ?? '', entry.currency ?? '']);
-
-const CATEGORY_LABELS: Record<string, string> = {
-  bankAccounts: 'Bank Accounts',
-  crypto: 'Crypto',
-  investments: 'Investments',
-  cash: 'Cash',
-};
-
+// The Monthly Wealth dropdown lists the (category, currency) pairs you track
+// through recurring income entries ("Bank Accounts - USD"). The BE does the
+// per-category summing: the selected pair is sent as a filter on
+// GET /monthlyData.
 export const getRecurringWealthOptions = (
   recurring?: RecurringIncomeData[],
 ): RecurringWealthOption[] => {
   const seen = new Map<string, RecurringWealthOption>();
-  (recurring ?? []).forEach((entry) => {
-    const key = getRecurringKey(entry);
-    if (!seen.has(key)) {
-      const category = CATEGORY_LABELS[entry.category] ?? entry.category;
-      seen.set(key, { key, label: entry.currency ? `${category} - ${entry.currency}` : category });
-    }
+  (recurring ?? []).forEach(({ category, currency }) => {
+    const key = JSON.stringify([category ?? '', currency ?? '']);
+    if (seen.has(key)) return;
+    const categoryLabel = INCOME_CATEGORY_LABELS[category as IncomeCategories] ?? category;
+    seen.set(key, {
+      key,
+      label: currency ? `${categoryLabel} - ${currency}` : categoryLabel,
+      category,
+      currency,
+    });
   });
   return [...seen.values()].sort((a, b) => a.label.localeCompare(b.label));
-};
-
-export const groupIncomeEntriesByMonth = (
-  entries: IncomeData[] | undefined,
-  recurringKey: string,
-): MonthlyExpense[] => {
-  const monthly = (entries ?? [])
-    .filter((entry) => getRecurringKey(entry) === recurringKey)
-    .reduce<Record<string, MonthlyExpense>>((acc, entry) => {
-      const yearMonth = entry.date?.slice(0, 7);
-      if (!parseYearMonth(yearMonth ?? '')) return acc;
-      const row = (acc[yearMonth] ??= { yearMonth, amountCad: 0, amountUsd: 0 });
-      const amount = Number(entry.amount) || 0;
-      if (entry.currency === Currency.CAD) row.amountCad += amount;
-      else if (entry.currency === Currency.USD) row.amountUsd += amount;
-      return acc;
-    }, {});
-
-  return Object.values(monthly)
-    .filter((row) => row.amountCad > 0 || row.amountUsd > 0)
-    .map((row) => ({
-      ...row,
-      amountCad: parseFloat(row.amountCad.toFixed(2)),
-      amountUsd: parseFloat(row.amountUsd.toFixed(2)),
-    }))
-    .sort((a, b) => a.yearMonth.localeCompare(b.yearMonth));
 };

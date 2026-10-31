@@ -8,6 +8,13 @@ export enum IncomeCategories {
   CASH = 'cash',
 }
 
+export const INCOME_CATEGORY_LABELS: Record<IncomeCategories, string> = {
+  [IncomeCategories.BANK_ACCOUNTS]: 'Bank Accounts',
+  [IncomeCategories.CRYPTO]: 'Crypto',
+  [IncomeCategories.INVESTMENTS]: 'Investments',
+  [IncomeCategories.CASH]: 'Cash',
+};
+
 export const getRowClassName = (params: GridRowClassNameParams<IncomeData>, rows: IncomeData[]) => {
   const currentRowIndex = rows.findIndex((row) => row.id === params.id);
 

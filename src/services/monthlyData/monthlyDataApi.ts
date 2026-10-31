@@ -11,8 +11,8 @@ export const monthlyDataApi = createApi({
 
   endpoints: (builder) => ({
     getMonthlyData: builder.query<MonthlyData[], GetArgs>({
-      query: () => ({
-        url: getMonthlyDataUrl(),
+      query: (args) => ({
+        url: getMonthlyDataUrl(args),
         method: 'GET',
       }),
       transformResponse: (response: MonthlyData[], _, { type }) =>

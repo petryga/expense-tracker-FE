@@ -19,6 +19,8 @@ export interface PatchArgs {
 
 export interface GetArgs {
   type?: MonthlyDataTypes;
+  category?: string;
+  currency?: string;
 }
 
 export type DeleteArgs = {

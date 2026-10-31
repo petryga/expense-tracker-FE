@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { GridActionsCellItem } from '@mui/x-data-grid';
 import styles from '../expenses/ExpensesPage.module.css';
 import { Currency } from '../expenses/helpers';
-import { IncomeCategories } from '../income/helpers';
+import { IncomeCategories, INCOME_CATEGORY_LABELS } from '../income/helpers';
 import { renderEditCell } from '../../components/amountTableCell/AmountTableCell';
 import { RecurringIncomeTableColumns } from './SettingsPage.types';
 import { formatAmount } from '../../utils';
@@ -44,12 +44,10 @@ export function createRecurringIncomeColumns({
       width: 350,
       editable: true,
       type: 'singleSelect',
-      valueOptions: [
-        { value: IncomeCategories.BANK_ACCOUNTS, label: 'Bank Accounts' },
-        { value: IncomeCategories.CRYPTO, label: 'Crypto' },
-        { value: IncomeCategories.INVESTMENTS, label: 'Investments' },
-        { value: IncomeCategories.CASH, label: 'Cash' },
-      ],
+      valueOptions: Object.values(IncomeCategories).map((value) => ({
+        value,
+        label: INCOME_CATEGORY_LABELS[value],
+      })),
     },
     {
       field: 'description',

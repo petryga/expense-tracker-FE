@@ -1,6 +1,5 @@
-import type { IncomeData } from '../../../services/income/incomeApi.types';
 import type { RecurringIncomeData } from '../../../services/recurringIncome/recurringIncomeApi.types';
-import { getRecurringWealthOptions, groupIncomeEntriesByMonth } from './helpers';
+import { getRecurringWealthOptions } from './helpers';
 import { describe, expect, it } from 'vitest';
 import { buildYearlyComparisonData, groupMonthlyData, getYAxisMax } from './helpers';
 import {
@@ -208,58 +207,32 @@ describe('buildYearlyComparisonData', () => {
 describe('recurring wealth helpers', () => {
   const recurring = [
     { id: '1', category: 'bankAccounts', description: '', currency: 'USD', amount: 1 },
-    { id: '2', category: 'bankAccounts', description: '', currency: 'CAD', amount: 1 },
-    { id: '3', category: 'cash', description: '', currency: 'USD', amount: 1 },
+    { id: '2', category: 'bankAccounts', description: 'other', currency: 'USD', amount: 2 },
+    { id: '3', category: 'bankAccounts', description: '', currency: 'CAD', amount: 1 },
+    { id: '4', category: 'cash', description: '', currency: 'USD', amount: 1 },
   ] as unknown as RecurringIncomeData[];
 
-  it('builds sorted "category - currency" options from recurring entries', () => {
+  it('builds sorted "category - currency" options, one per distinct pair', () => {
     expect(getRecurringWealthOptions(recurring).map((o) => o.label)).toEqual([
       'Bank Accounts - CAD',
       'Bank Accounts - USD',
       'Cash - USD',
     ]);
-    expect(getRecurringWealthOptions(undefined)).toEqual([]);
   });
 
-  it('sums only income entries matching category and currency, per month', () => {
-    const usd = getRecurringWealthOptions(recurring).find(
-      (o) => o.label === 'Bank Accounts - USD',
-    )!;
-    const entries = [
-      {
-        date: '2026-08-05',
-        category: 'bankAccounts',
-        description: 'a',
-        currency: 'USD',
-        amount: 100,
-      },
-      {
-        date: '2026-08-20',
-        category: 'bankAccounts',
-        description: 'b',
-        currency: 'USD',
-        amount: 5,
-      },
-      {
-        date: '2026-08-20',
-        category: 'bankAccounts',
-        description: 'b',
-        currency: 'CAD',
-        amount: 7,
-      },
-      {
-        date: '2026-09-01',
-        category: 'bankAccounts',
-        description: 'a',
-        currency: 'USD',
-        amount: 150,
-      },
-      { date: '2026-09-01', category: 'cash', description: 'a', currency: 'USD', amount: 9 },
-    ] as unknown as IncomeData[];
+  it('carries the category and currency to send to the BE as filters', () => {
+    const usd = getRecurringWealthOptions(recurring).find((o) => o.label === 'Bank Accounts - USD');
+    expect(usd).toMatchObject({ category: 'bankAccounts', currency: 'USD' });
+  });
 
-    expect(groupIncomeEntriesByMonth(entries, usd.key)).toEqual([
-      { yearMonth: '2026-08', amountCad: 0, amountUsd: 105 },
-      { yearMonth: '2026-09', amountCad: 0, amountUsd: 150 },
-    ]);
+  it('falls back to the raw category when it has no known label', () => {
+    const [option] = getRecurringWealthOptions([
+      { id: '1', category: 'collectibles', description: '', currency: 'USD', amount: 1 },
+    ] as unknown as RecurringIncomeData[]);
+    expect(option.label).toBe('collectibles - USD');
+  });
+
+  it('returns no options without recurring entries', () => {
+    expect(getRecurringWealthOptions(undefined)).toEqual([]);
   });
 });

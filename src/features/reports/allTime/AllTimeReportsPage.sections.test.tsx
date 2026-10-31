@@ -46,18 +46,13 @@ describe('buildAllTimeReportSections', () => {
   });
 
   it('passes data and monthRange through to Monthly Expenses and Monthly Wealth', () => {
-    const sections = buildAllTimeReportSections(DATA, 6);
+    const sections = buildAllTimeReportSections(DATA, 6, DATA);
     const byLabel = new Map(
       sections.map((section) => [section.label, asChartElement(section.content)]),
     );
 
     expect(byLabel.get('Monthly Expenses')!.props).toEqual({ data: DATA, monthRange: 6 });
-    expect(byLabel.get('Monthly Wealth')!.props).toEqual({
-      data: DATA,
-      monthRange: 6,
-      incomeEntries: undefined,
-      selectedKey: undefined,
-    });
+    expect(byLabel.get('Monthly Wealth')!.props).toEqual({ data: DATA, monthRange: 6 });
   });
 
   it("does not pass monthRange to Yearly Comparison - it doesn't accept one", () => {
@@ -67,5 +62,17 @@ describe('buildAllTimeReportSections', () => {
     );
 
     expect(yearlyComparison.props).toEqual({ data: DATA });
+  });
+});
+
+describe('buildAllTimeReportSections wealth data', () => {
+  it('feeds Monthly Wealth the separately-fetched category data, not the all-data set', () => {
+    const wealthData = [{ year: 2026, month: 8 }] as unknown as MonthlyData[];
+    const sections = buildAllTimeReportSections(DATA, 12, wealthData);
+    const wealth = asChartElement(sections.find((s) => s.label === 'Monthly Wealth')!.content);
+    const expenses = asChartElement(sections.find((s) => s.label === 'Monthly Expenses')!.content);
+
+    expect(wealth.props.data).toBe(wealthData);
+    expect(expenses.props.data).toBe(DATA);
   });
 });

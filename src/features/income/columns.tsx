@@ -2,7 +2,7 @@ import type { GridColDef } from '@mui/x-data-grid';
 import { faTrash, faSave, faEdit, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { formatAmount, formatDate, lastDayOfMonth, parseLocalDateString } from '../../utils';
 import { TableColumns } from './AssetsPage.types';
-import { IncomeCategories } from './helpers';
+import { IncomeCategories, INCOME_CATEGORY_LABELS } from './helpers';
 import { renderEditCell } from '../../components/amountTableCell/AmountTableCell';
 import { renderEditCell as renderDateEditCell } from '../../components/dateTableCell/DateTableCell';
 import Checkbox from '@mui/material/Checkbox';
@@ -74,12 +74,10 @@ export function createTableColumns({
       width: 350,
       editable: true,
       type: 'singleSelect',
-      valueOptions: [
-        { value: IncomeCategories.BANK_ACCOUNTS, label: 'Bank Accounts' },
-        { value: IncomeCategories.CRYPTO, label: 'Crypto' },
-        { value: IncomeCategories.INVESTMENTS, label: 'Investments' },
-        { value: IncomeCategories.CASH, label: 'Cash' },
-      ],
+      valueOptions: Object.values(IncomeCategories).map((value) => ({
+        value,
+        label: INCOME_CATEGORY_LABELS[value],
+      })),
     },
     {
       field: 'amount',

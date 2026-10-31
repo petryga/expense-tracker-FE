@@ -1,12 +1,11 @@
 import { FC, useState } from 'react';
 import { withSidebar } from '../../../components/sidebar/withSideBar';
 import { useGetMonthlyDataQuery } from '../../../services/monthlyData/monthlyDataApi';
-import { useGetIncomeEntriesQuery } from '../../../services/income/incomeApi';
+import { MonthlyDataTypes } from '../../../services/monthlyData/monthlyData.types';
 import { useGetRecurringIncomeQuery } from '../../../services/recurringIncome/recurringIncomeApi';
 import { UrlTabs } from '../../../components/urlTabs/UrlTabs';
 import { useActiveTabId } from '../../../components/urlTabs/useActiveTabId';
-import { getRecurringWealthOptions } from './helpers';
-import { ALL_WEALTH } from './WealthTracker';
+import { ALL_WEALTH, getRecurringWealthOptions } from './helpers';
 import { buildAllTimeReportSections } from './AllTimeReportsPage.sections';
 import styles from './AllTimeReportsPage.module.css';
 
@@ -22,11 +21,25 @@ const AllTimeReportsPage: FC = () => {
   const [monthRange, setMonthRange] = useState<number | null>(12);
   const [wealthKey, setWealthKey] = useState(ALL_WEALTH);
   const { data } = useGetMonthlyDataQuery({});
-  const { data: incomeEntries } = useGetIncomeEntriesQuery({});
   const { data: recurringIncome } = useGetRecurringIncomeQuery({});
   const wealthOptions = getRecurringWealthOptions(recurringIncome);
-  const activeWealthKey = wealthOptions.some((o) => o.key === wealthKey) ? wealthKey : ALL_WEALTH;
-  const sections = buildAllTimeReportSections(data, monthRange, incomeEntries, activeWealthKey);
+  const selectedWealth = wealthOptions.find((option) => option.key === wealthKey);
+  const activeWealthKey = selectedWealth ? wealthKey : ALL_WEALTH;
+  // The BE sums the selected category/currency; nothing is fetched until one is
+  // picked, and "All (total)" reuses the unfiltered query above.
+  const { data: categoryData } = useGetMonthlyDataQuery(
+    {
+      type: MonthlyDataTypes.Income,
+      category: selectedWealth?.category,
+      currency: selectedWealth?.currency,
+    },
+    { skip: !selectedWealth },
+  );
+  const sections = buildAllTimeReportSections(
+    data,
+    monthRange,
+    selectedWealth ? categoryData : data,
+  );
   const activeTabId = useActiveTabId(sections.map((section) => section.id));
 
   return (

@@ -7,29 +7,19 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
-import { groupMonthlyData, getYAxisMax, groupIncomeEntriesByMonth } from './helpers';
-import type { IncomeData } from '../../../services/income/incomeApi.types';
+import { groupMonthlyData, getYAxisMax } from './helpers';
 import { MonthlyData, MonthlyDataTypes } from '../../../services/monthlyData/monthlyData.types';
 import { CustomDot } from './CustomDot';
 import styles from './YearlyComparison.module.css';
 
-export const ALL_WEALTH = '__all__';
-
 export const WealthTracker = ({
   data,
   monthRange = null,
-  incomeEntries,
-  selectedKey = ALL_WEALTH,
 }: {
   data?: MonthlyData[];
   monthRange?: number | null;
-  incomeEntries?: IncomeData[];
-  selectedKey?: string;
 }) => {
-  const allMonthlyAssets =
-    selectedKey === ALL_WEALTH
-      ? groupMonthlyData(MonthlyDataTypes.Income, data)
-      : groupIncomeEntriesByMonth(incomeEntries, selectedKey);
+  const allMonthlyAssets = groupMonthlyData(MonthlyDataTypes.Income, data);
   const monthlyAssets = monthRange ? allMonthlyAssets.slice(-monthRange) : allMonthlyAssets;
 
   if (!monthlyAssets.length) return <div> No data</div>;
