@@ -72,6 +72,13 @@ export const YearlyComparison = ({ data }: { data?: MonthlyData[] }) => {
 
   return (
     <>
+      <div className={styles.header}>
+        <h2 className={styles.title}>Total expenses by year</h2>
+        <p className={styles.subtitle}>
+          Compares your expenses across years, in CAD, USD and a converted
+          total.
+        </p>
+      </div>
       <div className={styles.controls}>
         <label>
           Comparison

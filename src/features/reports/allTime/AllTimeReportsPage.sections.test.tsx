@@ -52,7 +52,12 @@ describe('buildAllTimeReportSections', () => {
     );
 
     expect(byLabel.get('Monthly Expenses')!.props).toEqual({ data: DATA, monthRange: 6 });
-    expect(byLabel.get('Monthly Wealth')!.props).toEqual({ data: DATA, monthRange: 6 });
+    expect(byLabel.get('Monthly Wealth')!.props).toEqual({
+      data: DATA,
+      monthRange: 6,
+      incomeEntries: undefined,
+      selectedKey: undefined,
+    });
   });
 
   it("does not pass monthRange to Yearly Comparison - it doesn't accept one", () => {

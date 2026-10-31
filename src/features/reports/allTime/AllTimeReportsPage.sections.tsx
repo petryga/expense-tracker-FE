@@ -1,5 +1,6 @@
 import type { UrlTabSection } from '../../../components/urlTabs/UrlTabs';
 import type { MonthlyData } from '../../../services/monthlyData/monthlyData.types';
+import type { IncomeData } from '../../../services/income/incomeApi.types';
 import { MonthlyExpenses } from './MonthlyExpenses';
 import { WealthTracker } from './WealthTracker';
 import { YearlyComparison } from './YearlyComparison';
@@ -7,6 +8,8 @@ import { YearlyComparison } from './YearlyComparison';
 export const buildAllTimeReportSections = (
   data: MonthlyData[] | undefined,
   monthRange: number | null,
+  incomeEntries?: IncomeData[],
+  wealthKey?: string,
 ): UrlTabSection[] => [
   {
     id: 'monthly-expenses',
@@ -16,7 +19,14 @@ export const buildAllTimeReportSections = (
   {
     id: 'monthly-wealth',
     label: 'Monthly Wealth',
-    content: <WealthTracker data={data} monthRange={monthRange} />,
+    content: (
+      <WealthTracker
+        data={data}
+        monthRange={monthRange}
+        incomeEntries={incomeEntries}
+        selectedKey={wealthKey}
+      />
+    ),
   },
   {
     id: 'yearly-comparison',

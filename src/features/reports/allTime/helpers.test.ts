@@ -1,3 +1,6 @@
+import type { IncomeData } from '../../../services/income/incomeApi.types';
+import type { RecurringIncomeData } from '../../../services/recurringIncome/recurringIncomeApi.types';
+import { getRecurringWealthOptions, groupIncomeEntriesByMonth } from './helpers';
 import { describe, expect, it } from 'vitest';
 import { buildYearlyComparisonData, groupMonthlyData, getYAxisMax } from './helpers';
 import {
@@ -199,5 +202,64 @@ describe('buildYearlyComparisonData', () => {
     });
 
     expect(result).toEqual({ rows: [], ytdCutoffOptionsByYear: {}, defaultYtdCutoffByYear: {} });
+  });
+});
+
+describe('recurring wealth helpers', () => {
+  const recurring = [
+    { id: '1', category: 'bankAccounts', description: '', currency: 'USD', amount: 1 },
+    { id: '2', category: 'bankAccounts', description: '', currency: 'CAD', amount: 1 },
+    { id: '3', category: 'cash', description: '', currency: 'USD', amount: 1 },
+  ] as unknown as RecurringIncomeData[];
+
+  it('builds sorted "category - currency" options from recurring entries', () => {
+    expect(getRecurringWealthOptions(recurring).map((o) => o.label)).toEqual([
+      'Bank Accounts - CAD',
+      'Bank Accounts - USD',
+      'Cash - USD',
+    ]);
+    expect(getRecurringWealthOptions(undefined)).toEqual([]);
+  });
+
+  it('sums only income entries matching category and currency, per month', () => {
+    const usd = getRecurringWealthOptions(recurring).find(
+      (o) => o.label === 'Bank Accounts - USD',
+    )!;
+    const entries = [
+      {
+        date: '2026-08-05',
+        category: 'bankAccounts',
+        description: 'a',
+        currency: 'USD',
+        amount: 100,
+      },
+      {
+        date: '2026-08-20',
+        category: 'bankAccounts',
+        description: 'b',
+        currency: 'USD',
+        amount: 5,
+      },
+      {
+        date: '2026-08-20',
+        category: 'bankAccounts',
+        description: 'b',
+        currency: 'CAD',
+        amount: 7,
+      },
+      {
+        date: '2026-09-01',
+        category: 'bankAccounts',
+        description: 'a',
+        currency: 'USD',
+        amount: 150,
+      },
+      { date: '2026-09-01', category: 'cash', description: 'a', currency: 'USD', amount: 9 },
+    ] as unknown as IncomeData[];
+
+    expect(groupIncomeEntriesByMonth(entries, usd.key)).toEqual([
+      { yearMonth: '2026-08', amountCad: 0, amountUsd: 105 },
+      { yearMonth: '2026-09', amountCad: 0, amountUsd: 150 },
+    ]);
   });
 });
