@@ -24,6 +24,14 @@ export const parseLocalDateString = (value: string): Date => {
 export const lastDayOfMonth = (date: Date): Date =>
   new Date(date.getFullYear(), date.getMonth() + 1, 0);
 
+// Builds the date for a recurring entry's "day of month" in the given
+// 1-indexed year/month, clamping to the month's last day so e.g. day 31 in
+// April yields Apr 30 instead of JS's overflow into May 1.
+export const dateForDayOfMonth = (year: number, month: number, dayOfMonth: number): Date => {
+  const lastDay = new Date(year, month, 0).getDate();
+  return new Date(year, month - 1, Math.min(dayOfMonth, lastDay));
+};
+
 // Inserts thousands-separator commas into a number's integer part for
 // display, e.g. 1234.5 -> "1,234.5". Leaves non-numeric strings (like an
 // in-progress arithmetic expression in the amount edit cell) untouched.

@@ -23,6 +23,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import WarningModal from '../../components/warningModal/WarningModal';
 import { format, parseISO } from 'date-fns';
 import { buildCategoryTree, Currency } from './helpers';
+import { dateForDayOfMonth } from '../../utils';
 import { CustomFooter } from './CustomFooter';
 import { Context } from './FooterContext';
 import ConfirmationModal from './ConfirmationModal';
@@ -180,7 +181,7 @@ export const ExpensesDataGrid = () => {
 
     recurringExpenses.forEach((expense) => {
       const { id: _id, dayOfMonth, isNew: _isNew, ...recurringExpense } = expense;
-      const datePosted = format(new Date(year, month - 1, dayOfMonth), 'yyyy-MM-dd');
+      const datePosted = format(dateForDayOfMonth(year, month, dayOfMonth), 'yyyy-MM-dd');
 
       expensesArray.push({
         ...recurringExpense,

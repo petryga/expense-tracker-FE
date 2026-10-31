@@ -84,6 +84,10 @@ export function createRecurringExpenseColumns({
       width: 120,
       type: 'number',
       editable: true,
+      preProcessEditCellProps: (params) => {
+        const day = Number(params.props.value);
+        return { ...params.props, error: !Number.isInteger(day) || day < 1 || day > 31 };
+      },
     },
     {
       field: 'actions',

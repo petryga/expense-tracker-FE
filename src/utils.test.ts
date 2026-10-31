@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  dateForDayOfMonth,
   formatAmount,
   formatDate,
   formatNumberWithCommas,
@@ -147,5 +148,22 @@ describe('formatAmount', () => {
   it('treats null/undefined as zero', () => {
     expect(formatAmount(null)).toBe('0');
     expect(formatAmount(undefined)).toBe('0');
+  });
+});
+
+describe('dateForDayOfMonth', () => {
+  it('uses the day as-is when the month has it', () => {
+    expect(dateForDayOfMonth(2026, 3, 31)).toEqual(new Date(2026, 2, 31));
+  });
+
+  it('clamps day 31 to the last day of a 30-day month', () => {
+    expect(dateForDayOfMonth(2026, 4, 31)).toEqual(new Date(2026, 3, 30));
+  });
+
+  it('clamps to Feb 28 in a non-leap year and Feb 29 in a leap year', () => {
+    expect(dateForDayOfMonth(2026, 2, 29)).toEqual(new Date(2026, 1, 28));
+    expect(dateForDayOfMonth(2026, 2, 30)).toEqual(new Date(2026, 1, 28));
+    expect(dateForDayOfMonth(2028, 2, 29)).toEqual(new Date(2028, 1, 29));
+    expect(dateForDayOfMonth(2028, 2, 31)).toEqual(new Date(2028, 1, 29));
   });
 });
