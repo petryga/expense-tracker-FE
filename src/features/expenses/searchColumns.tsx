@@ -31,8 +31,8 @@ export function createSearchColumns({
     },
     {
       field: 'datePosted',
-      headerName: 'Date Posted',
-      width: 100,
+      headerName: 'Date',
+      width: 80,
       editable: false,
       type: 'date',
       valueFormatter: (value) => formatDate(value),

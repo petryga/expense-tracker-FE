@@ -46,12 +46,12 @@ describe('transformCategoriesForDropdown', () => {
 });
 
 describe('formatDate', () => {
-  it('formats a Date value as yyyy/mm/dd using local fields', () => {
-    expect(formatDate(new Date(2026, 6, 5))).toBe('2026/07/05');
+  it('formats a Date value as mm/dd/yy using local fields', () => {
+    expect(formatDate(new Date(2026, 6, 5))).toBe('07/05/26');
   });
 
   it('formats a date string value', () => {
-    expect(formatDate('2026-01-09T00:00:00.000Z')).toBe('2026/01/09');
+    expect(formatDate('2026-01-09T00:00:00.000Z')).toBe('01/09/26');
   });
 });
 

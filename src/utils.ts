@@ -77,16 +77,16 @@ export const formatDate = (value: Date | string) => {
   if (value instanceof Date) {
     const dd = String(value.getDate()).padStart(2, '0');
     const mm = String(value.getMonth() + 1).padStart(2, '0');
-    const yyyy = value.getFullYear();
+    const yy = String(value.getFullYear() % 100).padStart(2, '0');
 
-    return `${yyyy}/${mm}/${dd}`;
+    return `${mm}/${dd}/${yy}`;
   }
 
   const valueFormatted = new Date(value);
 
   const dd = String(valueFormatted.getUTCDate()).padStart(2, '0');
   const mm = String(valueFormatted.getUTCMonth() + 1).padStart(2, '0');
-  const yyyy = valueFormatted.getUTCFullYear();
+  const yy = String(valueFormatted.getUTCFullYear() % 100).padStart(2, '0');
 
-  return `${yyyy}/${mm}/${dd}`;
+  return `${mm}/${dd}/${yy}`;
 };

@@ -49,7 +49,9 @@ export function createTableColumns({
     {
       field: 'date',
       headerName: 'Date',
-      width: 120,
+      // ~86 is the floor: the 4-digit-year editor needs about 78px of cell content
+      // (the grid trims this column's side padding while editing, see tableStyles).
+      width: 86,
       editable: true,
       type: 'date',
       renderEditCell: renderDateEditCell,

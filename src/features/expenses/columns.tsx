@@ -93,8 +93,9 @@ export function createTableColumns({
     },
     {
       field: 'datePosted',
-      headerName: 'Date Posted',
-      width: 100,
+      headerName: 'Date',
+      // Narrower than the 4-digit-year editor would like is clipped; ~96 is the floor.
+      width: 96,
       editable: true,
       type: 'date',
       renderEditCell: renderDateEditCell,
@@ -157,9 +158,7 @@ export function createTableColumns({
         const budget = budgetByCategory[params.row.category as string];
         const isOverBudget = budget !== undefined && params.value > budget;
         return (
-          <div className={isOverBudget ? styles.amountBold : ''}>
-            ${formatAmount(params.value)}
-          </div>
+          <div className={isOverBudget ? styles.amountBold : ''}>${formatAmount(params.value)}</div>
         );
       },
       renderEditCell,

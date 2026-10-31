@@ -22,6 +22,12 @@ export const tableStyles = {
     border: 'none',
     padding: 0,
   },
+  // Assets date column: only while editing, trim the side padding so the narrow
+  // column still fits the MM/DD/YYYY editor. Display keeps the normal padding.
+  '& .MuiDataGrid-cell--editing[data-field="date"]': {
+    paddingLeft: '4px',
+    paddingRight: '4px',
+  },
   '& .MuiDataGrid-cellContent': {
     textAlign: 'left',
   },
