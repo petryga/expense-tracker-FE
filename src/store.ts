@@ -32,14 +32,4 @@ export const store = configureStore({
     ),
 });
 
-export const rootReducer = {
-  expenses: expensesApi.reducer,
-  income: incomeApi.reducer,
-  monthlyData: monthlyDataApi.reducer,
-  recurringExpenses: recurringExpensesApi.reducer,
-  recurringIncome: recurringIncomeApi.reducer,
-  categories: categoriesApi.reducer,
-  accounts: accountsApi.reducer,
-};
-
 export type RootState = ReturnType<typeof store.getState>;

@@ -1,6 +1,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getMonthlyDataUrl, getYearlyComparisonUrl } from './helpers';
 import {
+  FlowReport,
   GetArgs,
   MonthlyData,
   MonthlyReport,
@@ -40,6 +41,13 @@ export const monthlyDataApi = createApi({
       }),
       providesTags: [{ type: 'MonthlyData', id: 'LIST' }],
     }),
+    getFlowReport: builder.query<FlowReport, string | undefined>({
+      query: (month) => ({
+        url: month ? `reports/flow?month=${encodeURIComponent(month)}` : 'reports/flow',
+        method: 'GET',
+      }),
+      providesTags: [{ type: 'MonthlyData', id: 'LIST' }],
+    }),
   }),
 });
 
@@ -48,4 +56,5 @@ export const {
   useGetYearlyComparisonQuery,
   useGetReportMonthsQuery,
   useGetMonthlyReportQuery,
+  useGetFlowReportQuery,
 } = monthlyDataApi;

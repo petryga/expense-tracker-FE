@@ -20,33 +20,6 @@ export const buildCategoryTree = (categories: CategoryRecord[]): Category[] => {
   }));
 };
 
-export const getDataByMonth = (
-  expenses?: Data[],
-): {
-  [key: string]: Data[];
-} => {
-  if (!expenses || !expenses.length) {
-    const thisMonthAndYear = new Date().toISOString().slice(0, 7);
-    return { [thisMonthAndYear]: [] };
-  }
-
-  const data = expenses?.reduce<{ [key: string]: Data[] }>((acc, expense) => {
-    const month = new Date(expense.datePosted).toISOString().slice(0, 7);
-    if (!acc[month]) {
-      acc[month] = [];
-    }
-    acc[month].push(expense);
-    return acc;
-  }, {});
-
-  return Object.keys(data)
-    .sort((a, b) => (a < b ? 1 : -1))
-    .reduce<{ [key: string]: Data[] }>((acc, key) => {
-      acc[key] = data[key];
-      return acc;
-    }, {});
-};
-
 export const getCurrentMonthPath = () => {
   const currentMonth = format(new Date(), 'yyyy-MM');
   return `/expenses/${currentMonth}`;

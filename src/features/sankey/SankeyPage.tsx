@@ -1,7 +1,6 @@
 import { FC, useMemo, useState } from 'react';
 import { withSidebar } from '../../components/sidebar/withSideBar';
-import { useGetIncomeEntriesQuery } from '../../services/income/incomeApi';
-import { useGetExpensesQuery } from '../../services/expenses/expensesApi';
+import { useGetFlowReportQuery } from '../../services/monthlyData/monthlyDataApi';
 import { format, parseISO } from 'date-fns';
 import { ResponsiveSankey } from '@nivo/sankey';
 import { Text, type TextProps } from '@nivo/text';
@@ -36,13 +35,11 @@ function SankeyNodeLabel(props: TextProps) {
 
 const SankeyPage: FC = () => {
   const [selectedMonth, setSelectedMonth] = useState<string | undefined>(undefined);
-  const { data: incomeData } = useGetIncomeEntriesQuery({});
-  const { data: expensesResponse } = useGetExpensesQuery({});
-  const expenses = expensesResponse?.data;
+  const { data: report } = useGetFlowReportQuery(selectedMonth);
 
   const { nodes, links, incomeAmount, expenseTotal, availableMonths, activeMonth } = useMemo(
-    () => buildSankeyData(incomeData, expenses, selectedMonth),
-    [incomeData, expenses, selectedMonth],
+    () => buildSankeyData(report),
+    [report],
   );
 
   const sankeyData = useMemo(() => {

@@ -1,7 +1,5 @@
 import {
   GridRowModesModel,
-  GridPaginationModel,
-  GridSortModel,
   GridRowId,
   GridRowModes,
   GridFilterModel,
@@ -33,18 +31,6 @@ export interface EditToolbarProps {
   recurringDisabled?: boolean;
   accounts: AccountRecord[];
 }
-
-export interface QueryOptions {
-  pageModel: GridPaginationModel;
-  sortModel: GridSortModel;
-  searchTerm: string;
-  rowCount: number;
-}
-
-export type ContentComponentProps = {
-  rows: Data[] | undefined;
-  setRows: Dispatch<SetStateAction<Data[]>>;
-};
 
 export type TableColumns = {
   rowModesModel: Record<GridRowId, { mode: GridRowModes }>;

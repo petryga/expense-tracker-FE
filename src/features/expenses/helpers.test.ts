@@ -1,12 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { format } from 'date-fns';
-import {
-  buildCategoryTree,
-  Currency,
-  getCurrentMonthPath,
-  getDataByMonth,
-  processExpensesData,
-} from './helpers';
+import { buildCategoryTree, Currency, getCurrentMonthPath, processExpensesData } from './helpers';
 import type { Data } from '../../services/expenses/expensesApi.types';
 import type { CategoryRecord } from '../../services/categories/categoriesApi.types';
 
@@ -44,28 +38,6 @@ describe('buildCategoryTree', () => {
 
   it('returns an empty array for no records', () => {
     expect(buildCategoryTree([])).toEqual([]);
-  });
-});
-
-describe('getDataByMonth', () => {
-  it('groups expenses by year-month, sorted descending', () => {
-    const expenses = [
-      makeExpense({ datePosted: '2026-05-01' }),
-      makeExpense({ datePosted: '2026-07-11' }),
-      makeExpense({ datePosted: '2026-05-15' }),
-    ];
-
-    const result = getDataByMonth(expenses);
-
-    expect(Object.keys(result)).toEqual(['2026-07', '2026-05']);
-    expect(result['2026-05']).toHaveLength(2);
-    expect(result['2026-07']).toHaveLength(1);
-  });
-
-  it('returns the current month with an empty array when there is no data', () => {
-    const result = getDataByMonth([]);
-    const currentMonth = new Date().toISOString().slice(0, 7);
-    expect(result).toEqual({ [currentMonth]: [] });
   });
 });
 

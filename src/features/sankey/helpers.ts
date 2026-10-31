@@ -1,10 +1,6 @@
 import { format, parseISO } from 'date-fns';
-import { Data as ExpenseData } from '../../services/expenses/expensesApi.types';
-import { IncomeData } from '../../services/income/incomeApi.types';
-import { convertAmount } from '../../utils/currency';
+import type { FlowReport } from '../../services/monthlyData/monthlyData.types';
 import { formatNumberWithCommas } from '../../utils';
-import { Currency } from '../expenses/helpers';
-import { IncomeCategories } from '../income/helpers';
 
 type SankeyNode = { name: string; color?: string; fill?: string };
 type SankeyLink = {
@@ -13,12 +9,6 @@ type SankeyLink = {
   value: number;
   color?: string;
 };
-
-const ALLOWED_INCOME_CATEGORIES = new Set([
-  IncomeCategories.BANK_ACCOUNTS,
-  IncomeCategories.CASH,
-  IncomeCategories.INVESTMENTS,
-]);
 
 export const COLORS = [
   '#0ea5e9',
@@ -33,20 +23,6 @@ export const COLORS = [
   '#e11d48',
 ];
 const SAVINGS_COLOR = '#22c55e';
-
-const toUsd = (amount: number, currency: Currency | '', year?: number, month?: number) => {
-  if (!Number.isFinite(amount)) return 0;
-  if (currency === Currency.CAD) {
-    return convertAmount({
-      amount,
-      fromCurrency: Currency.CAD,
-      toCurrency: Currency.USD,
-      year,
-      month,
-    });
-  }
-  return amount;
-};
 
 // A signed dollar amount for the header totals / node labels, e.g.
 // 150.4 -> "$150" and -75 -> "-$75".
@@ -75,10 +51,10 @@ export const splitTrailingParenthetical = (label: string): [string, string | nul
   return match ? [match[1].trim(), match[2].trim()] : [label, null];
 };
 
+// The BE decides which months are comparable and does the sums and the CAD->USD
+// conversion; this only turns its numbers into chart nodes and links.
 export const buildSankeyData = (
-  incomeEntries?: IncomeData[],
-  expenses?: ExpenseData[],
-  selectedMonth?: string,
+  report?: FlowReport,
 ): {
   nodes: SankeyNode[];
   links: SankeyLink[];
@@ -90,121 +66,33 @@ export const buildSankeyData = (
   cashSavings: number;
   investmentGrowth: number;
 } => {
-  const empty = {
+  const availableMonths = report?.availableMonths ?? [];
+  const activeMonth = report?.activeMonth ?? undefined;
+  const base = {
     nodes: [] as SankeyNode[],
     links: [] as SankeyLink[],
     monthLabel: '',
     incomeAmount: 0,
-    expenseTotal: 0,
-    availableMonths: [] as string[],
-    cashSavings: 0,
-    investmentGrowth: 0,
+    expenseTotal: report?.expenseTotal ?? 0,
+    availableMonths,
+    activeMonth,
+    cashSavings: report?.cashSavings ?? 0,
+    investmentGrowth: report?.investmentGrowth ?? 0,
   };
 
-  if (!incomeEntries?.length) return empty;
-
-  // Bank/cash and investment balances are tracked separately (not just
-  // combined into totalsByMonth) so the month-over-month "savings" swing can
-  // be attributed to money you actually set aside (cashSavings) vs. your
-  // investments simply appreciating or being contributed to
-  // (investmentGrowth) -- see buildSankeyData's Savings node label below.
-  const totalsByMonth: Record<string, number> = {};
-  const cashTotalsByMonth: Record<string, number> = {};
-  const investTotalsByMonth: Record<string, number> = {};
-
-  incomeEntries.forEach((entry) => {
-    if (!entry.date || !ALLOWED_INCOME_CATEGORIES.has(entry.category as IncomeCategories)) {
-      return;
-    }
-
-    const month = entry.date.slice(0, 7);
-    const [year, mon] = month.split('-').map(Number);
-    const raw = typeof entry.amount === 'number' ? entry.amount : parseFloat(String(entry.amount));
-    const usd = toUsd(raw, entry.currency as Currency, year, mon);
-
-    totalsByMonth[month] = (totalsByMonth[month] ?? 0) + usd;
-    if (entry.category === IncomeCategories.INVESTMENTS) {
-      investTotalsByMonth[month] = (investTotalsByMonth[month] ?? 0) + usd;
-    } else {
-      cashTotalsByMonth[month] = (cashTotalsByMonth[month] ?? 0) + usd;
-    }
-  });
-
-  const months = Object.keys(totalsByMonth).sort();
-  const expenseMonths = new Set(
-    (expenses ?? []).filter((e) => e.amount > 0).map((e) => e.datePosted.slice(0, 7)),
-  );
-  const monthsWithExpenses = months.filter((month, idx) => expenseMonths.has(month) && idx > 0);
-
-  if (monthsWithExpenses.length < 1) return empty;
-
-  const desiredIndex = selectedMonth
-    ? monthsWithExpenses.indexOf(selectedMonth)
-    : monthsWithExpenses.length - 1;
-  const activeIndex = desiredIndex >= 0 ? desiredIndex : monthsWithExpenses.length - 1;
-  const previousIndex = activeIndex - 1;
-
-  if (previousIndex < 0) {
-    return {
-      ...empty,
-      availableMonths: monthsWithExpenses,
-      activeMonth: monthsWithExpenses[activeIndex],
-    };
+  if (!report || !activeMonth || report.incomeAmount <= 0 || !report.categories.length) {
+    return base;
   }
 
-  const currentMonth = monthsWithExpenses[activeIndex];
-  const previousMonth = monthsWithExpenses[previousIndex];
-  const savings = Math.abs(
-    parseFloat((totalsByMonth[currentMonth] - totalsByMonth[previousMonth]).toFixed(2)),
-  );
-
-  // These are a breakdown of the same swing `savings` captures, not a
-  // separate figure -- cashSavings + investmentGrowth always equals the
-  // (signed) change that `savings` takes the absolute value of. Splitting
-  // them out is display-only, distinguishing money you actually set aside
-  // in bank/cash accounts from your investments moving on their own.
-  const cashSavings = parseFloat(
-    ((cashTotalsByMonth[currentMonth] ?? 0) - (cashTotalsByMonth[previousMonth] ?? 0)).toFixed(2),
-  );
-  const investmentGrowth = parseFloat(
-    ((investTotalsByMonth[currentMonth] ?? 0) - (investTotalsByMonth[previousMonth] ?? 0)).toFixed(
-      2,
-    ),
-  );
-
-  const [currentYear, currentMonthNumber] = currentMonth.split('-').map(Number);
-  const expensesByCategory = (expenses ?? []).reduce<Record<string, number>>((acc, expense) => {
-    if (!expense.datePosted.startsWith(currentMonth) || expense.amount <= 0) {
-      return acc;
-    }
-    acc[expense.category] =
-      (acc[expense.category] ?? 0) +
-      toUsd(expense.amount, expense.currency as Currency, currentYear, currentMonthNumber);
-    return acc;
-  }, {});
-
-  const categories = Object.entries(expensesByCategory).sort((a, b) => b[1] - a[1]);
-  const expenseTotal = categories.reduce((acc, [, v]) => acc + v, 0);
-  const incomeGross = expenseTotal + savings;
-
-  if (incomeGross <= 0) {
-    return {
-      ...empty,
-      expenseTotal,
-      availableMonths: monthsWithExpenses,
-      activeMonth: currentMonth,
-      cashSavings,
-      investmentGrowth,
-    };
-  }
+  const { categories, savings, cashSavings, investmentGrowth } = report;
 
   const nodes: SankeyNode[] = [
     {
-      name: `Income • $${formatNumberWithCommas(incomeGross.toFixed(0))}`,
+      name: `Income • $${formatNumberWithCommas(report.incomeAmount.toFixed(0))}`,
       color: '#0ea5e9',
       fill: '#0ea5e9',
     },
-    ...categories.map(([category, value], idx) => ({
+    ...categories.map(({ category, value }, idx) => ({
       name: `${category} • $${formatNumberWithCommas(value.toFixed(0))}`,
       color: COLORS[idx % COLORS.length],
       fill: COLORS[idx % COLORS.length],
@@ -221,33 +109,22 @@ export const buildSankeyData = (
   ];
 
   const links: SankeyLink[] = [
-    ...categories.map(([_, value], index) => ({
+    ...categories.map(({ value }, index) => ({
       source: 0,
       target: index + 1,
-      value: parseFloat(value.toFixed(2)),
+      value,
       color: nodes[index + 1].color,
     })),
     ...(savings > 0
-      ? [
-          {
-            source: 0,
-            target: categories.length + 1,
-            value: parseFloat(savings.toFixed(2)),
-            color: SAVINGS_COLOR,
-          },
-        ]
+      ? [{ source: 0, target: categories.length + 1, value: savings, color: SAVINGS_COLOR }]
       : []),
   ];
 
   return {
+    ...base,
     nodes,
     links,
-    monthLabel: format(parseISO(`${currentMonth}-01`), 'MMMM yyyy'),
-    incomeAmount: incomeGross,
-    expenseTotal,
-    availableMonths: monthsWithExpenses,
-    activeMonth: currentMonth,
-    cashSavings,
-    investmentGrowth,
+    monthLabel: format(parseISO(`${activeMonth}-01`), 'MMMM yyyy'),
+    incomeAmount: report.incomeAmount,
   };
 };

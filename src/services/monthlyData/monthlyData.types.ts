@@ -23,10 +23,6 @@ export interface GetArgs {
   currency?: string;
 }
 
-export type DeleteArgs = {
-  id: string;
-};
-
 export type PostArgs = {
   data: MonthlyData;
 };
@@ -68,4 +64,16 @@ export interface MonthlyReport {
   dataByCategory: CategoryBreakdown[];
   totalSpentCad: number;
   totalSpentUsd: number;
+}
+
+// All amounts in USD; incomeAmount is expenses plus savings.
+export interface FlowReport {
+  availableMonths: string[];
+  activeMonth: string | null;
+  incomeAmount: number;
+  expenseTotal: number;
+  savings: number;
+  cashSavings: number;
+  investmentGrowth: number;
+  categories: { category: string; value: number }[];
 }
