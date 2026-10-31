@@ -33,7 +33,7 @@ function SankeyNodeLabel(props: TextProps) {
   );
 }
 
-const SankeyPage: FC = () => {
+export const SankeyPage: FC = () => {
   const [selectedMonth, setSelectedMonth] = useState<string | undefined>(undefined);
   // selectedMonth is only ever the user's own pick; until they pick one (or if
   // their pick isn't comparable) the BE answers with the latest eligible month.

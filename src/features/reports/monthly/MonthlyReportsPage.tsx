@@ -7,7 +7,7 @@ import { VisualizedData } from './VisualizedData';
 import classnames from 'classnames';
 import styles from './MonthlyReportsPage.module.css';
 
-const MonthlyReportsPage: FC = () => {
+export const MonthlyReportsPage: FC = () => {
   const { data: reportMonths } = useGetReportMonthsQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });

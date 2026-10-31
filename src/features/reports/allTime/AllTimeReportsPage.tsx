@@ -17,7 +17,7 @@ const MONTH_RANGE_OPTIONS = [
   { label: 'All time', value: 'all' },
 ];
 
-const AllTimeReportsPage: FC = () => {
+export const AllTimeReportsPage: FC = () => {
   const [monthRange, setMonthRange] = useState<number | null>(12);
   const [wealthKey, setWealthKey] = useState(ALL_WEALTH);
   const { data } = useGetMonthlyDataQuery({}, { refetchOnMountOrArgChange: true });
