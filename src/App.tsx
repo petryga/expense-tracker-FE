@@ -12,6 +12,7 @@ const AllTimeReportsPage = lazy(() => import('./features/reports/allTime/AllTime
 const SankeyPage = lazy(() => import('./features/sankey/SankeyPage'));
 const LoginPage = lazy(() => import('./features/auth/LoginPage'));
 const SignupPage = lazy(() => import('./features/auth/SignupPage'));
+const ImportsPage = lazy(() => import('./features/imports/ImportsPage'));
 const SettingsPage = lazy(() => import('./features/settings/SettingsPage'));
 
 function App() {
@@ -65,6 +66,14 @@ function App() {
         element={
           <RequireAuth>
             <SankeyPage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path={`${URLS.imports}/:importId?`}
+        element={
+          <RequireAuth>
+            <ImportsPage />
           </RequireAuth>
         }
       />

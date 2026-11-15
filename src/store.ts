@@ -6,6 +6,7 @@ import { recurringExpensesApi } from './services/recurringExpenses/recurringExpe
 import { recurringIncomeApi } from './services/recurringIncome/recurringIncomeApi';
 import { categoriesApi } from './services/categories/categoriesApi';
 import { accountsApi } from './services/accounts/accountsApi';
+import { importsApi } from './services/imports/importsApi';
 import sidebarReducer from './components/sidebar/sidebarSlice';
 
 // A factory so tests can start from an empty cache; the app uses the one `store`.
@@ -19,6 +20,7 @@ export const createStore = () =>
       [recurringIncomeApi.reducerPath]: recurringIncomeApi.reducer,
       [categoriesApi.reducerPath]: categoriesApi.reducer,
       [accountsApi.reducerPath]: accountsApi.reducer,
+      [importsApi.reducerPath]: importsApi.reducer,
       rightSidebar: sidebarReducer,
     },
 
@@ -31,6 +33,7 @@ export const createStore = () =>
         recurringIncomeApi.middleware,
         categoriesApi.middleware,
         accountsApi.middleware,
+        importsApi.middleware,
       ),
   });
 

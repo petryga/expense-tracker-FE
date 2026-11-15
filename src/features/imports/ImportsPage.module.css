@@ -1,0 +1,168 @@
+/* Smaller than the default h1 (2.5em): this page has a lot under its title. */
+.pageTitle {
+  font-size: 1.75em;
+  margin: 0.4em 0 0.8em;
+}
+
+/* Matches the Settings panels and the month bar on the Expenses page. */
+.panel {
+  background-color: var(--surface);
+  box-shadow: 0 2px 6px 0 var(--shadow-color);
+  border: solid 1px var(--border-strong);
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.uploadRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #eeb12e;
+}
+
+.fileName {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  flex: 1;
+}
+
+.hint {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.errors {
+  margin: 6px 0 0;
+  padding-left: 20px;
+}
+
+.importsBar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 0 0 15px;
+}
+
+/* A faint tint of the app's gold, so the header reads as its own band in both
+   themes (the grey surfaces are near-white in light mode). */
+.importHeader {
+  background-color: rgba(238, 177, 46, 0.1);
+  box-shadow: 0 2px 6px 0 var(--shadow-color);
+  border: solid 1px var(--border-strong);
+  border-bottom: 2px solid #eeb12e;
+  padding: 12px 20px 10px;
+  margin-bottom: 16px;
+}
+
+/* The shared tab bar draws a divider under the tabs; the header card above
+   already separates this section, so drop it here only. */
+.tabs nav {
+  border-bottom: none;
+}
+
+.importTitle {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.summary {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 18px;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  margin-top: 4px;
+}
+
+.unbalanced {
+  color: #d9534f;
+  font-weight: 600;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.toolbarNote {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  padding-left: 8px;
+}
+
+.cellStack {
+  display: flex;
+  flex-direction: column;
+  padding: 6px 0;
+  line-height: 1.3;
+  min-width: 0;
+}
+
+.cellNote {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  white-space: normal;
+}
+
+.placeholder {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.credit {
+  color: #4caf50;
+}
+
+.actionButton {
+  min-width: 0 !important;
+  padding: 2px 8px !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  color: var(--text-muted) !important;
+}
+
+.actionButtonActive {
+  color: #eeb12e !important;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0 20px;
+  min-height: 56px;
+  border-top: 1px solid var(--border);
+  font-size: 15px;
+  color: #eeb12e;
+}
+
+.footerBad {
+  color: #d9534f;
+}
+
+.titleRow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+}
+
+.empty {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 40px 0;
+}
