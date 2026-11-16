@@ -1,9 +1,4 @@
-import {
-  GridRowModesModel,
-  GridRowId,
-  GridRowModes,
-  GridFilterModel,
-} from '@mui/x-data-grid';
+import { GridRowModesModel, GridRowId, GridRowModes, GridFilterModel } from '@mui/x-data-grid';
 import { Dispatch, SetStateAction } from 'react';
 import type { Data } from '../../services/expenses/expensesApi.types';
 import type { AccountRecord } from '../../services/accounts/accountsApi.types';

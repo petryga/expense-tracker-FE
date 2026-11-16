@@ -303,6 +303,34 @@ describe('ImportsPage review', () => {
     expect(screen.getByRole('button', { name: 'Confirm 2 rows' })).toBeEnabled();
   }, 8000);
 
+  it('confirms a row ticked as a gift with its real category and the gift flag', async () => {
+    const api = render();
+    api.setRoute(`imports/${ID}/confirm`, () => ({
+      saved: 1,
+      skipped: 1,
+      returned: 0,
+      import: detail(ROWS),
+    }));
+    await screen.findByRole('grid', { name: 'Rows to review' });
+
+    fireEvent.mouseDown(screen.getByRole('combobox', { name: 'Category for WHOLE FOODS MKT' }));
+    fireEvent.click(await screen.findByRole('option', { name: 'Food & Dining - Groceries' }));
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Gift: WHOLE FOODS MKT' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Confirm 2 rows' }));
+
+    await waitFor(() => expect(api.callsTo(`imports/${ID}/confirm`)).toHaveLength(1));
+    const call = vi
+      .mocked(fetch)
+      .mock.calls.find(([input]) => String((input as Request).url ?? input).endsWith('/confirm'));
+    expect((await (call![0] as Request).json()).rows[0]).toEqual({
+      id: 'groceries',
+      action: 'save',
+      category: 'Groceries',
+      description: 'whole foods mkt',
+      isGift: true,
+    });
+  });
+
   it('shows the file upload locally, and only the sample button to the demo account', async () => {
     render();
     expect(await screen.findByRole('region', { name: 'Upload a statement' })).toBeInTheDocument();

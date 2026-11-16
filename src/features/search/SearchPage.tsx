@@ -1,9 +1,9 @@
 import { FC, createContext, useContext, useMemo, useState } from 'react';
 import { withSidebar } from '../../components/sidebar/withSideBar';
 import { SearchBar } from './SearchBar';
-import { useGetExpensesQuery } from '../../services/expenses/expensesApi';
+import { useGetExpensesQuery, useUpdateExpenseMutation } from '../../services/expenses/expensesApi';
 import { tableStyles } from '../expenses/styles';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, type GridRowModesModel } from '@mui/x-data-grid';
 import { createSearchColumns } from '../expenses/searchColumns';
 import type { Data } from '../../services/expenses/expensesApi.types';
 import styles from './SearchPage.module.css';
@@ -45,10 +45,12 @@ const CustomFooter = () => {
   );
 };
 
-const SearchPage: FC = () => {
+export const SearchPage: FC = () => {
   const [debouncedValue, setDebouncedValue] = useState('');
   const [selectedRows, setSelectedRows] = useState<Data[]>([]);
   const [rows, setRows] = useState<Data[]>([]);
+  const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
+  const [updateExpense] = useUpdateExpenseMutation();
   const {
     data: { data, expensesTotal } = {},
     isFetching,
@@ -107,7 +109,20 @@ const SearchPage: FC = () => {
     handleCheckboxChange,
     categories,
     accounts: accounts ?? [],
+    rowModesModel,
+    setRowModesModel,
+    rows,
+    setRows,
   });
+
+  // Same save path as the expenses grid. The search re-runs afterwards, so a
+  // row edited out of the search (e.g. given a real category while searching
+  // "Uncategorized") drops off the list.
+  const handleRowUpdate = async (newRow: Data) => {
+    await updateExpense({ id: newRow.id!, data: newRow }).unwrap();
+    setRows((current) => current.map((row) => (row.id === newRow.id ? newRow : row)));
+    return newRow;
+  };
 
   return (
     <>
@@ -125,6 +140,11 @@ const SearchPage: FC = () => {
           rows={rows || []}
           loading={isFetching || isLoading}
           columns={columns}
+          editMode="row"
+          rowModesModel={rowModesModel}
+          onRowModesModelChange={setRowModesModel}
+          processRowUpdate={handleRowUpdate}
+          onProcessRowUpdateError={() => {}}
           sx={tableStyles}
           hideFooterPagination
           hideFooterSelectedRowCount

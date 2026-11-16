@@ -59,7 +59,7 @@ describe('buildDecisions', () => {
       row({ id: 'e', status: 'saved' }),
     ];
     const decisions = buildDecisions(rows, {
-      a: { action: 'save', category: 'Groceries', description: '  ' },
+      a: { action: 'save', category: 'Groceries', description: '  ', isGift: false },
     });
     expect(decisions).toEqual([
       { id: 'a', action: 'save', category: 'Groceries', description: 'whole foods mkt' },
@@ -107,4 +107,15 @@ describe('suggestions', () => {
       { id: 's', action: 'save', category: 'Groceries', description: 'whole foods mkt' },
     ]);
   });
+});
+
+it('sends the gift flag only for rows ticked as gifts', () => {
+  const decisions = buildDecisions([row({ id: 'g' }), row({ id: 'n' })], {
+    g: { action: 'save', category: 'Clothing', description: 'scarf', isGift: true },
+    n: { action: 'save', category: 'Clothing', description: 'jeans', isGift: false },
+  });
+  expect(decisions).toEqual([
+    { id: 'g', action: 'save', category: 'Clothing', description: 'scarf', isGift: true },
+    { id: 'n', action: 'save', category: 'Clothing', description: 'jeans' },
+  ]);
 });

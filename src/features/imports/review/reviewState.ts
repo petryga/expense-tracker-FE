@@ -8,6 +8,8 @@ export interface RowChoice {
   action: ConfirmAction;
   category: string;
   description: string;
+  // Bought as a gift: saved with its real category plus the gift flag.
+  isGift: boolean;
 }
 
 // A refund paired with a purchase that is already an expense: confirming
@@ -20,6 +22,7 @@ export const defaultChoice = (row: ImportRow): RowChoice => ({
   action: returnsSavedPurchase(row) ? 'return' : row.kind === 'refund' ? 'skip' : 'save',
   category: row.category ?? row.suggestedCategory ?? '',
   description: row.suggestedDescription,
+  isGift: false,
 });
 
 // Shown under the category while it is still the suggestion.
@@ -53,6 +56,7 @@ export const buildDecisions = (
             action: 'save',
             category: choice.category,
             description: choice.description.trim() || row.suggestedDescription,
+            ...(choice.isGift ? { isGift: true } : {}),
           },
         ];
       }

@@ -1,4 +1,4 @@
-import { Button, MenuItem, TextField } from '@mui/material';
+import { Button, Checkbox, MenuItem, TextField } from '@mui/material';
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import type { ConfirmAction, ImportRow } from '../../../services/imports/importsApi.types';
 import { formatDate } from '../../../utils';
@@ -113,6 +113,21 @@ export const createReviewColumns = ({
         </div>
       );
     },
+  },
+  {
+    field: 'isGift',
+    headerName: 'Gift',
+    width: 60,
+    sortable: false,
+    renderCell: ({ row }: GridRenderCellParams<ReviewGridRow>) =>
+      row.action === 'save' ? (
+        <Checkbox
+          size="small"
+          checked={row.isGift}
+          onChange={(e) => setChoice(row, { isGift: e.target.checked })}
+          slotProps={{ input: { 'aria-label': `Gift: ${row.bankDescription}` } }}
+        />
+      ) : null,
   },
   {
     field: 'action',

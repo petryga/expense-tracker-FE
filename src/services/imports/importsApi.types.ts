@@ -84,6 +84,7 @@ export interface ConfirmDecision {
   action: ConfirmAction;
   category?: string;
   description?: string;
+  isGift?: boolean;
 }
 
 export interface ConfirmArgs {

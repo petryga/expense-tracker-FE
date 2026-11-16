@@ -12,6 +12,8 @@ export type Data = {
   year?: number;
   month?: number;
   currency: Currency | '';
+  // Bought as a gift: keeps its real category, counts under Gifts in reports.
+  isGift?: boolean;
 };
 
 export interface GetExpensesData {
@@ -46,6 +48,7 @@ export type DataResponse = {
   year: number;
   month: number;
   currency: Currency | '';
+  isGift?: boolean;
 };
 
 export type GetArgs = {

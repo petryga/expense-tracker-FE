@@ -6,7 +6,6 @@ import {
   formatDate,
   lastDayOfMonth,
   parseLocalDateString,
-  transformCategoriesForDropdown,
 } from '../../utils';
 import type { TableColumns } from './ExpensesPage.types';
 import { Checkbox } from '@mui/material';
@@ -16,6 +15,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { renderEditCell } from '../../components/amountTableCell/AmountTableCell';
 import { renderEditCell as renderDateEditCell } from '../../components/dateTableCell/DateTableCell';
 import { iconAction, createRowModeHandlers } from './gridActions';
+import { categoryColumn, giftColumn } from './sharedColumns';
 
 export function createTableColumns({
   rowModesModel,
@@ -171,14 +171,8 @@ export function createTableColumns({
       valueOptions: [Currency.CAD, Currency.USD],
       editable: true,
     },
-    {
-      field: 'category',
-      headerName: 'Category',
-      width: 250,
-      type: 'singleSelect',
-      valueOptions: transformCategoriesForDropdown(categories),
-      editable: true,
-    },
+    giftColumn(),
+    categoryColumn(categories),
     {
       field: 'actions',
       type: 'actions',
