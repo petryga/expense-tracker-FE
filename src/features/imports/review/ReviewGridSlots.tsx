@@ -36,12 +36,21 @@ export const ReconciliationFooter: FC = () => {
   const ctx = useContext(ReviewContext);
   if (!ctx) return null;
   const r = ctx.detail.reconciliation;
+  const { byKind } = ctx.detail;
+  // Purchases versus everything paid back onto the card (payments, refunds,
+  // rewards): the file's total is the two together, so it can be negative.
+  const charges = byKind.charge?.cents ?? 0;
+  const credits = ['refund', 'payment', 'reward'].reduce(
+    (sum, kind) => sum + (byKind[kind]?.cents ?? 0),
+    0,
+  );
+  const earlier = r.duplicateCount ? `, plus ${r.duplicateCount} imported earlier` : '';
   return (
     <div className={`${styles.footer} ${r.balanced ? '' : styles.footerBad}`}>
       <span>
         {r.balanced
-          ? `Reconciled with the file: ${money(r.fileTotalCents)}`
-          : `Does not reconcile: file ${money(r.fileTotalCents)}, imported ${money(r.importedCents + r.duplicateTotalCents)}`}
+          ? `✓ Every row in the file is here: charges ${money(charges)}, payments and credits ${money(credits)}${earlier}.`
+          : `Rows are missing: the file adds up to ${money(r.fileTotalCents)}, but the rows here add up to ${money(r.importedCents + r.duplicateTotalCents)}.`}
       </span>
       <span>
         {ctx.detail.rowCount} rows · {ctx.detail.draftCount} to review

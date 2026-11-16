@@ -2,7 +2,10 @@ import { type FC, useMemo, useState } from 'react';
 import { Alert } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { useGetCategoriesQuery } from '../../../services/categories/categoriesApi';
-import { useConfirmImportMutation } from '../../../services/imports/importsApi';
+import {
+  useChooseAmazonOrderMutation,
+  useConfirmImportMutation,
+} from '../../../services/imports/importsApi';
 import type { ImportDetail, ImportRow } from '../../../services/imports/importsApi.types';
 import { buildCategoryTree } from '../../expenses/helpers';
 import { tableStyles } from '../../expenses/styles';
@@ -11,7 +14,14 @@ import { ErrorBox } from '../components';
 import { createReviewColumns, type ReviewGridRow } from './reviewColumns';
 import { ReviewContext } from './reviewContext';
 import { ReconciliationFooter, ReviewToolbar } from './ReviewGridSlots';
-import { buildDecisions, defaultChoice, pendingCount, type RowChoice } from './reviewState';
+import {
+  buildDecisions,
+  defaultChoice,
+  defaultItemChoice,
+  pendingCount,
+  splitItems,
+  type RowChoice,
+} from './reviewState';
 import styles from '../ImportsPage.module.css';
 
 // The "To review" tab: one row per draft, all editable, one confirm for all.
@@ -24,17 +34,53 @@ export const ReviewGrid: FC<{ detail: ImportDetail }> = ({ detail }) => {
   const [choices, setChoices] = useState<Record<string, RowChoice>>({});
   const [confirm, { isLoading, error, data: lastResult }] = useConfirmImportMutation();
 
+  const [chooseOrder, choosing] = useChooseAmazonOrderMutation();
+
   const drafts = detail.rows.filter((row) => row.status === 'draft');
   const choiceFor = (row: ImportRow) => choices[row.id] ?? defaultChoice(row);
-  const setChoice = (row: ImportRow, patch: Partial<RowChoice>) =>
-    setChoices((prev) => ({ ...prev, [row.id]: { ...choiceFor(row), ...patch } }));
-  const rows: ReviewGridRow[] = drafts.map((row) => ({
-    ...row,
-    ...choiceFor(row),
-    bankDescription: row.description,
-  }));
+  const setChoice = (row: ReviewGridRow, patch: Partial<RowChoice>) =>
+    setChoices((prev) => ({
+      ...prev,
+      [row.id]: { ...(prev[row.id] ?? pick(row)), ...patch },
+    }));
+  const pick = (row: ReviewGridRow): RowChoice => ({
+    action: row.action,
+    category: row.category,
+    description: row.description,
+    isGift: row.isGift,
+  });
+  // A split Amazon charge is followed by one editable row per item.
+  const rows: ReviewGridRow[] = drafts.flatMap((row) => {
+    const parent: ReviewGridRow = { ...row, ...choiceFor(row), bankDescription: row.description };
+    if (parent.action !== 'save') return [parent];
+    return [
+      parent,
+      ...splitItems(row).map((item): ReviewGridRow => ({
+        ...row,
+        ...(choices[item.id] ?? defaultItemChoice(item)),
+        id: item.id,
+        amountCents: item.amountCents,
+        suggestedDescription: item.suggestedDescription,
+        suggestedCategory: item.suggestedCategory,
+        suggestionSource: item.suggestionSource,
+        suggestionStatus: item.suggestionStatus,
+        amexCategory: null,
+        matched: null,
+        items: [],
+        amazonStatus: null,
+        bankDescription: item.description,
+        quantity: item.quantity,
+        itemOf: row,
+      })),
+    ];
+  });
   const decisions = buildDecisions(detail.rows, choices);
-  const columns = createReviewColumns({ categoryOptions, setChoice });
+  const columns = createReviewColumns({
+    categoryOptions,
+    setChoice,
+    chooseOrder: (row, orderKey) => chooseOrder({ id: detail.id, rowId: row.id, orderKey }),
+    choosing: choosing.isLoading,
+  });
 
   if (!drafts.length) {
     return <p className={styles.empty}>Everything in this import has been reviewed.</p>;
@@ -55,6 +101,7 @@ export const ReviewGrid: FC<{ detail: ImportDetail }> = ({ detail }) => {
       }}
     >
       <ErrorBox error={error} />
+      <ErrorBox error={choosing.error} />
       {lastResult && (
         <Alert severity="success" sx={{ mb: 1.5 }}>
           Saved {lastResult.saved}, skipped {lastResult.skipped}, returned {lastResult.returned}.

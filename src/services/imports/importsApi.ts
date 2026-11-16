@@ -3,6 +3,7 @@ import { baseQueryWithAuth } from '../api';
 import { expensesApi } from '../expenses/expensesApi';
 import { monthlyDataApi } from '../monthlyData/monthlyDataApi';
 import type {
+  AmazonUploadResult,
   ConfirmArgs,
   ConfirmResult,
   ImportDetail,
@@ -38,6 +39,25 @@ export const importsApi = createApi({
     importSampleStatement: builder.mutation<ImportDetail | UploadNothingNew, void>({
       query: () => ({ url: 'imports/sample', method: 'POST' }),
       invalidatesTags: ['Import'],
+    }),
+
+    // Amazon's order history: Amazon charges split into their items.
+    uploadAmazonOrders: builder.mutation<AmazonUploadResult, { csv: string }>({
+      query: (body) => ({ url: 'imports/amazon', method: 'POST', body }),
+      invalidatesTags: ['Import'],
+    }),
+
+    // The order an Amazon charge paid for, or null to keep the charge whole.
+    chooseAmazonOrder: builder.mutation<
+      ImportDetail,
+      { id: string; rowId: string; orderKey: string | null }
+    >({
+      query: ({ id, rowId, orderKey }) => ({
+        url: `imports/${id}/rows/${rowId}/amazon`,
+        method: 'POST',
+        body: { orderKey },
+      }),
+      invalidatesTags: (_result, _error, { id }) => [{ type: 'Import', id }],
     }),
 
     confirmImport: builder.mutation<ConfirmResult, ConfirmArgs>({
@@ -99,4 +119,6 @@ export const {
   useConfirmImportMutation,
   useDeleteImportMutation,
   useReopenRowsMutation,
+  useUploadAmazonOrdersMutation,
+  useChooseAmazonOrderMutation,
 } = importsApi;

@@ -5,6 +5,7 @@ import { URLS } from '../../components/sidebar/constants';
 import { useGetImportsQuery } from '../../services/imports/importsApi';
 import { ImportPicker } from './ImportPicker';
 import { ImportReview } from './review/ImportReview';
+import { AmazonPanel } from './upload/AmazonPanel';
 import { SamplePanel } from './upload/SamplePanel';
 import { UploadPanel } from './upload/UploadPanel';
 import styles from './ImportsPage.module.css';
@@ -25,6 +26,7 @@ export const ImportsPage: FC = () => {
         <ImportPicker imports={imports} selectedId={importId} onSelect={open} />
       )}
       {list?.uploadAllowed && <UploadPanel onUploaded={open} />}
+      {list?.uploadAllowed && <AmazonPanel summary={list.amazon} />}
       {list?.sampleAvailable && <SamplePanel onUploaded={open} />}
       {!isLoading && list && !list.uploadAllowed && !list.sampleAvailable && (
         <p className={styles.empty}>Statement import is not enabled for this account.</p>

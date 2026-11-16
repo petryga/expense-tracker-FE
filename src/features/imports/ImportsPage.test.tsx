@@ -89,13 +89,13 @@ const ROWS = [
   }),
 ];
 
-const render = (api = installFakeApi({}), uploadAllowed = true, query = '') => {
+const render = (api = installFakeApi({}), uploadAllowed = true, query = '', rows = ROWS) => {
   api.setRoute('imports', () => ({
-    data: [detail(ROWS)],
+    data: [detail(rows)],
     uploadAllowed,
     sampleAvailable: !uploadAllowed,
   }));
-  api.setRoute(`imports/${ID}`, () => detail(ROWS));
+  api.setRoute(`imports/${ID}`, () => detail(rows));
   api.setRoute('categories', () => [
     { id: 'f', name: 'Food & Dining', parentCategoryId: null, isDefault: true, budget: null },
     { id: 'g', name: 'Groceries', parentCategoryId: 'f', isDefault: true, budget: null },
@@ -123,7 +123,7 @@ describe('ImportsPage review', () => {
     expect(within(grid).queryByText(/AMAZON.COM\*AB12C/)).not.toBeInTheDocument();
     expect(within(grid).getByText(/Refund with no matching purchase/)).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Returned (1)' })).toBeInTheDocument();
-    expect(screen.getByText(/Reconciled with the file/)).toBeInTheDocument();
+    expect(screen.getByText(/Every row in the file is here/)).toBeInTheDocument();
     expect(api.unhandled).toEqual([]);
   });
 
@@ -344,5 +344,122 @@ describe('ImportsPage review', () => {
       await screen.findByRole('button', { name: 'Import sample statement' }),
     ).toBeInTheDocument();
     expect(screen.queryByRole('region', { name: 'Upload a statement' })).not.toBeInTheDocument();
+  });
+
+  it('shows a split Amazon charge as its items and confirms them together', async () => {
+    const api = installFakeApi({});
+    const amazonItem = (id: string, name: string, cents: number) => ({
+      id,
+      description: name,
+      suggestedDescription: name,
+      amountCents: cents,
+      quantity: 1,
+      category: null,
+      expenseId: null,
+      suggestedCategory: null,
+      suggestionSource: null,
+      suggestionStatus: 'none' as const,
+    });
+    const rows = [
+      row({
+        id: 'amz',
+        description: 'AMAZON MKTPL*TEST0001',
+        amountCents: 1749,
+        amazonStatus: 'matched',
+        items: [
+          amazonItem('i1', 'Test Hose Nozzle', 1250),
+          amazonItem('i2', 'Test Phone Cable', 499),
+        ],
+      }),
+    ];
+    api.setRoute('imports', () => ({
+      data: [detail(rows)],
+      uploadAllowed: true,
+      sampleAvailable: false,
+    }));
+    render(api);
+    api.setRoute(`imports/${ID}`, () => detail(rows));
+    api.setRoute(`imports/${ID}/confirm`, () => ({
+      saved: 1,
+      skipped: 0,
+      returned: 0,
+      import: detail(rows),
+    }));
+
+    expect(await screen.findByText(/split into 2 items below/)).toBeInTheDocument();
+    expect(
+      screen.queryByRole('combobox', { name: 'Category for AMAZON MKTPL*TEST0001' }),
+    ).toBeNull();
+    for (const name of ['Test Hose Nozzle', 'Test Phone Cable']) {
+      fireEvent.mouseDown(screen.getByRole('combobox', { name: `Category for ${name}` }));
+      fireEvent.click(await screen.findByRole('option', { name: 'Food & Dining - Groceries' }));
+    }
+    fireEvent.click(screen.getByRole('button', { name: 'Confirm 1 rows' }));
+
+    await waitFor(() => expect(api.callsTo(`imports/${ID}/confirm`)).toHaveLength(1));
+    const call = vi
+      .mocked(fetch)
+      .mock.calls.find(([input]) => String((input as Request).url ?? input).endsWith('/confirm'));
+    expect((await (call![0] as Request).json()).rows).toEqual([
+      {
+        id: 'amz',
+        action: 'save',
+        items: [
+          { id: 'i1', category: 'Groceries', description: 'Test Hose Nozzle' },
+          { id: 'i2', category: 'Groceries', description: 'Test Phone Cable' },
+        ],
+      },
+    ]);
+  });
+
+  it('lets you pick one of several Amazon orders', async () => {
+    const api = installFakeApi({});
+    const rows = [
+      row({
+        id: 'amz',
+        description: 'AMAZON.COM*TEST0002',
+        amazonStatus: 'ambiguous',
+        amazonCandidates: [
+          {
+            key: 'order-a',
+            orderDate: '2026-03-09',
+            shipDate: '2026-03-09',
+            items: [{ description: 'Test Notebook', amountCents: 1000 }],
+          },
+          {
+            key: 'order-b',
+            orderDate: '2026-03-09',
+            shipDate: '2026-03-09',
+            items: [{ description: 'Test Sticky Notes', amountCents: 1000 }],
+          },
+        ],
+      }),
+    ];
+    api.setRoute(`imports/${ID}/rows/amz/amazon`, () => detail(rows));
+    render(api, true, '', rows);
+
+    fireEvent.mouseDown(
+      await screen.findByRole('combobox', { name: 'Amazon order for AMAZON.COM*TEST0002' }),
+    );
+    fireEvent.click(await screen.findByRole('option', { name: /Test Sticky Notes/ }));
+    await waitFor(() => expect(api.callsTo(`imports/${ID}/rows/amz/amazon`)).toHaveLength(1));
+    const call = vi
+      .mocked(fetch)
+      .mock.calls.find(([input]) => String((input as Request).url ?? input).endsWith('/amazon'));
+    expect(await (call![0] as Request).json()).toEqual({ orderKey: 'order-b' });
+  });
+
+  it('uploads the Amazon order history', async () => {
+    const api = render();
+    api.setRoute('imports/amazon', () => ({
+      kind: 'orders',
+      itemCount: 3,
+      newItemCount: 3,
+      matchedCount: 1,
+    }));
+    const input = await screen.findByLabelText('Amazon order history file');
+    const file = new File(['Order ID,Order Date\n'], 'Order History.csv', { type: 'text/csv' });
+    fireEvent.change(input, { target: { files: [file] } });
+    expect(await screen.findByText(/1 Amazon charges split/)).toBeInTheDocument();
   });
 });
