@@ -14,9 +14,10 @@ export const ReviewToolbar: FC = () => {
     <GridToolbarContainer>
       <div className={styles.toolbar}>
         <span className={styles.toolbarNote}>
+          {ctx.pending > 0 && `Getting suggestions for ${ctx.pending} rows… `}
           {ctx.waiting > 0
             ? `${ctx.waiting} rows still need a category. Rows without one stay here for later.`
-            : 'Every row is decided. Confirm saves them all at once.'}
+            : 'Every row is decided. Check the suggestions, then Confirm saves them all at once.'}
         </span>
         <Button
           sx={goldButton}

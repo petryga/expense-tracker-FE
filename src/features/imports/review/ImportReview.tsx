@@ -7,11 +7,16 @@ import { ErrorBox, FaIcon } from '../components';
 import { DeleteImportDialog } from './DeleteImportDialog';
 import { DoneGrid } from './DoneGrid';
 import { ReviewGrid } from './ReviewGrid';
+import { pendingCount } from './reviewState';
 import styles from '../ImportsPage.module.css';
 
 // One import: title with delete, counts, and a tab per row status.
 export const ImportReview: FC<{ id: string; onRemoved: () => void }> = ({ id, onRemoved }) => {
   const { data: detail, isLoading, error } = useGetImportQuery(id);
+  // While the AI service works in the background, refresh every 2 s so its
+  // suggestions appear without a reload; stop once nothing is pending.
+  const pending = detail ? pendingCount(detail.rows) : 0;
+  useGetImportQuery(id, { pollingInterval: 2000, skip: pending === 0 });
   const [deleteImport, deletion] = useDeleteImportMutation();
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   if (isLoading) return <p className={styles.empty}>Loading…</p>;

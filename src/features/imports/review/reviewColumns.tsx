@@ -3,7 +3,7 @@ import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import type { ConfirmAction, ImportRow } from '../../../services/imports/importsApi.types';
 import { formatDate } from '../../../utils';
 import { Amount } from '../components';
-import { actionsFor, returnsSavedPurchase, type RowChoice } from './reviewState';
+import { actionsFor, returnsSavedPurchase, suggestionNote, type RowChoice } from './reviewState';
 import styles from '../ImportsPage.module.css';
 
 // `description` is what the expense will be called (editable); the bank's own
@@ -80,35 +80,39 @@ export const createReviewColumns = ({
     headerName: 'Category',
     width: 230,
     sortable: false,
-    renderCell: ({ row }: GridRenderCellParams<ReviewGridRow>) =>
-      row.action !== 'save' ? (
-        <span className={styles.placeholder}>—</span>
-      ) : (
-        <TextField
-          select
-          variant="standard"
-          size="small"
-          fullWidth
-          value={row.category}
-          onChange={(e) => setChoice(row, { category: e.target.value })}
-          onKeyDown={stopGridKeys}
-          slotProps={{
-            select: {
-              displayEmpty: true,
-              inputProps: { 'aria-label': `Category for ${row.bankDescription}` },
-            },
-          }}
-        >
-          <MenuItem value="">
-            <span className={styles.placeholder}>Choose…</span>
-          </MenuItem>
-          {categoryOptions.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
+    renderCell: ({ row }: GridRenderCellParams<ReviewGridRow>) => {
+      if (row.action !== 'save') return <span className={styles.placeholder}>—</span>;
+      const note = suggestionNote(row, row.category);
+      return (
+        <div className={styles.cellStack}>
+          <TextField
+            select
+            variant="standard"
+            size="small"
+            fullWidth
+            value={row.category}
+            onChange={(e) => setChoice(row, { category: e.target.value })}
+            onKeyDown={stopGridKeys}
+            slotProps={{
+              select: {
+                displayEmpty: true,
+                inputProps: { 'aria-label': `Category for ${row.bankDescription}` },
+              },
+            }}
+          >
+            <MenuItem value="">
+              <span className={styles.placeholder}>Choose…</span>
             </MenuItem>
-          ))}
-        </TextField>
-      ),
+            {categoryOptions.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+          {note && <span className={styles.suggestionNote}>{note}</span>}
+        </div>
+      );
+    },
   },
   {
     field: 'action',

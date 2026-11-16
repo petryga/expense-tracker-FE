@@ -115,6 +115,12 @@
   white-space: normal;
 }
 
+.suggestionNote {
+  color: #eeb12e;
+  font-size: 0.72rem;
+  margin-top: 2px;
+}
+
 .placeholder {
   color: var(--text-muted);
   font-style: italic;

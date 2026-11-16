@@ -21,6 +21,9 @@ const row = (overrides: Partial<ImportRow>): ImportRow => ({
   expenseId: null,
   amexCategory: null,
   matched: null,
+  suggestedCategory: null,
+  suggestionSource: null,
+  suggestionStatus: 'none',
   ...overrides,
 });
 
@@ -262,6 +265,43 @@ describe('ImportsPage review', () => {
     });
     expect(await (post[0] as Request).json()).toEqual({ rowIds: ['skippedCharge', 'payment'] });
   });
+
+  it('pre-fills suggestions and picks up the AI ones as they arrive', async () => {
+    const api = installFakeApi({});
+    const rows = (aiDone: boolean) => [
+      row({
+        id: 'remembered',
+        description: 'BEAN THERE CAFE',
+        suggestedDescription: 'bean there cafe',
+        suggestedCategory: 'Groceries',
+        suggestionSource: 'memory',
+        suggestionStatus: 'done',
+      }),
+      row({
+        id: 'asked',
+        description: 'GREENLEAF MARKET',
+        suggestedDescription: 'greenleaf market',
+        ...(aiDone
+          ? { suggestedCategory: 'Groceries', suggestionSource: 'model', suggestionStatus: 'done' }
+          : { suggestionStatus: 'pending' }),
+      }),
+    ];
+    let aiDone = false;
+    render(api);
+    api.setRoute(`imports/${ID}`, () => detail(rows(aiDone)));
+
+    const grid = await screen.findByRole('grid', { name: 'Rows to review' });
+    expect(await within(grid).findByText('Suggested: you chose this before')).toBeInTheDocument();
+    expect(within(grid).getByText('Getting a suggestion…')).toBeInTheDocument();
+    expect(screen.getByText(/Getting suggestions for 1 rows/)).toBeInTheDocument();
+
+    aiDone = true; // the next refresh brings the AI's answer
+    expect(
+      await within(grid).findByText('Suggested by AI', {}, { timeout: 4000 }),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/Getting suggestions/)).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Confirm 2 rows' })).toBeEnabled();
+  }, 8000);
 
   it('shows the file upload locally, and only the sample button to the demo account', async () => {
     render();

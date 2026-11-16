@@ -36,6 +36,11 @@ export interface ImportRow {
   category: string | null;
   expenseId: string | null;
   amexCategory: string | null;
+  // Where the suggested category came from: your past choices for this shop
+  // ('memory') or the AI service ('model'). 'pending' while the AI works on it.
+  suggestedCategory: string | null;
+  suggestionSource: 'memory' | 'model' | null;
+  suggestionStatus: 'pending' | 'done' | 'none';
   matched: {
     id: string;
     batchId: string;

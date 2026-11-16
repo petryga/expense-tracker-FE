@@ -6,6 +6,7 @@ export const ReviewContext = createContext<{
   detail: ImportDetail;
   decisionsCount: number;
   waiting: number;
+  pending: number;
   saving: boolean;
   onConfirm: () => void;
 } | null>(null);

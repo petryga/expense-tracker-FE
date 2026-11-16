@@ -11,7 +11,7 @@ import { ErrorBox } from '../components';
 import { createReviewColumns, type ReviewGridRow } from './reviewColumns';
 import { ReviewContext } from './reviewContext';
 import { ReconciliationFooter, ReviewToolbar } from './ReviewGridSlots';
-import { buildDecisions, defaultChoice, type RowChoice } from './reviewState';
+import { buildDecisions, defaultChoice, pendingCount, type RowChoice } from './reviewState';
 import styles from '../ImportsPage.module.css';
 
 // The "To review" tab: one row per draft, all editable, one confirm for all.
@@ -46,6 +46,7 @@ export const ReviewGrid: FC<{ detail: ImportDetail }> = ({ detail }) => {
         detail,
         decisionsCount: decisions.length,
         waiting: drafts.length - decisions.length,
+        pending: pendingCount(detail.rows),
         saving: isLoading,
         onConfirm: async () => {
           const result = await confirm({ id: detail.id, rows: decisions });
