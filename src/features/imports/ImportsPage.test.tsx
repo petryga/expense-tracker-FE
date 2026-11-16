@@ -60,7 +60,7 @@ const ROWS = [
     suggestedDescription: 'starbucks 0123',
     amountCents: 525,
   }),
-  row({ id: 'partial', description: 'ZENNI OPTICAL', kind: 'refund', amountCents: -2000 }),
+  row({ id: 'partial', description: 'LENSWORKS OPTICAL', kind: 'refund', amountCents: -2000 }),
   row({ id: 'skippedCharge', description: 'PARKING LOT 12', status: 'skipped', amountCents: 800 }),
   row({
     id: 'payment',
