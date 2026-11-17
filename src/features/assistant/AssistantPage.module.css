@@ -1,0 +1,155 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  max-width: 760px;
+  height: calc(100vh - 48px);
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.header h2 {
+  margin: 0 0 4px;
+}
+
+.note {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.message {
+  max-width: 85%;
+  padding: 10px 14px;
+  border-radius: 12px;
+  line-height: 1.45;
+  text-align: left;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.user {
+  align-self: flex-end;
+  background: #eeb12e;
+  color: #1e1e1e;
+}
+
+.assistant {
+  align-self: flex-start;
+  background: var(--surface-subtle);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.failed {
+  align-self: flex-start;
+  background: var(--warn-bg);
+  color: var(--warn-text);
+}
+
+.tools {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.thinking {
+  align-self: flex-start;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.empty {
+  margin: auto;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.examples {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.example {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--button-bg);
+  color: var(--text);
+  cursor: pointer;
+  font: inherit;
+}
+
+.example:hover {
+  border-color: #eeb12e;
+}
+
+.form {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.form textarea {
+  flex: 1;
+  resize: none;
+  min-height: 44px;
+  max-height: 140px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+
+.form button,
+.clear {
+  padding: 0 18px;
+  border: none;
+  border-radius: 8px;
+  background: #eeb12e;
+  color: #1e1e1e;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.form button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.clear {
+  padding: 4px 12px;
+  background: var(--button-bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  font-weight: normal;
+}
+
+.off {
+  padding: 16px;
+  border-radius: 8px;
+  background: var(--warn-bg);
+  color: var(--warn-text);
+}

@@ -5,6 +5,7 @@ import {
   faGear,
   faMagnifyingGlass,
   faFileImport,
+  faComments,
 } from '@fortawesome/free-solid-svg-icons';
 
 export const URLS: Record<string, string> = {
@@ -15,6 +16,7 @@ export const URLS: Record<string, string> = {
   sankey: '/sankey',
   search: '/search',
   imports: '/imports',
+  assistant: '/ask',
   settings: '/settings',
 };
 
@@ -51,6 +53,11 @@ export const OPTIONS = [
     text: 'Import',
     path: URLS.imports,
     icon: faFileImport,
+  },
+  {
+    text: 'Ask',
+    path: URLS.assistant,
+    icon: faComments,
   },
   {
     text: 'Search',

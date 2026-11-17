@@ -14,6 +14,7 @@ const LoginPage = lazy(() => import('./features/auth/LoginPage'));
 const SignupPage = lazy(() => import('./features/auth/SignupPage'));
 const ImportsPage = lazy(() => import('./features/imports/ImportsPage'));
 const SettingsPage = lazy(() => import('./features/settings/SettingsPage'));
+const AssistantPage = lazy(() => import('./features/assistant/AssistantPage'));
 
 function App() {
   return (
@@ -74,6 +75,14 @@ function App() {
         element={
           <RequireAuth>
             <ImportsPage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path={URLS.assistant}
+        element={
+          <RequireAuth>
+            <AssistantPage />
           </RequireAuth>
         }
       />
