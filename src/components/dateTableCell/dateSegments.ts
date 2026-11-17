@@ -42,7 +42,7 @@ export const clampDayToMonth = (day: number, year: number, month: number): numbe
 
 export type Segments = { month: string; day: string; year: string };
 
-export const EMPTY_SEGMENTS: Segments = { month: '', day: '', year: '' };
+const EMPTY_SEGMENTS: Segments = { month: '', day: '', year: '' };
 
 export const pad2 = (value: number) => String(value).padStart(2, '0');
 

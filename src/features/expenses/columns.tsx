@@ -1,12 +1,7 @@
 import { Currency } from './helpers';
 import type { GridColDef, GridRowParams } from '@mui/x-data-grid';
 import { faTrash, faSave, faEdit, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
-import {
-  formatAmount,
-  formatDate,
-  lastDayOfMonth,
-  parseLocalDateString,
-} from '../../utils';
+import { formatAmount, formatDate, lastDayOfMonth, parseLocalDateString } from '../../utils';
 import type { TableColumns } from './ExpensesPage.types';
 import { Checkbox } from '@mui/material';
 import styles from './ExpensesPage.module.css';
