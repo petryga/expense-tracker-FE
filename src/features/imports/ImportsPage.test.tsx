@@ -344,6 +344,13 @@ describe('ImportsPage review', () => {
       await screen.findByRole('button', { name: 'Import sample statement' }),
     ).toBeInTheDocument();
     expect(screen.queryByRole('region', { name: 'Upload a statement' })).not.toBeInTheDocument();
+    expect(
+      screen.getByText(/the AI category suggestions were made in advance/),
+    ).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'GitHub' })).toHaveAttribute(
+      'href',
+      'https://github.com/petryga/expense-tracker-AI',
+    );
   });
 
   it('shows a split Amazon charge as its items and confirms them together', async () => {
