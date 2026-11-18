@@ -6,7 +6,7 @@ import { renderWithStore } from '../../test/renderWithStore';
 
 // The real store and RTK Query; only the network is faked. Invented data.
 const fakeServer = (
-  enabled: boolean,
+  enabled: boolean | { enabled: boolean; perVisitorDailyLimit?: number },
   answer: (body: { question: string; history: unknown[] }) => { status: number; body: unknown },
 ) => {
   const asked: { question: string; history: unknown[] }[] = [];
@@ -14,7 +14,8 @@ const fakeServer = (
     'fetch',
     vi.fn(async (input: Request | string) => {
       const req = typeof input === 'string' ? new Request(input) : input;
-      if (req.method === 'GET') return Response.json({ enabled });
+      if (req.method === 'GET')
+        return Response.json(typeof enabled === 'boolean' ? { enabled } : enabled);
       const body = await req.json();
       asked.push(body);
       const { status, body: out } = answer(body);
@@ -36,6 +37,21 @@ const askQuestion = async (text: string) => {
 };
 
 describe('AssistantPage', () => {
+  it('tells demo visitors their daily limit, and shows the limit message when it is reached', async () => {
+    fakeServer({ enabled: true, perVisitorDailyLimit: 5 }, () => ({
+      status: 429,
+      body: { error: 'The demo answers 5 questions per visitor a day. Try again tomorrow.' },
+    }));
+    renderWithStore(<AssistantPage />);
+    expect(await screen.findByText(/up to 5 questions per visitor a day/)).toBeInTheDocument();
+    await askQuestion('Coffee in October?');
+    expect(
+      await screen.findByText(
+        'The demo answers 5 questions per visitor a day. Try again tomorrow.',
+      ),
+    ).toBeInTheDocument();
+  });
+
   it('shows the answer and the tools used, and sends earlier turns as history', async () => {
     const asked = fakeServer(true, ({ question }) => ({
       status: 200,

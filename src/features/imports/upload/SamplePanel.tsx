@@ -4,6 +4,7 @@ import { faFileArrowUp } from '@fortawesome/free-solid-svg-icons';
 import { useImportSampleStatementMutation } from '../../../services/imports/importsApi';
 import { ErrorBox, FaIcon } from '../components';
 import { goldButton } from '../formatting';
+import { assistantEnabled } from '../../assistant/enabled';
 import styles from '../ImportsPage.module.css';
 
 const AI_REPO_URL = 'https://github.com/petryga/expense-tracker-AI';
@@ -32,7 +33,11 @@ export const SamplePanel: FC<{ onUploaded: (id: string) => void }> = ({ onUpload
       </div>
       <p className={styles.hint}>
         In this demo the AI category suggestions were made in advance with Claude, so no model is
-        called here, and the spending assistant runs only locally. Code and eval results:{' '}
+        called here.{' '}
+        {assistantEnabled
+          ? 'The spending assistant on the Ask page is live, with a few questions a day.'
+          : 'The spending assistant runs only locally.'}{' '}
+        Code and eval results:{' '}
         <a href={AI_REPO_URL} target="_blank" rel="noopener noreferrer">
           GitHub
         </a>

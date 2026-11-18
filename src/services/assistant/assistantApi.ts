@@ -21,11 +21,17 @@ export interface AskResult {
   toolCalls: string[];
 }
 
+// perVisitorDailyLimit: only for the public demo account.
+export interface AssistantStatus {
+  enabled: boolean;
+  perVisitorDailyLimit?: number;
+}
+
 export const assistantApi = createApi({
   reducerPath: 'assistantApi',
   baseQuery: baseQueryWithAuth,
   endpoints: (builder) => ({
-    getAssistantStatus: builder.query<{ enabled: boolean }, void>({
+    getAssistantStatus: builder.query<AssistantStatus, void>({
       query: () => ({ url: 'assistant', method: 'GET' }),
     }),
     ask: builder.mutation<AskResult, AskArgs>({

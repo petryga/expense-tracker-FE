@@ -69,8 +69,9 @@ export const AssistantPage: FC = () => {
     <div className={`${styles.page} full-width-page`}>
       {!status?.enabled ? (
         <div className={styles.off} role="status">
-          The assistant is turned off. To use it locally, set AI_ASSISTANT_ENABLED=true in the
-          backend and run the AI service.
+          {import.meta.env.DEV
+            ? 'The assistant is turned off. To use it locally, set AI_ASSISTANT_ENABLED=true in the backend and run the AI service.'
+            : 'The assistant is turned off right now.'}
         </div>
       ) : (
         <>
@@ -90,6 +91,12 @@ export const AssistantPage: FC = () => {
                   </div>
                   <h2 className={styles.emptyTitle}>Ask about your spending</h2>
                   <p className={styles.emptyNote}>Try one of these, or write your own below.</p>
+                  {status.perVisitorDailyLimit && (
+                    <p className={styles.emptyNote}>
+                      This demo answers up to {status.perVisitorDailyLimit} questions per visitor a
+                      day, about its made-up sample data.
+                    </p>
+                  )}
                   <div className={styles.examples}>
                     {EXAMPLES.map((example) => (
                       <button
