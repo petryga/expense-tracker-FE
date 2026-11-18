@@ -147,6 +147,7 @@
 .notVisible .brand,
 .notVisible > ul,
 .notVisible .userEmail,
+.notVisible .themeButton,
 .notVisible .logoutButton {
   opacity: 0;
   pointer-events: none;
@@ -161,6 +162,7 @@
 .visible .brand,
 .visible > ul,
 .visible .userEmail,
+.visible .themeButton,
 .visible .logoutButton {
   opacity: 1;
   transition: opacity 0.2s ease 0.1s;
@@ -214,4 +216,34 @@
   border-color: transparent;
   background-color: var(--surface-subtle);
   color: #eeb12e;
+}
+
+/* The light/dark switch: an icon in a circle that lights up on hover. */
+.themeButton {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  margin: 4px 0 0 11px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  background: none;
+  color: var(--text-muted);
+  font-size: 19px;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+}
+
+.themeButton:hover {
+  background-color: var(--surface-subtle);
+  border-color: var(--border);
+  color: #eeb12e;
+}
+
+.themeButton:focus-visible {
+  outline: 2px solid #eeb12e;
+  outline-offset: 2px;
 }

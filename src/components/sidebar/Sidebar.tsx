@@ -87,12 +87,15 @@ const Sidebar = (): JSX.Element => {
           );
         })}
       </ul>
-      <button type="button" className={styles.logoutButton} onClick={toggleMode}>
-        <FontAwesomeIcon
-          className={styles.sidebarIcon}
-          icon={(mode === 'dark' ? faSun : faMoon) as IconProp}
-        />
-        {mode === 'dark' ? 'Light mode' : 'Dark mode'}
+      {/* Icon only; the label is for screen readers and the tooltip. */}
+      <button
+        type="button"
+        className={styles.themeButton}
+        onClick={toggleMode}
+        aria-label={mode === 'dark' ? 'Light mode' : 'Dark mode'}
+        title={mode === 'dark' ? 'Light mode' : 'Dark mode'}
+      >
+        <FontAwesomeIcon icon={(mode === 'dark' ? faSun : faMoon) as IconProp} />
       </button>
       {isAuthEnabled && session?.user?.email && (
         <div className={styles.userEmail} title={session.user.email}>
