@@ -4,6 +4,7 @@ import { faFileCsv } from '@fortawesome/free-solid-svg-icons';
 import { useUploadAmazonOrdersMutation } from '../../../services/imports/importsApi';
 import type { AmazonUploadResult, ImportList } from '../../../services/imports/importsApi.types';
 import { formatDate } from '../../../utils';
+import { goldButton } from '../formatting';
 import { ErrorBox, FaIcon } from '../components';
 import styles from '../ImportsPage.module.css';
 
@@ -40,7 +41,7 @@ export const AmazonPanel: FC<{ summary: ImportList['amazon'] }> = ({ summary }) 
       <div className={styles.uploadRow}>
         <Button
           component="label"
-          variant="outlined"
+          sx={goldButton}
           startIcon={<FaIcon icon={faFileCsv} />}
           disabled={isLoading}
         >
