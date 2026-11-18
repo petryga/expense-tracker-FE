@@ -17,7 +17,7 @@ API: **[expense-tracker-api](https://github.com/petryga/expense-tracker-BE)** ·
 - **Sankey** cash-flow diagram (income → categories → spend)
 - **Search** across descriptions, merchants and categories
 - **CSV export** of all expenses
-- **Ask** (local only): a chat page that answers questions about your own spending through the AI service. It shows in the dev server, and in a build only with `VITE_ASSISTANT_ENABLED=true`, so production has no entry for it.
+- **Ask**: a chat page that answers questions about your own spending through the AI service. It shows in the dev server, and in a build only with `VITE_ASSISTANT_ENABLED=true`. Live in the demo, where the backend allows each visitor a few questions a day.
 - Auth via Supabase; runs in a no-auth local mode when Supabase isn't configured
 
 ## Stack
