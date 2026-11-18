@@ -6,6 +6,7 @@ import { recurringExpensesApi } from './services/recurringExpenses/recurringExpe
 import { recurringIncomeApi } from './services/recurringIncome/recurringIncomeApi';
 import { categoriesApi } from './services/categories/categoriesApi';
 import { accountsApi } from './services/accounts/accountsApi';
+import { marketplacesApi } from './services/marketplaces/marketplacesApi';
 import { importsApi } from './services/imports/importsApi';
 import { assistantApi } from './services/assistant/assistantApi';
 import sidebarReducer from './components/sidebar/sidebarSlice';
@@ -21,6 +22,7 @@ export const createStore = () =>
       [recurringIncomeApi.reducerPath]: recurringIncomeApi.reducer,
       [categoriesApi.reducerPath]: categoriesApi.reducer,
       [accountsApi.reducerPath]: accountsApi.reducer,
+      [marketplacesApi.reducerPath]: marketplacesApi.reducer,
       [importsApi.reducerPath]: importsApi.reducer,
       [assistantApi.reducerPath]: assistantApi.reducer,
       rightSidebar: sidebarReducer,
@@ -35,6 +37,7 @@ export const createStore = () =>
         recurringIncomeApi.middleware,
         categoriesApi.middleware,
         accountsApi.middleware,
+        marketplacesApi.middleware,
         importsApi.middleware,
         assistantApi.middleware,
       ),

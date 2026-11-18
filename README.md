@@ -10,11 +10,12 @@ API: **[expense-tracker-api](https://github.com/petryga/expense-tracker-BE)** ·
 - **Recurring** expense and income templates, managed from Settings
 - **Categories & budgets** — custom categories with per-category monthly budgets
 - **Accounts**
+- **Marketplaces** (Settings): new expenses whose description starts with one (eBay, Vinted…) are marked with it; Amazon items from split orders are marked Amazon. The tables show the marketplace as a small tag next to the description, and Search finds it.
 - **Reports**
   - Monthly: category breakdowns, budget vs. actual
   - All-time: a net-worth / wealth tracker, monthly-expense trend, year-over-year comparison
 - **Sankey** cash-flow diagram (income → categories → spend)
-- **Search** across descriptions and categories
+- **Search** across descriptions, merchants and categories
 - **CSV export** of all expenses
 - **Ask** (local only): a chat page that answers questions about your own spending through the AI service. It shows in the dev server, and in a build only with `VITE_ASSISTANT_ENABLED=true`, so production has no entry for it.
 - Auth via Supabase; runs in a no-auth local mode when Supabase isn't configured

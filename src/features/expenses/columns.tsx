@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { renderEditCell } from '../../components/amountTableCell/AmountTableCell';
 import { renderEditCell as renderDateEditCell } from '../../components/dateTableCell/DateTableCell';
 import { iconAction, createRowModeHandlers } from './gridActions';
-import { categoryColumn, giftColumn } from './sharedColumns';
+import { categoryColumn, giftColumn, renderDescription } from './sharedColumns';
 
 export function createTableColumns({
   rowModesModel,
@@ -142,6 +142,7 @@ export function createTableColumns({
       flex: 1,
       minWidth: 140,
       editable: true,
+      renderCell: renderDescription,
     },
     {
       field: 'amount',

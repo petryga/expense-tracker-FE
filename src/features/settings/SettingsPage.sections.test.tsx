@@ -5,6 +5,7 @@ import { RecurringExpensesGrid } from './RecurringExpensesGrid';
 import { RecurringIncomeGrid } from './RecurringIncomeGrid';
 import { CategoriesPanel } from './CategoriesPanel';
 import { AccountsPanel } from './AccountsPanel';
+import { MarketplacesPanel } from './MarketplacesPanel';
 
 // Guards the mapping itself, not rendering - each section's `content` is
 // just a React element descriptor (`{ type, props }`) until something
@@ -17,6 +18,7 @@ describe('SETTINGS_SECTIONS', () => {
       'Recurring Income',
       'Categories',
       'Accounts',
+      'Marketplaces',
     ]);
   });
 
@@ -37,5 +39,6 @@ describe('SETTINGS_SECTIONS', () => {
     expect(contentTypeByLabel.get('Recurring Income')).toBe(RecurringIncomeGrid);
     expect(contentTypeByLabel.get('Categories')).toBe(CategoriesPanel);
     expect(contentTypeByLabel.get('Accounts')).toBe(AccountsPanel);
+    expect(contentTypeByLabel.get('Marketplaces')).toBe(MarketplacesPanel);
   });
 });

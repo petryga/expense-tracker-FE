@@ -6,7 +6,7 @@ import { formatAmount, formatDate } from '../../utils';
 import { renderEditCell } from '../../components/amountTableCell/AmountTableCell';
 import { Currency } from './helpers';
 import { createRowModeHandlers, iconAction } from './gridActions';
-import { categoryColumn, giftColumn } from './sharedColumns';
+import { categoryColumn, giftColumn, renderDescription } from './sharedColumns';
 import type { Category } from './ExpensesPage.types';
 import type { AccountRecord } from '../../services/accounts/accountsApi.types';
 import type { Data } from '../../services/expenses/expensesApi.types';
@@ -75,6 +75,7 @@ export function createSearchColumns({
       headerName: 'Description',
       width: 300,
       editable: true,
+      renderCell: renderDescription,
     },
     {
       field: 'amount',

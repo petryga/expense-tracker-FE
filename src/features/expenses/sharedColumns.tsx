@@ -1,4 +1,5 @@
-import type { GridColDef } from '@mui/x-data-grid';
+import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import styles from './DescriptionCell.module.css';
 import { transformCategoriesForDropdown } from '../../utils';
 import type { Category } from './ExpensesPage.types';
 
@@ -30,4 +31,23 @@ export const categoryColumn = (categories: Category[]): GridColDef => {
     renderCell: (params) =>
       options.find((o) => o.value === params.value)?.label ?? params.value ?? '',
   };
+};
+
+// The description, with a small tag for every expense that has a merchant, so
+// a tagged expense always looks tagged, even when its description names the merchant.
+export const showsMerchantTag = (merchant: string | null | undefined) => !!merchant?.trim();
+
+export const renderDescription = (params: GridRenderCellParams) => {
+  const description = String(params.value ?? '');
+  const merchant = params.row.merchant as string | null | undefined;
+  return (
+    <span className={styles.cell}>
+      <span className={styles.text}>{description}</span>
+      {showsMerchantTag(merchant) && (
+        <span className={styles.tag} title={`Bought on ${merchant}`}>
+          {merchant}
+        </span>
+      )}
+    </span>
+  );
 };

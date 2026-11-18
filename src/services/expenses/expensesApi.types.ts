@@ -14,6 +14,10 @@ export type Data = {
   currency: Currency | '';
   // Bought as a gift: keeps its real category, counts under Gifts in reports.
   isGift?: boolean;
+  // Where it was bought, when the description doesn't say ("Amazon" for the
+  // items of a split Amazon order, or a marketplace from Settings). Set by the
+  // backend; read-only here.
+  merchant?: string | null;
 };
 
 export interface GetExpensesData {
