@@ -3,6 +3,7 @@ import './App.css';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { URLS } from './components/sidebar/constants';
 import { RequireAuth } from './features/auth/RequireAuth';
+import { assistantEnabled } from './features/assistant/enabled';
 
 const MonthlyReportsPage = lazy(() => import('./features/reports/monthly/MonthlyReportsPage'));
 const SearchPage = lazy(() => import('./features/search/SearchPage'));
@@ -78,14 +79,16 @@ function App() {
           </RequireAuth>
         }
       />
-      <Route
-        path={URLS.assistant}
-        element={
-          <RequireAuth>
-            <AssistantPage />
-          </RequireAuth>
-        }
-      />
+      {assistantEnabled && (
+        <Route
+          path={URLS.assistant}
+          element={
+            <RequireAuth>
+              <AssistantPage />
+            </RequireAuth>
+          }
+        />
+      )}
       <Route
         path={URLS.settings}
         element={

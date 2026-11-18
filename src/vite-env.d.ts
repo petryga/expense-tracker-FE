@@ -10,6 +10,8 @@ interface ImportMetaEnv {
   // every login, so it is safe to ship these in the build.
   readonly VITE_DEMO_EMAIL?: string;
   readonly VITE_DEMO_PASSWORD?: string;
+  // Shows the Ask page in a build (it is always on in the dev server).
+  readonly VITE_ASSISTANT_ENABLED?: string;
 }
 
 interface ImportMeta {

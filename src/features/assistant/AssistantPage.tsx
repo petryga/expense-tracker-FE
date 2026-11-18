@@ -1,4 +1,6 @@
 import { type FC, type FormEvent, type KeyboardEvent, useEffect, useRef, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowUp, faComments } from '@fortawesome/free-solid-svg-icons';
 import { withSidebar } from '../../components/sidebar/withSideBar';
 import { useAskMutation, useGetAssistantStatusQuery } from '../../services/assistant/assistantApi';
 import { EXAMPLES, type Message, errorText, historyFor, toolsUsed } from './chat';
@@ -63,9 +65,9 @@ export const AssistantPage: FC = () => {
 
   return (
     <div className={styles.page}>
-      <div className={styles.header}>
+      <header className={styles.header}>
         <div>
-          <h2>Ask about your spending</h2>
+          <h1 className={styles.title}>Ask</h1>
           <p className={styles.note}>
             Answers come from your own data. The assistant can read, never change anything.
           </p>
@@ -75,7 +77,7 @@ export const AssistantPage: FC = () => {
             New conversation
           </button>
         )}
-      </div>
+      </header>
 
       {!status?.enabled ? (
         <div className={styles.off} role="status">
@@ -87,7 +89,11 @@ export const AssistantPage: FC = () => {
           <div className={styles.messages} aria-live="polite">
             {messages.length === 0 && !asking && (
               <div className={styles.empty}>
-                Try a question like:
+                <div className={styles.emptyIcon} aria-hidden="true">
+                  <FontAwesomeIcon icon={faComments} />
+                </div>
+                <h2 className={styles.emptyTitle}>Ask about your spending</h2>
+                <p className={styles.emptyNote}>Try one of these, or write your own below.</p>
                 <div className={styles.examples}>
                   {EXAMPLES.map((example) => (
                     <button
@@ -118,11 +124,17 @@ export const AssistantPage: FC = () => {
                 )}
               </div>
             ))}
-            {asking && <div className={styles.thinking}>Thinking…</div>}
+            {asking && (
+              <div className={styles.thinking} role="status" aria-label="Thinking">
+                <span />
+                <span />
+                <span />
+              </div>
+            )}
             <div ref={bottom} />
           </div>
 
-          <form className={styles.form} onSubmit={onSubmit}>
+          <form className={styles.composer} onSubmit={onSubmit}>
             <textarea
               aria-label="Your question"
               placeholder="Ask about your spending…"
@@ -132,10 +144,16 @@ export const AssistantPage: FC = () => {
               onChange={(event) => setDraft(event.target.value)}
               onKeyDown={onKeyDown}
             />
-            <button type="submit" disabled={!draft.trim() || asking}>
-              Send
+            <button
+              type="submit"
+              className={styles.send}
+              aria-label="Send"
+              disabled={!draft.trim() || asking}
+            >
+              <FontAwesomeIcon icon={faArrowUp} />
             </button>
           </form>
+          <p className={styles.hint}>Enter to send, Shift+Enter for a new line.</p>
         </>
       )}
     </div>

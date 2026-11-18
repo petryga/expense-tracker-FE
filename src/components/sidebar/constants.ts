@@ -7,6 +7,7 @@ import {
   faFileImport,
   faComments,
 } from '@fortawesome/free-solid-svg-icons';
+import { assistantEnabled } from '../../features/assistant/enabled';
 
 export const URLS: Record<string, string> = {
   expenses: '/expenses',
@@ -54,11 +55,16 @@ export const OPTIONS = [
     path: URLS.imports,
     icon: faFileImport,
   },
-  {
-    text: 'Ask',
-    path: URLS.assistant,
-    icon: faComments,
-  },
+  // Local only (see features/assistant/enabled.ts).
+  ...(assistantEnabled
+    ? [
+        {
+          text: 'Ask',
+          path: URLS.assistant,
+          icon: faComments,
+        },
+      ]
+    : []),
   {
     text: 'Search',
     path: URLS.search,

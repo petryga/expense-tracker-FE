@@ -16,6 +16,7 @@ API: **[expense-tracker-api](https://github.com/petryga/expense-tracker-BE)** ·
 - **Sankey** cash-flow diagram (income → categories → spend)
 - **Search** across descriptions and categories
 - **CSV export** of all expenses
+- **Ask** (local only): a chat page that answers questions about your own spending through the AI service. It shows in the dev server, and in a build only with `VITE_ASSISTANT_ENABLED=true`, so production has no entry for it.
 - Auth via Supabase; runs in a no-auth local mode when Supabase isn't configured
 
 ## Stack
@@ -79,7 +80,7 @@ The API ([expense-tracker-api](https://github.com/petryga/expense-tracker-BE)) n
 
 ## Configuration
 
-`VITE_API_BASE_URL`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` — see `.env.example`.
+`VITE_API_BASE_URL`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, and the optional `VITE_DEMO_EMAIL`, `VITE_DEMO_PASSWORD`, `VITE_ASSISTANT_ENABLED` — see `.env.example`.
 
 ## License
 
