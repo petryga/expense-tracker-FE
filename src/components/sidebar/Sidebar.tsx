@@ -87,31 +87,38 @@ const Sidebar = (): JSX.Element => {
           );
         })}
       </ul>
-      {/* Icon only; the label is for screen readers and the tooltip. */}
-      <button
-        type="button"
-        className={styles.themeButton}
-        onClick={toggleMode}
-        aria-label={mode === 'dark' ? 'Light mode' : 'Dark mode'}
-        title={mode === 'dark' ? 'Light mode' : 'Dark mode'}
-      >
-        <FontAwesomeIcon icon={(mode === 'dark' ? faSun : faMoon) as IconProp} />
-      </button>
-      {isAuthEnabled && session?.user?.email && (
-        <div className={styles.userEmail} title={session.user.email}>
-          {session.user.email}
+      <div className={styles.footer}>
+        {isAuthEnabled && session?.user?.email && (
+          <div className={styles.userEmail} title={session.user.email}>
+            {session.user.email}
+          </div>
+        )}
+        <div className={styles.footerRow}>
+          {isAuthEnabled && (
+            <button
+              type="button"
+              className={styles.logoutButton}
+              onClick={() => supabase?.auth.signOut()}
+            >
+              <FontAwesomeIcon
+                className={styles.sidebarIcon}
+                icon={faRightFromBracket as IconProp}
+              />
+              Log out
+            </button>
+          )}
+          {/* Icon only; the label is for screen readers and the tooltip. */}
+          <button
+            type="button"
+            className={styles.themeButton}
+            onClick={toggleMode}
+            aria-label={mode === 'dark' ? 'Light mode' : 'Dark mode'}
+            title={mode === 'dark' ? 'Light mode' : 'Dark mode'}
+          >
+            <FontAwesomeIcon icon={(mode === 'dark' ? faSun : faMoon) as IconProp} />
+          </button>
         </div>
-      )}
-      {isAuthEnabled && (
-        <button
-          type="button"
-          className={styles.logoutButton}
-          onClick={() => supabase?.auth.signOut()}
-        >
-          <FontAwesomeIcon className={styles.sidebarIcon} icon={faRightFromBracket as IconProp} />
-          Log out
-        </button>
-      )}
+      </div>
     </div>
   );
 };

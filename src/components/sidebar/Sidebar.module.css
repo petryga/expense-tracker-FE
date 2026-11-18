@@ -11,7 +11,7 @@
   box-shadow: 1px 1px 2px var(--shadow-color);
   width: 250px;
   top: 0;
-  padding-bottom: 2rem;
+  padding-bottom: 14px;
   display: flex;
   flex-direction: column;
 }
@@ -44,7 +44,8 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 26px 24px 18px;
+  /* Right padding leaves room for the collapse button on the edge. */
+  padding: 22px 32px 18px 24px;
   border-bottom: 1px solid var(--border);
   margin-bottom: 8px;
 }
@@ -125,11 +126,12 @@
 }
 
 .toggleButton {
-  position: relative;
-  top: 20px;
-  left: 226px;
-  width: 40px;
-  height: 40px;
+  /* Sits on the sidebar's edge, out of the flow, so it adds no space above the brand. */
+  position: absolute;
+  top: 18px;
+  right: -17px;
+  width: 34px;
+  height: 34px;
   padding: 0;
   border-radius: 50%;
   background-color: var(--surface);
@@ -158,9 +160,7 @@
 
 .notVisible .brand,
 .notVisible > ul,
-.notVisible .userEmail,
-.notVisible .themeButton,
-.notVisible .logoutButton {
+.notVisible .footer {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.15s ease;
@@ -173,9 +173,7 @@
 
 .visible .brand,
 .visible > ul,
-.visible .userEmail,
-.visible .themeButton,
-.visible .logoutButton {
+.visible .footer {
   opacity: 1;
   transition: opacity 0.2s ease 0.1s;
 }
@@ -196,10 +194,25 @@
   color: var(--text);
 }
 
-.userEmail {
-  margin: 12px 12px 0;
-  padding: 10px 12px 0;
+.footer {
+  flex-shrink: 0;
+  margin: 8px 12px 0;
+  padding-top: 10px;
   border-top: 1px solid var(--border);
+}
+
+/* Log out on the left, the light/dark switch on the right. */
+.footerRow {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.userEmail {
+  padding: 0 12px;
+  text-align: left;
   font-size: 12px;
   color: var(--text-muted);
   white-space: nowrap;
@@ -211,9 +224,10 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  width: calc(100% - 24px);
-  margin: 4px 12px 0;
+  flex: 1;
+  margin: 0;
   padding: 10px 12px;
+  border: none;
   border-radius: 8px;
   font-weight: 600;
   text-decoration: none;
@@ -235,15 +249,15 @@
   flex-shrink: 0;
   display: grid;
   place-items: center;
-  width: 42px;
-  height: 42px;
-  margin: 4px 0 0 11px;
+  width: 38px;
+  height: 38px;
+  margin: 0;
   padding: 0;
   border: 1px solid transparent;
   border-radius: 50%;
   background: none;
   color: var(--text-muted);
-  font-size: 19px;
+  font-size: 16px;
   cursor: pointer;
   transition:
     background-color 0.15s,
