@@ -21,7 +21,19 @@
   flex-direction: column;
   flex: 1;
   min-height: 0;
+  /* On a short screen the links scroll inside the list instead of spilling
+     over the theme and log-out buttons below it. */
+  overflow-y: auto;
+  scrollbar-width: none;
   padding: 4px 12px;
+}
+
+.sidebar > ul::-webkit-scrollbar {
+  display: none;
+}
+
+.sidebar > ul > li {
+  flex-shrink: 0;
 }
 
 .sidebar::-webkit-scrollbar {
@@ -220,6 +232,7 @@
 
 /* The light/dark switch: an icon in a circle that lights up on hover. */
 .themeButton {
+  flex-shrink: 0;
   display: grid;
   place-items: center;
   width: 42px;
