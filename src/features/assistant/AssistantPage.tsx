@@ -64,21 +64,9 @@ export const AssistantPage: FC = () => {
   if (statusLoading) return null;
 
   return (
-    <div className={styles.page}>
-      <header className={styles.header}>
-        <div>
-          <h1 className={styles.title}>Ask</h1>
-          <p className={styles.note}>
-            Answers come from your own data. The assistant can read, never change anything.
-          </p>
-        </div>
-        {messages.length > 0 && (
-          <button type="button" className={styles.clear} onClick={() => setMessages([])}>
-            New conversation
-          </button>
-        )}
-      </header>
-
+    // full-width-page (App.css): #root takes the page width, so the chat keeps
+    // its size when the welcome is replaced by messages.
+    <div className={`${styles.page} full-width-page`}>
       {!status?.enabled ? (
         <div className={styles.off} role="status">
           The assistant is turned off. To use it locally, set AI_ASSISTANT_ENABLED=true in the
@@ -86,74 +74,85 @@ export const AssistantPage: FC = () => {
         </div>
       ) : (
         <>
-          <div className={styles.messages} aria-live="polite">
-            {messages.length === 0 && !asking && (
-              <div className={styles.empty}>
-                <div className={styles.emptyIcon} aria-hidden="true">
-                  <FontAwesomeIcon icon={faComments} />
-                </div>
-                <h2 className={styles.emptyTitle}>Ask about your spending</h2>
-                <p className={styles.emptyNote}>Try one of these, or write your own below.</p>
-                <div className={styles.examples}>
-                  {EXAMPLES.map((example) => (
-                    <button
-                      key={example}
-                      type="button"
-                      className={styles.example}
-                      onClick={() => void send(example)}
-                    >
-                      {example}
-                    </button>
-                  ))}
-                </div>
+          <div className={styles.chat}>
+            {messages.length > 0 && (
+              <div className={styles.toolbar}>
+                <button type="button" className={styles.clear} onClick={() => setMessages([])}>
+                  New conversation
+                </button>
               </div>
             )}
-            {messages.map((message) => (
-              <div
-                key={message.id}
-                className={`${styles.message} ${
-                  message.failed ? styles.failed : styles[message.role]
-                }`}
-                data-role={message.role}
-              >
-                {message.text}
-                {message.toolCalls && message.toolCalls.length > 0 && (
-                  <div className={styles.tools}>
-                    Looked at: {toolsUsed(message.toolCalls).join(', ')}
+            <div className={styles.messages} aria-live="polite">
+              {messages.length === 0 && !asking && (
+                <div className={styles.empty}>
+                  <div className={styles.emptyIcon} aria-hidden="true">
+                    <FontAwesomeIcon icon={faComments} />
                   </div>
-                )}
-              </div>
-            ))}
-            {asking && (
-              <div className={styles.thinking} role="status" aria-label="Thinking">
-                <span />
-                <span />
-                <span />
-              </div>
-            )}
-            <div ref={bottom} />
-          </div>
+                  <h2 className={styles.emptyTitle}>Ask about your spending</h2>
+                  <p className={styles.emptyNote}>Try one of these, or write your own below.</p>
+                  <div className={styles.examples}>
+                    {EXAMPLES.map((example) => (
+                      <button
+                        key={example}
+                        type="button"
+                        className={styles.example}
+                        onClick={() => void send(example)}
+                      >
+                        {example}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {messages.map((message) => (
+                <div
+                  key={message.id}
+                  className={`${styles.message} ${
+                    message.failed ? styles.failed : styles[message.role]
+                  }`}
+                  data-role={message.role}
+                >
+                  {message.text}
+                  {message.toolCalls && message.toolCalls.length > 0 && (
+                    <div className={styles.tools}>
+                      Looked at: {toolsUsed(message.toolCalls).join(', ')}
+                    </div>
+                  )}
+                </div>
+              ))}
+              {asking && (
+                <div className={styles.thinking} role="status" aria-label="Thinking">
+                  <span />
+                  <span />
+                  <span />
+                </div>
+              )}
+              <div ref={bottom} />
+            </div>
 
-          <form className={styles.composer} onSubmit={onSubmit}>
-            <textarea
-              aria-label="Your question"
-              placeholder="Ask about your spending…"
-              value={draft}
-              maxLength={MAX_QUESTION}
-              rows={1}
-              onChange={(event) => setDraft(event.target.value)}
-              onKeyDown={onKeyDown}
-            />
-            <button
-              type="submit"
-              className={styles.send}
-              aria-label="Send"
-              disabled={!draft.trim() || asking}
-            >
-              <FontAwesomeIcon icon={faArrowUp} />
-            </button>
-          </form>
-          <p className={styles.hint}>Enter to send, Shift+Enter for a new line.</p>
+            <form className={styles.composer} onSubmit={onSubmit}>
+              <textarea
+                aria-label="Your question"
+                placeholder="Ask about your spending…"
+                value={draft}
+                maxLength={MAX_QUESTION}
+                rows={1}
+                onChange={(event) => setDraft(event.target.value)}
+                onKeyDown={onKeyDown}
+              />
+              <button
+                type="submit"
+                className={styles.send}
+                aria-label="Send"
+                disabled={!draft.trim() || asking}
+              >
+                <FontAwesomeIcon icon={faArrowUp} />
+              </button>
+            </form>
+          </div>
+          <p className={styles.hint}>
+            Answers come from your own expenses. It only looks things up and never makes changes.
+          </p>
         </>
       )}
     </div>
